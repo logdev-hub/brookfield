@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>📦 Logística — Profissional • Negócios • Mercados • Curva ABC</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  :root{
+    --azul-escuro:#0a2a4a;      /* nav/footer */
+    --azul:#15457a;             /* fundo gradiente */
+    --azul-medio:#0e3b75;
+    --amarelo:#ffc400;          /* acentos */
+    --amarelo-2:#ffd84d;
+    --texto-claro:#eaf1fb;
+    --texto-escuro:#0a2340;
+    --borda:rgba(255,255,255,.18);
+    --tile:rgba(255,255,255,.06);
+  }
+  body{ background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, #082a4e 100%); color:var(--texto-claro); }
+  .navbar{ background:var(--azul-escuro); }
+  a{ color:#ffd24a } a:hover{ color:#ffe17a }
+  .brand-badge{ display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .75rem;border:1px solid var(--borda);border-radius:999px;background:rgba(255,255,255,.05) }
+  .tab-pane{ background:rgba(255,255,255,.05); border-radius:1rem; padding:1.25rem }
+  .nav-tabs{ border-bottom-color:var(--borda) }
+  .nav-tabs .nav-link{ color:var(--texto-claro); border:0; border-bottom:2px solid transparent }
+  .nav-tabs .nav-link.active{ color:var(--texto-escuro); background:var(--amarelo); border-bottom-color:var(--amarelo) }
+  .badge-chip{ background:rgba(255,255,255,.1); border:1px solid var(--borda); padding:.3rem .55rem; border-radius:.6rem }
+  .card, .tile{ background:var(--tile); border:1px solid var(--borda); border-radius:.9rem }
+  .tile{ padding:1rem }
+  .btn-amarelo{
+    --bs-btn-color:#192d45;--bs-btn-bg:var(--amarelo);--bs-btn-border-color:var(--amarelo);
+    --bs-btn-hover-bg:var(--amarelo-2);--bs-btn-hover-border-color:var(--amarelo-2);
+    --bs-btn-active-bg:#ffcf33; font-weight:700;
+  }
+  .footer{ background:var(--azul-escuro); color:#bcd3f7 }
+
+  /* Fade-in */
+  .reveal{opacity:0; transform:translateY(12px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.show{opacity:1; transform:translateY(0);}
+
+  /* ===== Tabela & ABC ===== */
+  .table{ --bs-table-bg:transparent; --bs-table-border-color:var(--borda); color:var(--texto-claro); }
+  .table thead th{ background:rgba(255,255,255,.08); color:#fff; }
+  .table-hover tbody tr:hover{ background:rgba(255,255,255,.06); }
+  .table tfoot th{ background:rgba(255,255,255,.9) !important; color:var(--texto-escuro) !important; }
+
+  /* Linhas após cálculo com contraste alto + texto branco forçado */
+  .row-a td, .row-a th{ background:#7a1430 !important; color:#fff !important; }   /* rubi escuro */
+  .row-b td, .row-b th{ background:#6b5d16 !important; color:#fff !important; }   /* âmbar oliva */
+  .row-c td, .row-c th{ background:#0d3a62 !important; color:#eaf6ff !important;} /* azul aço */
+
+  /* ===== ABC: estado PRÉ-cálculo com legibilidade ===== */
+  /* 1) Só textos comuns ficam brancos; inputs/botões mantêm sua própria cor */
+  #pane-abc.abc-pre :is(h1,h2,h3,h4,h5,h6,p,li,ol,ul,small,label,th,td,span){
+    color:#ffffff !important;
+  }
+  /* 2) Campos do formulário escuros com texto/placeholder claros */
+  #pane-abc .form-control{
+    background:#0d3a62;
+    color:#eaf6ff;
+    border-color:rgba(255,255,255,.35);
+  }
+  #pane-abc .form-control::placeholder{ color:#cfe1ff; opacity:.9; }
+  #pane-abc .form-control:focus{
+    background:#0f4676; color:#ffffff; border-color:#7ec3ff;
+    box-shadow:0 0 0 .2rem rgba(126,195,255,.15);
+  }
+  /* 3) Botão amarelo legível */
+  #pane-abc .btn-amarelo{ color:#0a2340 !important; }
+  /* 4) Alert informativo com fundo escuro quando pré-cálculo */
+  #pane-abc.abc-pre .alert-info{
+    background:rgba(255,255,255,.08); color:#eaf1fb; border-color:rgba(255,255,255,.25);
+  }
+  /* Cabeçalho da tabela sempre claro */
+  #pane-abc .table thead th{ color:#ffffff !important; }
+
+  .chart-wrap{ background:var(--tile); border:1px solid var(--borda); border-radius:.75rem; padding:1rem; }
+
+  .info-grid{ display:grid; gap:1rem; }
+  @media (min-width:992px){ .info-grid{ grid-template-columns:repeat(3,1fr); } }
+  .kpi{ display:flex; align-items:center; gap:.6rem; }
+  .kpi i{ font-size:1.15rem; color:var(--amarelo) }
+
+  @media print{
+    .no-print{display:none !important}
+    .container{max-width:100% !important}
+    .tab-pane{background:#fff;color:#000}
+    body{background:#fff !important}
+  }
+</style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="navbar navbar-dark navbar-expand-lg mb-4">
+    <div class="container">
+      <span class="navbar-brand brand-badge">📦 Senac | Atendimento Corporativo</span>
+      <div class="ms-auto small">Profissional • Negócios • Mercados • Curva ABC</div>
+    </div>
+  </nav>
+
+  <main class="container mb-5">
+    <!-- CAPA -->
+    <header class="mb-4 text-center reveal">
+      <h1 class="fw-bold">📘 Curso Básico em <span class="text-warning">Logística</span></h1>
+      <p class="lead mb-0">Conteúdo didático com storytelling, exercícios e ferramenta de Curva ABC</p>
+      <div class="mt-2 d-inline-flex gap-2">
+        <span class="badge-chip">🏭 Guarulhos/Brookfield</span>
+        <span class="badge-chip">📊 KPIs & Decisão</span>
+        <span class="badge-chip">✨ Tema escuro • Responsivo</span>
+      </div>
+    </header>
+
+    <!-- GUIAS -->
+    <ul class="nav nav-tabs mb-3" id="tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab-perfil" data-bs-toggle="tab" data-bs-target="#pane-perfil" type="button" role="tab">🧑‍🏭 Profissional de Logística</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-neg" data-bs-toggle="tab" data-bs-target="#pane-neg" type="button" role="tab">🏭 Logística & Negócios</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-merc" data-bs-toggle="tab" data-bs-target="#pane-merc" type="button" role="tab">🏷️ Mercados de Fornecimento</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-abc" data-bs-toggle="tab" data-bs-target="#pane-abc" type="button" role="tab">📊 Curva ABC</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- GUIA 1: PROFISSIONAL -->
+      <div class="tab-pane fade show active reveal" id="pane-perfil" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-lg-4">
+            <div class="tile h-100">
+              <h3 class="h5">Base conceitual</h3>
+              <ul class="mb-3">
+                <li>Perfil do operador logístico</li>
+                <li>Competências técnicas & comportamentais</li>
+                <li>Progressão de carreira</li>
+                <li>Áreas de especialização</li>
+                <li>Mercado Guarulhos/Brookfield</li>
+              </ul>
+              <div class="small">Objetivo: alinhar papéis, expectativas e trilhas de crescimento com foco em empregabilidade.</div>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="tile">
+              <h4 class="h6 text-warning mb-2">Storytelling — <strong>Rafael</strong>, operador em Guarulhos</h4>
+              <p>Rafael começou como <em>auxiliar de logística</em> em um parque Brookfield. Em 6 meses obteve a <strong>NR-11</strong> e passou a operar empilhadeira. No dia a dia, utiliza RF para <em>picking</em>, confere notas no <strong>WMS</strong> e reporta divergências. Com o tempo, assumiu o papel de <em>líder de equipe</em> em turnos 24/7, aprendendo a ler <strong>KPIs</strong> (acurácia, OTIF, produtividade). Seu objetivo é tornar-se <strong>coordenador</strong> em 3 anos, cursando gestão de pessoas e certificando-se nos sistemas da empresa.</p>
+            </div>
+
+            <div class="info-grid mt-3">
+              <div class="tile">
+                <h5 class="h6">Competências técnicas</h5>
+                <ul class="mb-2">
+                  <li>Operação de equipamentos: empilhadeiras, paleteiras, transelevadores</li>
+                  <li>Domínio de sistemas: WMS/TMS/ERP e coletores RF</li>
+                  <li>Inventário, endereçamento e conferência cega</li>
+                  <li>Noções de armazenagem, embalagens e segregação</li>
+                </ul>
+                <div class="kpi"><i class="bi bi-gear"></i><span>Meta de acurácia &gt; 98% e perdas &lt; 0,2%.</span></div>
+              </div>
+              <div class="tile">
+                <h5 class="h6">Competências comportamentais</h5>
+                <ul class="mb-2">
+                  <li>Atenção a detalhes, responsabilidade e disciplina</li>
+                  <li>Trabalho em equipe e comunicação assertiva</li>
+                  <li>Adaptabilidade a turnos e ambientes 24/7</li>
+                  <li>Proatividade na resolução de problemas</li>
+                </ul>
+                <div class="kpi"><i class="bi bi-people"></i><span>Briefing diário (DDS) e feedbacks quinzenais.</span></div>
+              </div>
+              <div class="tile">
+                <h5 class="h6">Progressão & especialização</h5>
+                <p class="mb-1">Auxiliar → Operador/Conferente → Líder → Supervisor → Coordenador → Gerente → Diretor.</p>
+                <ul class="mb-0">
+                  <li><strong>Armazenagem:</strong> layout, slotting, inventários</li>
+                  <li><strong>Transporte:</strong> roteirização, janela de docas</li>
+                  <li><strong>Compras/Suprimentos</strong> e <strong>Log. reversa</strong></li>
+                  <li><strong>Tecnologia:</strong> automação, IoT, IA</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-6">
+                <div class="tile h-100">
+                  <h5 class="h6">Desafio 1 — Mapeamento de competências</h5>
+                  <p>Matriz com 10 técnicas + 10 comportamentais, nota 1–5 e 5 prioridades para 6 meses.</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="tile h-100">
+                  <h5 class="h6">Desafio 2 — Simulação de entrevista</h5>
+                  <p>Duplas: 8 perguntas; inverter papéis; consolidar aprendizados de apresentação e exemplos STAR.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- GUIA 2: NEGÓCIOS -->
+      <div class="tab-pane fade reveal" id="pane-neg" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-lg-4">
+            <div class="tile h-100">
+              <h3 class="h5">Logística estratégica</h3>
+              <p>De apoio operacional para motor de competitividade. Decisões sobre <strong>localização de CDs</strong>, <strong>modais</strong>, <strong>contratos de frete</strong> e <strong>automação</strong> influenciam receita, margem e <em>NPS</em>.</p>
+              <ul>
+                <li>Malha de distribuição (D+0/D+1)</li>
+                <li>Capital de giro: estoques vs. nível de serviço</li>
+                <li>Trade-offs: custo × prazo × confiabilidade</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="tile">
+              <h4 class="h6 text-warning mb-2">Storytelling — <strong>TechDistribuidora</strong></h4>
+              <p>A empresa vende eletrônicos a partir de Campinas. 40% das vendas estão em SP e 25% em RJ/ES. Concorrentes entregam mais rápido. O time avalia abrir um <strong>CD em Guarulhos</strong> para reduzir prazos (SP 1–2d; RJ 2–3d), conectar-se ao aeroporto e otimizar rotas para 65% do faturamento. Impacto: Comercial (prazos e conversão), Operações (malha e estoques), Financeiro (payback), Compras (lead time) e TI (integrações WMS/TMS/ERP).</p>
+            </div>
+
+            <div class="info-grid mt-3">
+              <div class="tile">
+                <h5 class="h6">Integração interfuncional</h5>
+                <ul class="mb-2">
+                  <li><strong>Comercial:</strong> SLA de entrega e disponibilidade</li>
+                  <li><strong>Produção:</strong> JIT, fluxo fábrica-mercado</li>
+                  <li><strong>Financeiro:</strong> estoque, frete, CAPEX/OPEX</li>
+                  <li><strong>Compras:</strong> lead time, performance de fornecedores</li>
+                </ul>
+                <div class="kpi"><i class="bi bi-clipboard2-data"></i><span>KPIs: OTIF, Custo por pedido, Giro, NPS, Conversão.</span></div>
+              </div>
+              <div class="tile">
+                <h5 class="h6">Checklist de novo CD</h5>
+                <ul class="mb-0">
+                  <li>Mapa de demanda (OD) e janela de entrega</li>
+                  <li>Payback/ROI, sensibilidade de volume</li>
+                  <li>Capacidade para picos (BF/Natal)</li>
+                  <li>Riscos (SLA, fornecedores, modais alternativos)</li>
+                  <li>Integrações e visibilidade ponta-a-ponta</li>
+                </ul>
+              </div>
+              <div class="tile">
+                <h5 class="h6">Exemplos práticos</h5>
+                <ul class="mb-0">
+                  <li>Redução de estoque via <em>split</em> por região</li>
+                  <li>Cross-docking para itens rápidos</li>
+                  <li>Logística reversa simplificada (trocas)</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- GUIA 3: MERCADOS DE FORNECIMENTO -->
+      <div class="tab-pane fade reveal" id="pane-merc" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="tile h-100">
+              <h3 class="h5">Tipos de mercado</h3>
+              <p>Ao contratar fornecedores, entender a estrutura do mercado ajuda a negociar melhor. Três formatos didáticos:</p>
+              <ol>
+                <li><strong>Monopólio:</strong> um fornecedor domina.</li>
+                <li><strong>Oligopólio:</strong> poucos fornecedores fortes.</li>
+                <li><strong>Concorrência perfeita:</strong> muitos fornecedores padronizados.</li>
+              </ol>
+              <p class="mb-0"><em>Dica:</em> ajuste sua estratégia de compras, SLA e estoques conforme o poder de barganha de cada estrutura.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="tile h-100">
+              <h4 class="h6 text-warning">Storytelling — decidindo fornecedor</h4>
+              <p><strong>Rafael</strong> agora atua como comprador júnior. Ele precisa contratar: (1) gás industrial, (2) combustível para frota, e (3) caixas de papelão. Cada item vive em um mercado diferente — e a estratégia muda.</p>
+              <ul class="mb-0">
+                <li><strong>Gás industrial (monopólio local):</strong> foco em SLA, compliance e estoque de segurança.</li>
+                <li><strong>Diesel (oligopólio):</strong> leilão reverso com 3 redes e indexador (ANP) + multas por SLA.</li>
+                <li><strong>Caixas (concorrência perfeita):</strong> cotar 5 fornecedores, padronizar especificação e rodar contratos trimestrais.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-lg-4"><div class="tile h-100">
+            <h5 class="h6">Monopólio</h5>
+            <p><strong>Exemplos:</strong> utilidade local, duto exclusivo, tecnologia patenteada.</p>
+            <ul>
+              <li><strong>Vantagens:</strong> estabilidade de fornecimento, interface simples.</li>
+              <li><strong>Desvantagens:</strong> preço alto, pouca barganha; risco de dependência.</li>
+            </ul>
+            <p class="mb-0"><em>Story:</em> Rafael contrata gás por contrato anual com <strong>SLA rígido</strong>, backup de cilindros e cláusulas de contingência.</p>
+          </div></div>
+
+          <div class="col-lg-4"><div class="tile h-100">
+            <h5 class="h6">Oligopólio</h5>
+            <p><strong>Exemplos:</strong> combustíveis, aço, pneus de marcas líderes.</p>
+            <ul>
+              <li><strong>Vantagens:</strong> qualidade e serviço previsíveis.</li>
+              <li><strong>Desvantagens:</strong> tendência a preços próximos; exige habilidade de negociação.</li>
+            </ul>
+            <p class="mb-0"><em>Story:</em> Rafael usa <strong>leilão reverso</strong> com 3 redes e KPI de abastecimento 24/7; preço atrelado a índice público.</p>
+          </div></div>
+
+          <div class="col-lg-4"><div class="tile h-100">
+            <h5 class="h6">Concorrência perfeita</h5>
+            <p><strong>Exemplos:</strong> papelão, fitas, parafusos padrão, EPI básico.</p>
+            <ul>
+              <li><strong>Vantagens:</strong> preços competitivos, múltiplas fontes, substituição rápida.</li>
+              <li><strong>Desvantagens:</strong> gestão de qualidade de muitos fornecedores; risco de “menor preço” baixar padrão.</li>
+            </ul>
+            <p class="mb-0"><em>Story:</em> Para caixas, Rafael padroniza <strong>especificação técnica</strong>, homologa 5 fornecedores e gira contratos trimestrais por lote mínimo.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- GUIA 4: CURVA ABC -->
+      <div class="tab-pane fade reveal abc-pre" id="pane-abc" role="tabpanel">
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <h3 class="h5">Curva ABC — passo a passo</h3>
+            <ol class="mb-3">
+              <li>Liste os itens: Material, Valor unitário e Demanda anual.</li>
+              <li>Calcule o Valor Total = Valor × Demanda.</li>
+              <li>Ordene do maior para o menor.</li>
+              <li>Some acumulado e calcule % acumulado.</li>
+              <li>Classifique: A (0–70%), B (70–95%), C (95–100%).</li>
+            </ol>
+            <div class="row g-2 align-items-end">
+              <div class="col-6 col-md-4">
+                <label class="form-label">Limite A (%)</label>
+                <input id="limitA" type="number" class="form-control" value="70" min="1" max="90" placeholder="ex.: 70">
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label">Limite B (%)</label>
+                <input id="limitB" type="number" class="form-control" value="95" min="70" max="99" placeholder="ex.: 95">
+              </div>
+              <div class="col-12 col-md-4 d-grid">
+                <button id="btnCalc" class="btn btn-amarelo"><i class="bi bi-calculator"></i> Calcular ABC</button>
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button id="btnAdd" class="btn btn-outline-light btn-sm"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
+              <button id="btnClear" class="btn btn-outline-light btn-sm"><i class="bi bi-x-circle"></i> Limpar</button>
+              <button id="btnCSV" class="btn btn-outline-light btn-sm"><i class="bi bi-file-earmark-spreadsheet"></i> CSV</button>
+            </div>
+            <div class="alert alert-info mt-3 mb-0">
+              <strong>Leitura gerencial:</strong> itens A = maior controle/contagem; B = atenção intermediária; C = políticas mais simples.
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <!-- Tabela -->
+            <div class="table-responsive mb-3">
+              <table id="tabABC" class="table table-hover table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th>Material</th>
+                    <th>Valor unitário (R$)</th>
+                    <th>Demanda anual</th>
+                    <th>Valor Total (R$)</th>
+                    <th>Grau</th>
+                    <th>% Acum.</th>
+                    <th>Classe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td contenteditable="true">A</td><td contenteditable="true">1,00</td><td contenteditable="true">10000</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">B</td><td contenteditable="true">12,00</td><td contenteditable="true">10200</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">C</td><td contenteditable="true">3,00</td><td contenteditable="true">90000</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">D</td><td contenteditable="true">6,00</td><td contenteditable="true">4500</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">E</td><td contenteditable="true">10,00</td><td contenteditable="true">7000</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">F</td><td contenteditable="true">1200,00</td><td contenteditable="true">20</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">G</td><td contenteditable="true">0,60</td><td contenteditable="true">42000</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">H</td><td contenteditable="true">28,00</td><td contenteditable="true">800</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">I</td><td contenteditable="true">4,00</td><td contenteditable="true">1800</td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td contenteditable="true">J</td><td contenteditable="true">60,00</td><td contenteditable="true">130</td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+                <tfoot>
+                  <tr class="table-secondary">
+                    <th colspan="3" class="text-end">Total Geral (R$)</th>
+                    <th id="totalGeral" colspan="4">—</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- Gráfico Pareto -->
+            <div class="chart-wrap"><canvas id="abcChart" height="220"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer py-3">
+    <div class="container d-flex justify-content-between flex-wrap gap-2">
+      <div>© <span id="year"></span> Senac — Atendimento Corporativo</div>
+      <div class="small">Tema escuro • Responsivo • Acessível</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Fade-in
+    const obs = new IntersectionObserver((e)=>e.forEach(x=>{ if(x.isIntersecting) x.target.classList.add('show'); }), {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    // ===== Utilitários numéricos =====
+    const fmtBR = new Intl.NumberFormat('pt-BR',{style:'currency', currency:'BRL'});
+    const toBR = v => fmtBR.format(v||0);
+    function parseBR(v){
+      const s = (v ?? '').toString().trim();
+      if(!s) return NaN;
+      const clean = s.replace(/[^\d,.\-]/g,'').replace(/\.(?=\d{3}(?:\D|$))/g,'').replace(',', '.');
+      const n = Number(clean);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    // ===== Curva ABC =====
+    const paneABC   = document.getElementById('pane-abc');
+    const table     = document.getElementById('tabABC');
+    const tbody     = table.querySelector('tbody');
+    const totalGeral= document.getElementById('totalGeral');
+    const limitAEl  = document.getElementById('limitA');
+    const limitBEl  = document.getElementById('limitB');
+    let abcChart    = null;
+
+    function computeABC(){
+      paneABC.classList.remove('abc-pre'); // após cálculo, sai do estado "pré"
+
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const prepared = [];
+
+      rows.forEach(tr=>{
+        tr.classList.remove('row-a','row-b','row-c');
+        const c = tr.children;
+        const mat = (c[0].innerText||'').trim() || '(s/ nome)';
+        const vu  = parseBR(c[1].innerText);
+        const dem = parseBR(c[2].innerText);
+        const valid = Number.isFinite(vu) && vu >= 0 && Number.isFinite(dem) && dem >= 0;
+        const vt = valid ? vu * dem : NaN;
+
+        c[3].innerText = valid ? toBR(vt) : '';
+        c[4].innerText = ''; c[5].innerText = ''; c[6].innerText = '';
+
+        if(valid && vt > 0) prepared.push({tr, mat, vt});
+      });
+
+      if(prepared.length === 0){
+        totalGeral.innerText = '—';
+        renderChart([],[],[]);
+        return;
+      }
+
+      prepared.sort((a,b)=>b.vt - a.vt);
+      tbody.innerHTML = '';
+      prepared.forEach(r=>tbody.appendChild(r.tr));
+
+      const total = prepared.reduce((s,r)=>s + r.vt, 0);
+      totalGeral.innerText = toBR(total);
+
+      const limA = Math.min(Math.max(Number(limitAEl.value)||70,1), 90);
+      const limB = Math.min(Math.max(Number(limitBEl.value)||95,70), 99);
+      let acum = 0, grau = 0;
+
+      const labels=[], valores=[], cumul=[];
+      prepared.forEach(r=>{
+        const tr=r.tr, c=tr.children;
+        grau += 1; acum += r.vt;
+        const perc = total ? (acum/total)*100 : 0;
+
+        c[4].innerText = grau + 'º';
+        c[5].innerText = perc.toFixed(0) + '%';
+
+        let classe = (perc <= limA) ? 'A' : (perc <= limB ? 'B' : 'C');
+        c[6].innerText = classe;
+
+        tr.classList.remove('row-a','row-b','row-c');
+        if(classe==='A') tr.classList.add('row-a');
+        if(classe==='B') tr.classList.add('row-b');
+        if(classe==='C') tr.classList.add('row-c');
+
+        labels.push(r.mat);
+        valores.push(r.vt);
+        cumul.push(Number(perc.toFixed(2)));
+      });
+
+      renderChart(labels, valores, cumul);
+      document.getElementById('abcChart').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function renderChart(labels, valores, cumulPerc){
+      const ctx = document.getElementById('abcChart').getContext('2d');
+      if(abcChart){ abcChart.destroy(); }
+      // cores alto contraste
+      const barColor   = 'rgba(77,163,255,0.75)';   // azul claro
+      const barBorder  = 'rgba(77,163,255,1)';
+      const lineColor  = 'rgba(255,212,74,1)';      // dourado
+      const pointFill  = 'rgba(255,212,74,1)';
+
+      abcChart = new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels,
+          datasets:[
+            { type:'bar',  label:'Valor Total (R$)', data:valores, yAxisID:'y', borderColor:barBorder, backgroundColor:barColor, borderWidth:1 },
+            { type:'line', label:'% acumulado',      data:cumulPerc, yAxisID:'y1', borderColor:lineColor, backgroundColor:lineColor, pointBackgroundColor:pointFill, tension:.25, pointRadius:3, borderWidth:2 }
+          ]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{
+            legend:{ position:'top', labels:{ color:'#eaf1fb' } },
+            tooltip:{
+              callbacks:{
+                label:(ctx)=>{
+                  if(ctx.dataset.type==='line') return `% acumulado: ${ctx.parsed.y.toFixed(2)}%`;
+                  return `Valor Total: ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(ctx.parsed.y)}`;
+                }
+              }
+            }
+          },
+          scales:{
+            x:{ ticks:{ color:'#cfe1ff' }, grid:{ color:'rgba(255,255,255,.06)' } },
+            y:{ beginAtZero:true, title:{display:true, text:'Valor Total (R$)', color:'#cfe1ff'}, ticks:{ color:'#cfe1ff' }, grid:{ color:'rgba(255,255,255,.08)' } },
+            y1:{ position:'right', beginAtZero:true, min:0, max:100,
+                 ticks:{ color:'#cfe1ff', callback:v=>v+'%' },
+                 grid:{drawOnChartArea:false, color:'rgba(255,255,255,.12)'},
+                 title:{display:true, text:'% acumulado', color:'#cfe1ff'} }
+          }
+        }
+      });
+    }
+
+    // Eventos
+    document.getElementById('btnCalc').addEventListener('click', computeABC);
+    document.getElementById('limitA').addEventListener('change', computeABC);
+    document.getElementById('limitB').addEventListener('change', computeABC);
+
+    document.getElementById('btnClear').addEventListener('click', ()=>{
+      paneABC.classList.add('abc-pre'); // volta ao estado pré: fonte branca
+      tbody.querySelectorAll('tr').forEach(tr=>{
+        tr.classList.remove('row-a','row-b','row-c');
+        tr.children[3].innerText=''; tr.children[4].innerText='';
+        tr.children[5].innerText=''; tr.children[6].innerText='';
+      });
+      totalGeral.innerText='—'; renderChart([],[],[]);
+    });
+
+    document.getElementById('btnAdd').addEventListener('click', ()=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td contenteditable="true">Novo</td>
+                      <td contenteditable="true">0,00</td>
+                      <td contenteditable="true">0</td>
+                      <td></td><td></td><td></td><td></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('btnCSV').addEventListener('click', ()=>{
+      const rows = [[...table.tHead.rows[0].cells].map(c=>c.innerText)];
+      [...tbody.rows].forEach(r=>{
+        rows.push([...r.cells].map((c,i)=>{
+          let t = c.innerText.replace(/\s+/g,' ').trim();
+          if(i===3 && t) t = t.replace(/[^\d,.-]/g,''); // remove símbolo R$
+          if(t.includes('"')) t = t.replace(/"/g,'""');
+          if(/[;"\n]/.test(t)) t = `"${t}"`;
+          return t;
+        }));
+      });
+      rows.push(['','','Total Geral', totalGeral.innerText.replace(/[^\d,.-]/g,''), '', '', '']);
+      const csv = rows.map(r=>r.join(';')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='curva-abc.csv';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Inicia “pré” quando a aba ABC for aberta pela 1ª vez
+    let abcInitialized = false;
+    document.getElementById('tab-abc').addEventListener('shown.bs.tab', ()=>{
+      if(!abcInitialized){ paneABC.classList.add('abc-pre'); abcInitialized = true; }
+    });
+  </script>
+</body>
+</html>

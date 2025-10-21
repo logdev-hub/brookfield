@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GRU Tech • Logística Integrada e Cadeia de Suprimentos (Notebook)</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  :root{
+    --azul-escuro:#0b2c54;         /* fundo base */
+    --azul:#123f70;                /* cartões */
+    --azul-soft:rgba(255,255,255,.06);
+    --borda:rgba(255,255,255,.18);
+    --texto:#eaf1fb;               /* texto branco frio */
+    --amarelo:#ffd24a;             /* destaque */
+  }
+  html,body{background:var(--azul-escuro); color:var(--texto); font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,"Noto Sans",Arial;}
+  h1,h2,h3,h4,strong,b{color:#fff}
+  a{color:#ffd24a}
+  .container-deck{max-width:1100px; margin:auto; padding:26px 18px}
+  .deck{position:relative; display:flex; flex-direction:column; gap:1.25rem; background:var(--azul-soft); border:1px solid var(--borda); border-radius:18px; padding:18px}
+  .slide{display:none; opacity:0; pointer-events:none; transition:opacity .4s ease; padding:16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid var(--borda)}
+  .slide.active{display:block; opacity:1; pointer-events:auto}
+  .slide header h2{font-weight:800}
+  .badge-chip{background:rgba(255,255,255,.10); border:1px solid var(--borda); color:#fff; border-radius:24px; padding:.35rem .65rem; margin-right:.4rem}
+  .card{background:rgba(255,255,255,.06); border:1px solid var(--borda); border-radius:16px}
+  .card-body{color:var(--texto)}
+  .box-simples{background:rgba(255,255,255,.08); border:1px dashed rgba(255,255,255,.28); border-radius:.8rem; padding:.75rem 1rem}
+  /* Tabela do glossário sempre branca */
+  .table{--bs-table-bg:transparent; --bs-table-border-color:rgba(255,255,255,.25); color:var(--texto)}
+  .table *{color:var(--texto)!important}
+  /* Indicadores (bolinhas) */
+  .dots{display:flex; gap:.4rem; align-items:center; flex-wrap:wrap}
+  .dot{width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,.25)}
+  .dot.on{background:var(--amarelo)}
+  /* Botões navegação: SEM absoluto; ficam sempre após o conteúdo */
+  .controls{display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-top:.75rem}
+  .btn-amarelo{background:var(--amarelo); color:#2b2b2b; font-weight:700}
+  .meter{height:8px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden}
+  .meter>span{display:block; height:100%; width:0%; background:var(--amarelo)}
+  /* SVG responsivo */
+  .flow svg{width:100%; height:auto; display:block}
+  /* Espaço extra em mobile para evitar qualquer sobreposição visual */
+  @media (max-width: 768px){
+    .slide{padding:12px}
+    .controls{flex-direction:column; align-items:stretch}
+  }
+</style>
+</head>
+<body>
+
+<div class="container-deck">
+  <!-- Cabeçalho chips -->
+  <div class="mb-2">
+    <span class="badge-chip">🏭 Fábrica (ponto focal): Guarulhos/SP</span>
+    <span class="badge-chip">↔️ Montante • Jusante</span>
+    <span class="badge-chip">📦 Fluxos: físico • dados • financeiro</span>
+  </div>
+
+  <section id="deck" class="deck">
+
+    <!-- Slide 0 — Capa / Objetivo -->
+    <article class="slide active" data-title="Capa">
+      <header class="mb-2">
+        <h2>👋 Objetivo da apresentação</h2>
+      </header>
+      <p>Apresentar a <strong>logística integrada</strong> da cadeia do <strong>notebook</strong> pela visão da empresa focal <strong>GRU Tech Notebooks S.A.</strong> (Guarulhos).</p>
+
+      <div class="row g-3 mt-1">
+        <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">📦 Logística Integrada</h6>
+          <p>Coordena <strong>inbound</strong> (entrada), <strong>movimentação interna</strong> e <strong>outbound</strong> (saída) conectando <em>fluxo físico</em>, <em>dados</em> e <em>financeiro</em>.</p>
+        </div></div></div>
+        <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">🔗 Supply Chain</h6>
+          <p><strong>Montante</strong> (T3/T2/T1 → fábrica) e <strong>jusante</strong> (fábrica → 3PL/CD → varejo/cliente → assistência/reciclagem).</p>
+        </div></div></div>
+        <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">♻️ Reversa</h6>
+          <p><em>Pós-venda</em> (RMA, swap, wipe) e <em>pós-consumo</em> (e-lixo) com segurança e certificação ambiental.</p>
+        </div></div></div>
+      </div>
+
+      <div class="box-simples mt-3"><strong>Para lembrar:</strong> vamos usar linguagem simples, exemplos reais e um glossário no final para as siglas. ✅</div>
+    </article>
+
+    <!-- Slide 0.1 — Storytelling -->
+    <article class="slide" data-title="Story">
+      <header class="mb-2"><h2>📖 Storytelling — quem é a GRU Tech?</h2></header>
+      <p>A <strong>GRU Tech Notebooks S.A.</strong> nasceu em Guarulhos para montar notebooks com foco em <em>rapidez</em> e <em>qualidade</em>. Nosso dia começa às 6h com a chegada dos voos de carga: CPUs e SSDs vindos da Ásia passam pela alfândega, enquanto caminhões com embalagens e carcaças chegam do ABC Paulista. Às 8h, o <strong>WMS</strong> libera os itens para <strong>kitting</strong> e as linhas iniciam a <strong>montagem</strong>. Às 14h, os primeiros lotes passam no <strong>burn-in</strong> e seguem para <strong>embalagem</strong>. Às 17h, a <strong>expedição</strong> fecha o carregamento para os CDs regionais. Em paralelo, nosso centro de <strong>pós-venda</strong> recebe notebooks para reparo e a área de <strong>pós-consumo</strong> envia e-lixo para recicladores homologados. Tudo isso acontece porque os <strong>três fluxos</strong> — físico, de dados e financeiro — andam juntos.</p>
+      <div class="box-simples"><strong>Resumo simples:</strong> receber 👉 montar 👉 testar 👉 embalar 👉 entregar 👉 atender garantia 👉 reciclar. Cada etapa tem pessoas, sistemas e indicadores.</div>
+    </article>
+
+    <!-- Slide 1 — O que é logística integrada -->
+    <article class="slide" data-title="Integrada">
+      <header class="mb-2"><h2>📦 O que é Logística Integrada — no exemplo do notebook</h2></header>
+
+      <div class="row g-3">
+        <div class="col-lg-6"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">📥 Inbound (entrada)</h6>
+          <ul>
+            <li>CPU (Taiwan), memória (Coreia), SSD (China), telas (China/Vietnã), baterias (China), carcaça (Brasil/SP), embalagens (ABC Paulista).</li>
+            <li>Chegada por via aérea (GRU) e rodoviária; <u>recebimento</u>, <u>desembaraço</u>, conferência fiscal/física e armazenagem de insumos.</li>
+            <li>Fluxos: físico (carga), <em>dados</em> (ASN/EDI, NF-e importação), <em>financeiro</em> (pagamento internacional, impostos).</li>
+          </ul>
+
+          <h6 class="text-warning mt-3">🏭 Movimentação interna</h6>
+          <ul>
+            <li>Armazenagem, <em>kitting</em>, linhas SMT e montagem final, testes (burn-in), etiquetagem, embalagem.</li>
+            <li>Sistemas: <strong>ERP/MES/WMS</strong>; políticas: Kanban, endereçamento, rastreabilidade por serial.</li>
+          </ul>
+        </div></div></div>
+
+        <div class="col-lg-6"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">📤 Outbound (saída)</h6>
+          <ul>
+            <li>Expedição do produto acabado para <strong>CDs regionais</strong>, varejistas e clientes corporativos.</li>
+            <li>Integração com 3PL, booking de coleta, <strong>NF-e</strong>, <strong>CT-e</strong>, rastreio e <em>proof of delivery</em>.</li>
+            <li>Fluxos: físico (paletes, caixas), dados (EDI com redes varejistas), financeiro (faturamento, cobrança).</li>
+          </ul>
+          <p class="small mt-2">Essas três frentes só funcionam bem quando os <strong>três fluxos</strong> (físico, dados, financeiro) estão sincronizados.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <!-- Slide 2 — Cadeia 1/2: definição + participantes -->
+    <article class="slide" data-title="Cadeia1">
+      <header class="mb-2"><h2>🔗 Cadeia de Suprimentos — visão montante ↔ jusante (1/2)</h2></header>
+      <div class="box-simples mb-3"><strong>Definição simples:</strong> cadeia de suprimentos é a rede de empresas e atividades que <em>planejam, produzem e entregam</em> o notebook ao cliente. <strong>Montante</strong> = quem está <em>antes</em> de nós (fornecedores → fábrica). <strong>Jusante</strong> = quem está <em>depois</em> de nós (fábrica → distribuição/cliente).</div>
+
+      <div class="row g-3">
+        <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">📈 Mapa de participantes</h6>
+          <ul class="mb-2">
+            <li><strong>T3</strong> minérios/químicos → <strong>T2</strong> materiais: silício, lítio, polímeros, cobre, papel/cartão.</li>
+            <li><strong>T1</strong> componentes: CPU, GPU, RAM, SSD, placas, baterias, telas, fontes, carcaça.</li>
+            <li><strong>Operadores logísticos</strong>: <em>freight forwarder</em>, despachante aduaneiro, 3PL de armazém e transporte, <em>last mile</em>.</li>
+            <li><strong>Fábrica (GRU Tech)</strong>: integração, testes, embalagem.</li>
+            <li><strong>Jusante</strong>: CDs nacionais/regionais, varejo/e-commerce, clientes corporativos e finais, assistência técnica e recicladores.</li>
+          </ul>
+          <h6 class="text-warning">🤝 Relações de qualidade</h6>
+          <ul class="mb-0">
+            <li><strong>Fornecedores T1</strong> com PPAP/FAI, <em>specs</em>, auditorias e <strong>scorecard</strong> (OTIF, qualidade, custo).</li>
+            <li><strong>Colaboração</strong>: S&amp;OP/CPFR com varejo; VMI para baterias/SSDs; contrato 3PL com SLA de coleta/entrega.</li>
+            <li><strong>Compliance</strong>: ISO 9001/14001, RoHS, segurança Li-ion, rastreio por serial.</li>
+          </ul>
+        </div></div></div>
+
+        <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+          <h6 class="text-warning">🧭 Como ler montante e jusante</h6>
+          <p><strong>Montante</strong> (⬅️) começa em <em>matérias-primas</em> e termina na <em>fábrica</em>. <strong>Jusante</strong> (➡️) sai da <em>fábrica</em> até o <em>cliente</em> e além (assistência/reciclagem).</p>
+          <div class="box-simples">Resumo: T3 → T2 → T1 → <strong>Fábrica</strong> → CDs/Varejo → Cliente → Pós-venda/consumo.</div>
+        </div></div></div>
+      </div>
+    </article>
+
+    <!-- Slide 3 — Cadeia 2/2: Esquematização visual -->
+    <article class="slide" data-title="Cadeia2">
+      <header class="mb-2"><h2>🔗 Cadeia de Suprimentos — Esquematização visual (2/2)</h2></header>
+      <div class="card"><div class="card-body flow">
+        <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr2" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="#ffd24a" />
+            </marker>
+            <style>
+              .bx{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.35)}
+              .tx{fill:#eaf1fb;font-size:13px}
+              .ln{stroke:#ffd24a;stroke-width:2.2;fill:none;stroke-linecap:round}
+            </style>
+          </defs>
+
+          <!-- Montante (linha superior) -->
+          <rect class="bx" x="20"  y="40" width="170" height="54" rx="12"/>
+          <text class="tx" x="105" y="72" text-anchor="middle">⛏️ T3 Minérios/Químicos</text>
+
+          <rect class="bx" x="210" y="40" width="210" height="54" rx="12"/>
+          <text class="tx" x="315" y="72" text-anchor="middle">🏭 T2 Materiais (silício, Li, polímeros)</text>
+
+          <rect class="bx" x="440" y="40" width="230" height="54" rx="12"/>
+          <text class="tx" x="555" y="72" text-anchor="middle">🔧 T1 Componentes (CPU, SSD, RAM, telas)</text>
+
+          <!-- Fábrica central -->
+          <rect class="bx" x="330" y="150" width="260" height="68" rx="14" stroke="#ffd24a"/>
+          <text class="tx" x="460" y="188" text-anchor="middle">🏗️ Fábrica • GRU Tech (monta e testa)</text>
+
+          <!-- Jusante (coluna à direita em 3 níveis + cliente) -->
+          <rect class="bx" x="720" y="40"  width="200" height="54" rx="12"/>
+          <text class="tx" x="820" y="72"  text-anchor="middle">🏬 CDs Nacionais</text>
+
+          <rect class="bx" x="720" y="120" width="200" height="54" rx="12"/>
+          <text class="tx" x="820" y="152" text-anchor="middle">📦 CDs Regionais</text>
+
+          <rect class="bx" x="720" y="200" width="200" height="54" rx="12"/>
+          <text class="tx" x="820" y="232" text-anchor="middle">🛒 Varejo / E-commerce</text>
+
+          <rect class="bx" x="720" y="280" width="200" height="54" rx="12"/>
+          <text class="tx" x="820" y="312" text-anchor="middle">👤 Cliente Final</text>
+
+          <!-- Pós-venda e reciclagem -->
+          <rect class="bx" x="480" y="280" width="200" height="54" rx="12"/>
+          <text class="tx" x="580" y="312" text-anchor="middle">🛠️ Assistência Técnica</text>
+
+          <rect class="bx" x="480" y="350" width="200" height="54" rx="12"/>
+          <text class="tx" x="580" y="382" text-anchor="middle">♻️ Recicladores</text>
+
+          <!-- Operadores -->
+          <rect class="bx" x="120" y="280" width="220" height="54" rx="12"/>
+          <text class="tx" x="230" y="312" text-anchor="middle">✈️🚚 Operadores (FF/3PL)</text>
+
+          <!-- Conexões curvas com folga -->
+          <path class="ln" marker-end="url(#arr2)" d="M190,67 C200,67 205,67 210,67"/>
+          <path class="ln" marker-end="url(#arr2)" d="M420,67 C430,67 435,67 440,67"/>
+          <path class="ln" marker-end="url(#arr2)" d="M555,94 C545,120 520,140 490,150"/>
+          <path class="ln" marker-end="url(#arr2)" d="M340,307 C360,290 385,230 420,218"/>
+          <path class="ln" marker-end="url(#arr2)" d="M590,170 C650,150 690,100 720,97"/>
+          <path class="ln" marker-end="url(#arr2)" d="M820,174 C820,182 820,190 820,200"/>
+          <path class="ln" marker-end="url(#arr2)" d="M820,254 C820,262 820,270 820,280"/>
+          <path class="ln" marker-end="url(#arr2)" d="M720,307 C700,307 680,307 680,307"/>
+          <path class="ln" marker-end="url(#arr2)" d="M720,334 C690,345 640,352 680,377"/>
+          <path class="ln" marker-end="url(#arr2)" d="M370,218 C320,230 290,260 280,280"/>
+        </svg>
+        <div class="small text-center mt-2">Setas curvas com folga — evitando sobreposição. Emojis representam cada elo da cadeia.</div>
+      </div></div>
+    </article>
+
+    <!-- Slide 4 — Reversa: pós-venda -->
+    <article class="slide" data-title="Pos-venda">
+      <header class="mb-2"><h2>🛠️ Logística Reversa — Pós-venda (RMA)</h2></header>
+      <div class="row g-3">
+        <div class="col-md-6"><div class="card h-100"><div class="card-body">
+          <p><strong>RMA</strong> (<em>Return Merchandise Authorization</em>) é a <u>autorização formal</u> para devolução/atendimento em garantia. Define quem paga o frete, prazo e procedimento.</p>
+          <p><strong>Swap</strong> = troca rápida por unidade equivalente (reduz tempo do cliente). <strong>Wipe</strong> = limpeza segura de dados do SSD antes de reparo/troca.</p>
+          <h6 class="text-warning">🎯 Boas práticas</h6>
+          <ul class="mb-0">
+            <li>Banco de peças e SLA de reparo (ex.: 5 dias úteis).</li>
+            <li>Wipe obrigatório em qualquer troca.</li>
+            <li>Feedback de falhas para engenharia (pareto).</li>
+          </ul>
+        </div></div></div>
+
+        <div class="col-md-6"><div class="card h-100"><div class="card-body flow">
+          <h6 class="text-warning">🔁 Fluxo simplificado de pós-venda</h6>
+          <svg viewBox="0 0 620 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ffd24a"/></marker></defs>
+            <rect x="10" y="20" width="120" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="70" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">👤 Cliente</text>
+            <rect x="150" y="20" width="130" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="215" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">📞 Suporte & RMA</text>
+            <rect x="300" y="20" width="120" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="360" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">🏬 Triagem/Reparo</text>
+            <rect x="440" y="20" width="160" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="520" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">🔁 Swap / 🔒 Wipe / Retorno</text>
+            <line x1="130" y1="40" x2="150" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr3)"/>
+            <line x1="280" y1="40" x2="300" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr3)"/>
+            <line x1="420" y1="40" x2="440" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr3)"/>
+          </svg>
+        </div></div></div>
+      </div>
+    </article>
+
+    <!-- Slide 5 — Reversa: pós-consumo -->
+    <article class="slide" data-title="Pos-consumo">
+      <header class="mb-2"><h2>♻️ Logística Reversa — Pós-consumo (e-lixo)</h2></header>
+      <div class="row g-3">
+        <div class="col-md-6"><div class="card h-100"><div class="card-body">
+          <ol class="mb-1">
+            <li>📦 <strong>Coleta</strong> por PEVs e varejo parceiro.</li>
+            <li>🚚 <strong>Transporte</strong> dedicado para reciclador homologado.</li>
+            <li>🧯 <strong>Segurança</strong> de baterias Li-ion (embalagem/sinalização).</li>
+            <li>🧨 <strong>Descaracterização</strong> e separação: plásticos, placas, metais, vidro.</li>
+            <li>🔁 <strong>Recuperação</strong> de metais (Cu, Au, Ag) e <strong>destinação</strong> correta.</li>
+          </ol>
+          <div class="small">Fluxos: físico (desmontagem), dados (certificados), financeiro (eco-fees/créditos).</div>
+        </div></div></div>
+
+        <div class="col-md-6"><div class="card h-100"><div class="card-body flow">
+          <h6 class="text-warning">🔁 Fluxo simplificado de pós-consumo</h6>
+          <svg viewBox="0 0 620 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ffd24a"/></marker></defs>
+            <rect x="10" y="20" width="130" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="75" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">📍 Ponto de Coleta</text>
+            <rect x="160" y="20" width="120" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="220" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">🚚 Transporte</text>
+            <rect x="300" y="20" width="120" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="360" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">🏭 Reciclador</text>
+            <rect x="440" y="20" width="160" height="40" rx="8" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.3)"/>
+            <text x="520" y="45" text-anchor="middle" fill="#eaf1fb" font-size="12">🔁 Recuperação e Destinação</text>
+            <line x1="140" y1="40" x2="160" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr4)"/>
+            <line x1="280" y1="40" x2="300" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr4)"/>
+            <line x1="420" y1="40" x2="440" y2="40" stroke="#ffd24a" stroke-width="2" marker-end="url(#arr4)"/>
+          </svg>
+        </div></div></div>
+      </div>
+    </article>
+
+    <!-- Slide 6 — Checklists (Inbound) -->
+    <article class="slide" data-title="Checklist Inbound">
+      <header class="mb-2"><h2>✅ Checklists — Inbound</h2></header>
+      <div class="card"><div class="card-body">
+        <div class="chk" data-ck="inb">
+          <div class="mb-2">1) ASN/nota conferida e janela de doca confirmada?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">2) Amostragem de qualidade por lote (visual/funcional)?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">3) Etiquetas e serial lidos no recebimento (rastreio)?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">4) Baterias/telas armazenadas conforme norma?</div>
+          <div class="btn-group mb-3" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="meter mb-2"><span id="m_inb"></span></div>
+          <div class="small">Conformidade: <span id="p_inb">0%</span></div>
+        </div>
+      </div></div>
+    </article>
+
+    <!-- Slide 7 — Checklists (Interna) -->
+    <article class="slide" data-title="Checklist Interna">
+      <header class="mb-2"><h2>✅ Checklists — Movimentação interna</h2></header>
+      <div class="card"><div class="card-body">
+        <div class="chk" data-ck="int">
+          <div class="mb-2">1) WIP dentro dos limites do Kanban?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">2) Serial registrado no MES em todas as estações?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">3) ESD e segurança Li-ion validados?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">4) Testes/burn-in com laudo anexado?</div>
+          <div class="btn-group mb-3" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="meter mb-2"><span id="m_int"></span></div>
+          <div class="small">Conformidade: <span id="p_int">0%</span></div>
+        </div>
+      </div></div>
+    </article>
+
+    <!-- Slide 8 — Checklists (Outbound) -->
+    <article class="slide" data-title="Checklist Outbound">
+      <header class="mb-2"><h2>✅ Checklists — Outbound</h2></header>
+      <div class="card"><div class="card-body">
+        <div class="chk" data-ck="out">
+          <div class="mb-2">1) NF-e/CT-e emitidos e validados?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">2) Embalagem e paletização conforme especificação?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">3) Tracking ativo com POD enviado ao cliente?</div>
+          <div class="btn-group mb-2" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="mb-2">4) SLA de coleta/entrega do 3PL atendido?</div>
+          <div class="btn-group mb-3" role="group">
+            <button class="btn btn-outline-light" data-v="1">Sim</button>
+            <button class="btn btn-outline-light" data-v="0">Não</button>
+            <button class="btn btn-outline-light" data-v="0.5">Em parte</button>
+          </div>
+          <div class="meter mb-2"><span id="m_out"></span></div>
+          <div class="small">Conformidade: <span id="p_out">0%</span></div>
+        </div>
+      </div></div>
+    </article>
+
+    <!-- Slide 9 — Glossário -->
+    <article class="slide" data-title="Glossário">
+      <header class="mb-2"><h2>📚 Glossário de Siglas e Termos</h2></header>
+      <table class="table table-sm align-middle">
+        <tbody>
+          <tr><td><strong>WMS</strong></td><td>Sistema de Gerenciamento de Armazéns (<em>Warehouse Management System</em>)</td></tr>
+          <tr><td><strong>MES</strong></td><td>Sistema de Execução de Manufatura (<em>Manufacturing Execution System</em>)</td></tr>
+          <tr><td><strong>ERP</strong></td><td>Sistema Integrado de Gestão</td></tr>
+          <tr><td><strong>3PL</strong></td><td>Operador logístico terceirizado (<em>Third-Party Logistics</em>)</td></tr>
+          <tr><td><strong>FF</strong></td><td><em>Freight Forwarder</em> (consolida e coordena transporte internacional)</td></tr>
+          <tr><td><strong>ASN</strong></td><td>Aviso de Embarque Antecipado (<em>Advanced Shipping Notice</em>)</td></tr>
+          <tr><td><strong>CT-e / NF-e</strong></td><td>Conhecimento/Nota fiscais eletrônicas de transporte/venda</td></tr>
+          <tr><td><strong>OTIF</strong></td><td><em>On Time In Full</em> — indicador: no prazo e completo</td></tr>
+          <tr><td><strong>RMA</strong></td><td>Autorização de Devolução/Serviço em garantia</td></tr>
+          <tr><td><strong>PPAP/FAI</strong></td><td>Qualificação de peça/processo (amostras e primeiro artigo)</td></tr>
+          <tr><td><strong>ESD</strong></td><td>Proteção contra descarga eletrostática</td></tr>
+        </tbody>
+      </table>
+      <div class="box-simples"><strong>Resumo simples:</strong> os sistemas (ERP/MES/WMS) registram tudo; 3PL/FF movem a carga; ASN avisa o que chega; NF-e/CT-e legalizam; OTIF mede entrega; RMA cuida da garantia.</div>
+    </article>
+
+    <!-- Controles (sempre após conteúdo) -->
+    <div class="controls">
+      <div class="d-flex gap-2">
+        <button id="prevBtn" class="btn btn-outline-light">⬅️ Anterior</button>
+        <button id="nextBtn" class="btn btn-amarelo">Próximo ➡️</button>
+      </div>
+      <div id="steps" class="dots"></div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  // --- Navegação por slides (sempre com controles após o conteúdo) ---
+  const slides = [...document.querySelectorAll('.slide')];
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsWrap = document.getElementById('steps');
+  let idx = 0;
+
+  // criar indicadores
+  slides.forEach((_,i)=>{
+    const d=document.createElement('div'); d.className='dot'; d.title=(i+1)+' • '+(slides[i].dataset.title||'');
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...dotsWrap.children];
+
+  function render(){
+    slides.forEach((s,i)=>{ s.classList.toggle('active', i===idx); });
+    dots.forEach((d,i)=>d.classList.toggle('on', i===idx));
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===slides.length-1;
+    // garantir que controles fiquem visíveis após a troca
+    document.querySelector('.controls').scrollIntoView({block:'end', behavior:'smooth'});
+  }
+  prevBtn.onclick=()=>{ if(idx>0){ idx--; render(); } };
+  nextBtn.onclick=()=>{ if(idx<slides.length-1){ idx++; render(); } };
+  // setas do teclado
+  window.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight') nextBtn.click();
+    if(e.key==='ArrowLeft')  prevBtn.click();
+  });
+  render();
+
+  // --- Checklists com barra de conformidade ---
+  function setupChecklist(prefix){
+    const wrap = document.querySelector(`.chk[data-ck="${prefix}"]`);
+    if(!wrap) return;
+    const buttons = wrap.querySelectorAll('button[data-v]');
+    const meter = document.getElementById(`m_${prefix}`);
+    const pct   = document.getElementById(`p_${prefix}`);
+    const groups = wrap.querySelectorAll('.btn-group');
+    const vals = new Array(groups.length).fill(null);
+
+    buttons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        // marcar seleção no grupo
+        const parent = btn.parentElement;
+        parent.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // atualizar valor
+        const gi = [...wrap.querySelectorAll('.btn-group')].indexOf(parent);
+        vals[gi] = parseFloat(btn.dataset.v);
+        const answered = vals.filter(v => v!==null);
+        const score = answered.length ? (vals.reduce((a,b)=>a+(b||0),0)/vals.length) : 0;
+        const show = Math.round(score*100);
+        meter.style.width = show+'%';
+        pct.textContent = show+'%';
+      });
+    });
+  }
+  ['inb','int','out'].forEach(setupChecklist);
+</script>
+</body>
+</html>

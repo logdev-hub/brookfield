@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📘 Curso Básico em Logística — Apresentação Síntese</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      --azul-escuro:#0a2a4a;  /* fundo nav/footer */
+      --azul:#15457a;         /* gradiente topo */
+      --azul-medio:#0e3b75;   /* gradiente topo */
+      --amarelo:#ffc400;      /* acento */
+      --amarelo-2:#ffd84d;    /* hover/acento claro */
+      --laranja:#f5a524;      /* acento secundário */
+      --branco:#ffffff;       
+    }
+    body{background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, #083056 100%); color:#eaf1fb;}
+    .navbar{background:var(--azul-escuro);}    
+    .brand-badge{display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .75rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.05)}
+    a{color:#ffd24a} a:hover{color:#ffe17a}
+
+    /* === Deck de slides (fade in/out) === */
+    .deck{position:relative;min-height:70vh;border-radius:1rem;background:rgba(255,255,255,.05);overflow:hidden}
+    .slide{position:absolute;inset:0;padding:2rem 1.25rem;opacity:0;pointer-events:none;transition:opacity .6s ease;}
+    .slide.active{opacity:1;pointer-events:auto}
+    .slide header h2{font-weight:800}
+    .badge-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:.3rem .55rem;border-radius:.6rem}
+    .btn-amarelo{--bs-btn-color:#192d45;--bs-btn-bg:var(--amarelo);--bs-btn-border-color:var(--amarelo);--bs-btn-hover-bg:var(--amarelo-2);--bs-btn-hover-border-color:var(--amarelo-2);--bs-btn-active-bg:#ffcf33;color:#0a2340;font-weight:700}
+
+    .controls{position:absolute;bottom:1rem;left:0;right:0;display:flex;justify-content:space-between;gap:.5rem;padding:0 1rem}
+    .step{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25)}
+    .step.active{background:var(--amarelo)}
+
+    .card{border:0;border-radius:1rem;background:rgba(255,255,255,.06)}
+    .table{--bs-table-bg:transparent;--bs-table-border-color:rgba(255,255,255,.2);color:#eaf1fb}
+
+    .footer{background:var(--azul-escuro);color:#bcd3f7}
+  
+    /* Correção global de contraste: todo o texto em branco/azulado */
+    body, p, li, h1, h2, h3, h4, h5, h6, .card, .card *:not(a), .navbar, .navbar *:not(a), .slide, .slide *:not(a){ color:#eaf1fb !important; }
+    .card{ background:rgba(255,255,255,.06) }
+    .slide .card .card-body{ color:#eaf1fb !important; }
+    .accordion-button, .table, .table *{ color:#eaf1fb !important; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-lg mb-4">
+    <div class="container">
+      <span class="navbar-brand brand-badge">📦 Senac | Atendimento Corporativo</span>
+      <div class="ms-auto small">Apresentação-resumo — Aula 1</div>
+    </div>
+  </nav>
+
+  <main class="container mb-5">
+    <header class="mb-4 text-center">
+      <h1 class="fw-bold">📘 Curso Básico em <span class="text-warning">Logística</span></h1>
+      <p class="lead mb-0">Síntese com exemplos práticos • efeitos <strong>fade in/out</strong> • paleta azul/amarelo</p>
+      <div class="mt-2 d-inline-flex gap-2">
+        <span class="badge-chip">⏱️ 32h</span>
+        <span class="badge-chip">🏭 Guarulhos</span>
+        <span class="badge-chip">🎯 Operações & Iniciantes</span>
+      </div>
+    </header>
+
+    <!-- SLIDES (versão ampliada e detalhada) -->
+    <section class="deck shadow">
+      <!-- 0 CAPA -->
+      <article class="slide active" data-title="Capa">
+        <header class="mb-3"><h2>👋 Boas‑vindas</h2></header>
+        <p>Versão ampliada, com <strong>explicações simples</strong>, <strong>exemplos ricos</strong> e <strong>respostas completas</strong> para quem está começando em logística. Use ⬅️ ➡️ para navegar.</p>
+        <ul>
+          <li>Paleta corporativa (azul + amarelo) • transição <em>fade in/out</em>;</li>
+          <li>Em cada tópico: 3–4 <strong>exemplos práticos</strong> com números;</li>
+          <li>Exercícios finais + <strong>gabarito detalhado</strong> com passo a passo.</li>
+        </ul>
+      </article>
+
+      <!-- 1 HISTÓRICO E CONTEXTO -->
+      <article class="slide" data-title="Histórico">
+        <header class="mb-3"><h2>🕰️ Evolução e por que isso importa</h2></header>
+        <p><strong>Ideia central:</strong> logística nasceu para <em>garantir disponibilidade</em> no tempo certo. O que antes era suprimento militar, hoje virou <em>atendimento ao cliente</em>.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 exemplos práticos com paralelos</h6>
+            <ol class="mb-0">
+              <li><strong>Campanha publicitária (BF)</strong> → como uma operação militar: <em>posiciona estoque</em> em CDs regionais 15 dias antes; meta: <strong>D+1</strong> capitais. Se 30% das vendas ocorrem nas primeiras 24h, o estoque precisa estar <u>mais perto</u> do cliente.</li>
+              <li><strong>Vacinação municipal</strong> → janelas de entrega e <em>cadeia fria</em> (2–8 °C). Planejamento de rotas minimiza abertura de caixas térmicas; indicador: % de doses entregues dentro da temperatura.</li>
+              <li><strong>Festival de música</strong> → picos de recebimento. Agendamento de docas por hora + área de <em>buffer</em> evita fila. Métrica: <em>tempo de espera</em> do caminhão (alvo: &lt; 30 min).</li>
+              <li><strong>Obra urbana</strong> → suprimento <em>just‑in‑time</em> em janelas noturnas para não travar o trânsito; canteiro vira um <em>mini‑CD</em> com controle de inventário diário.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧠 Explicação simples</h6>
+            <p>Logística é sobre <strong>antecipar</strong> demanda e <strong>sincronizar</strong> recursos. Quando o planejamento falha, aparece ruptura (falta), excesso (custo) ou atraso (insatisfação).</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 2 CONCEITO BASE -->
+      <article class="slide" data-title="Conceito">
+        <header class="mb-3"><h2>📦 O que é logística? — no dia a dia</h2></header>
+        <p><strong>Definição prática:</strong> garantir que <u>o que foi prometido</u> chegue <strong>completo</strong>, <strong>no prazo</strong> e <strong>sem erros</strong>, ao menor custo possível. Isso envolve <em>planejar → executar → controlar</em>.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 exemplos objetivos</h6>
+            <ol class="mb-0">
+              <li><strong>E‑commerce</strong>: pedido 10:00 → WMS reserva em 2 min → separação até 12:00 → coleta às 16:00 → D+1 capital. <em>KPIs:</em> tempo de ciclo e % pedido perfeito.</li>
+              <li><strong>Indústria</strong>: MRP gera compras de 500 un. do insumo X com <em>lead time</em> 7 dias; estoque de segurança = 3 dias de consumo médio.</li>
+              <li><strong>Saúde</strong>: montagem de kits cirúrgicos por cirurgia/dia reduz falta no centro cirúrgico; check‑list 100% antes de expedir.</li>
+              <li><strong>Alimentos</strong>: previsão sobe 20% em dias quentes; política de reposição aumenta produção de bebidas e gelo 48h antes.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🔍 Conceitos em linguagem simples</h6>
+            <ul class="mb-0">
+              <li><strong>Lead time</strong>: tempo total do pedido até a entrega.</li>
+              <li><strong>WMS/TMS</strong>: softwares que organizam o armazém e o transporte.</li>
+              <li><strong>Pedido perfeito</strong>: pontual × completo × sem erro.</li>
+            </ul>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 3 SCM (CADEIA DE SUPRIMENTOS) -->
+      <article class="slide" data-title="SCM">
+        <header class="mb-3"><h2>🔗 Cadeia de Suprimentos (SCM) — como funciona</h2></header>
+        <p>Coordena <strong>planejar → abastecer → produzir → entregar → retornar</strong> entre empresas. O objetivo é <em>menos falta</em>, <em>menos sobra</em> e <em>mais velocidade</em>.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 práticas ilustradas</h6>
+            <ol class="mb-0">
+              <li><strong>CPFR</strong> (planejamento colaborativo): varejo compartilha previsão semanal; fornecedor ajusta produção; resultado: ruptura cai de 10% → 3%.</li>
+              <li><strong>VMI</strong>: fornecedor repõe gôndola quando o estoque cai de 80 → 40 un.; acordos definem mínimo/máximo e frequência.</li>
+              <li><strong>ASN & agendamento de doca</strong>: aviso prévio com paletes e horários evita congestionamento e acelera conferência.</li>
+              <li><strong>3PL sob demanda</strong>: operador logístico absorve pico (ex.: Natal) por 8 semanas; custo variável substitui investimento fixo.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧠 Explicação simples</h6>
+            <p>SCM dá <strong>visibilidade</strong> entre os elos. Sem isso, cada um otimiza o próprio pedaço e o <em>todo</em> fica caro e lento.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 4 CADEIA DE VALOR -->
+      <article class="slide" data-title="Cadeia de Valor">
+        <header class="mb-3"><h2>💎 Cadeia de Valor — onde gerar ganho rápido</h2></header>
+        <p>Atividades primárias e de apoio que somam valor para o cliente. Melhorias pequenas e bem escolhidas geram <strong>grandes efeitos</strong>.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 melhorias com números</h6>
+            <ol class="mb-0">
+              <li><strong>Picking por voz</strong> ↑ produtividade 18% e ↓ erros 30% em 60 dias.</li>
+              <li><strong>Layout por giro ABC</strong> ↓ percurso 25% e ↑ pedidos/hora 15%.</li>
+              <li><strong>RFID</strong> em inventário cíclico: acurácia 96% → 99%.</li>
+              <li><strong>Compras com SLA logístico</strong>: fornecedor entrega OTIF ≥ 95% ou aplica‑se multa/ação corretiva.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🔍 Por que funciona?</h6>
+            <p>Porque reduz <em>movimento desnecessário</em>, <em>recontagens</em> e <em>retrabalho</em>, liberando tempo para atender mais pedidos com a mesma equipe.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 5 CANAIS DE DISTRIBUIÇÃO -->
+      <article class="slide" data-title="Canais">
+        <header class="mb-3"><h2>🏪 Canais de Distribuição — escolhendo o caminho</h2></header>
+        <p>Do fabricante ao consumidor: direto, varejo, CDs regionais, cross‑docking, lockers, dark stores. Cada escolha muda <strong>prazo</strong> e <strong>custo</strong>.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 cenários didáticos</h6>
+            <ol class="mb-0">
+              <li><strong>CD único</strong>: frete médio R$ 12; prazo D+3; adequado a itens pesados com giro menor.</li>
+              <li><strong>2 CDs regionais</strong>: frete R$ 15; prazo D+1 em capitais; ideal para alto giro e campanhas.</li>
+              <li><strong>Cross‑docking</strong>: quase sem estocar; bom para sortimento largo (moda) com chegada diária.</li>
+              <li><strong>Locker/retira</strong>: reduz custo de última milha em 20–40% e aumenta primeira tentativa de entrega.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧠 Dica</h6>
+            <p>Combine modelos (híbrido). <em>Não existe canal perfeito</em>; existe o que melhor atende seu público‑alvo com o custo total certo.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 6 NIVEL DE SERVIÇO -->
+      <article class="slide" data-title="Nível de Serviço">
+        <header class="mb-3"><h2>⭐ Nível de Serviço — medindo o que o cliente sente</h2></header>
+        <p><strong>Pedido perfeito</strong> = Pontualidade × Completude × Sem erros. Todos entre 0 e 1.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 3 exemplos com cálculo</h6>
+            <ol class="mb-0">
+              <li><strong>B2C eletrônico</strong>: 0,92 × 0,96 × 0,98 = <strong>0,87</strong> (87%). Gargalo: pontualidade → revisar malha de transporte.</li>
+              <li><strong>B2B farma</strong>: 0,95 × 0,98 × 0,99 = <strong>0,92</strong>. Manter cadeia fria e janela agendada.</li>
+              <li><strong>Moda</strong>: 0,90 × 0,92 × 0,97 = <strong>0,80</strong>. Melhorar conferência de tamanhos na expedição.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🔍 Como aumentar rápido?</h6>
+            <ul class="mb-0">
+              <li>Mapeie exceções diárias (atrasos, falta, avaria);</li>
+              <li>Crie <em>checklist</em> de doca e auditoria de <em>packing</em>;</li>
+              <li>Envie aviso proativo ao cliente quando houver atraso.</li>
+            </ul>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 7 TRADE-OFFS E CUSTO TOTAL -->
+      <article class="slide" data-title="Trade-offs">
+        <header class="mb-3"><h2>⚖️ Trade‑offs — escolhendo bem onde investir</h2></header>
+        <p>O objetivo não é o frete mais barato nem o estoque zero: é <strong>minimizar o custo total</strong> mantendo o nível de serviço desejado.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 comparações com lógica</h6>
+            <ol class="mb-0">
+              <li><strong>Estoque ↑</strong> → menos ruptura, mas ↑ capital e risco de obsolescência.</li>
+              <li><strong>Expresso</strong> (aéreo/rodoviário dedicado) vs. <strong>Econômico</strong> (consolidado): prazo × custo.</li>
+              <li><strong>Multi‑CD</strong> (prazo) vs. <strong>CD único</strong> (escala). Híbrido é comum.</li>
+              <li><strong>Embalagem reforçada</strong> (custa +R$ 0,70) vs. <strong>avaria</strong> (devolução R$ 20): se avaria &gt; 3,5%, vale reforçar.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧮 Mini‑modelo</h6>
+            <p><strong>Custo total</strong> = Frete + Armazenagem + Pedidos + Avaria + Capital em estoque. Compare cenários A/B alterando apenas 1 variável por vez.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 8 SEGMENTAÇÃO DE SERVIÇO -->
+      <article class="slide" data-title="Segmentação">
+        <header class="mb-3"><h2>🧭 Diferenciação por cliente — uma régua de serviço</h2></header>
+        <p>Clientes e regiões diferentes pedem soluções diferentes. <strong>Segmentar</strong> evita gastar demais onde não precisa e reforça onde importa.</p>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 políticas de exemplo</h6>
+            <ol class="mb-0">
+              <li><strong>Premium B2B</strong>: janela agendada, canal de suporte e SLA de 97% OTIF.</li>
+              <li><strong>Padrão B2C</strong>: D+3 a D+5 com comunicação ativa e opção de locker.</li>
+              <li><strong>Interior remoto</strong>: consolidação semanal e retirada em parceiro.</li>
+              <li><strong>Key accounts</strong>: estoque dedicado no CD (mínimo acordado).</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🔍 Regra simples</h6>
+            <p>Defina 2 níveis (Premium/Padrão) com prazos, janelas e comunicação. Meça satisfação e custo; ajuste trimestralmente.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 9 DESEMPENHO E MELHORIA -->
+      <article class="slide" data-title="Desempenho">
+        <header class="mb-3"><h2>📊 Desempenho — medir, entender e agir</h2></header>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧩 4 práticas orientadas a dados</h6>
+            <ol class="mb-0">
+              <li><strong>Inventário cíclico</strong> diário por curva ABC (A = diário; B = semanal; C = mensal).</li>
+              <li><strong>OTIF</strong> por cliente e transportadora (exponha ranking mensal).</li>
+              <li><strong>Layout</strong> revisto trimestralmente a partir do giro.</li>
+              <li><strong>Treinamentos</strong> curtos (<em>toolbox</em>) focados no erro mais frequente.</li>
+            </ol>
+          </div></div></div>
+          <div class="col-lg-5"><div class="card h-100"><div class="card-body">
+            <h6 class="text-warning">🧠 Explicação</h6>
+            <p>Melhorar desempenho é repetir o ciclo: <strong>medir → analisar → agir → medir de novo</strong>. Escolha 1 KPI por vez para elevar.</p>
+          </div></div></div>
+        </div>
+      </article>
+
+      <!-- 10 EXERCÍCIOS -->
+      <article class="slide" data-title="Exercícios">
+        <header class="mb-3"><h2>📝 Exercícios</h2></header>
+        <ol class="mb-3">
+          <li><strong>Pedido perfeito</strong>: Pontual 88%, Completo 92%, Sem erros 97%.</li>
+          <li><strong>Canal</strong>: escolher entre CD único (R$ 12, D+3) e 2 CDs (R$ 15, D+1). Proponha <em>híbrido</em> e justifique.</li>
+          <li><strong>Trade‑off embalagem</strong>: reforço custa R$ 0,70 e reduz avarias de 5% para 1% (custo de avaria R$ 20). Compensa?</li>
+        </ol>
+        <p class="small">Respostas completas no próximo slide. 🔒</p>
+      </article>
+
+      <!-- 11 GABARITO DETALHADO -->
+      <article class="slide" data-title="Gabarito">
+        <header class="mb-3"><h2>📎 Gabarito — passo a passo</h2></header>
+        <ol class="mb-4">
+          <li>
+            <strong>Pedido perfeito</strong> = 0,88 × 0,92 × 0,97 = 0,783 → <strong>78,3%</strong>.
+            <div class="small">Interpretação: a meta de 85% exige atacar pontualidade (88%). Ex.: reforçar malha em 5 capitais e ajustar janela de coleta.</div>
+          </li>
+          <li>
+            <strong>Canal</strong> — Híbrido sugerido: capitais via 2 CDs (D+1, R$ 15); interior via CD único (D+3, R$ 12). 
+            <div class="small">Justificativa: 65% do volume está em capitais (sensíveis a prazo); 35% no interior (sensível a preço). O híbrido reduz reclamações e mantém custo médio competitivo.</div>
+          </li>
+          <li>
+            <strong>Trade‑off embalagem</strong> — 
+            <div class="small">Custo de avaria sem reforço: 5% × R$ 20 = R$ 1,00 por unidade; com reforço: 1% × R$ 20 + R$ 0,70 = R$ 0,90. <u>Compensa</u> (economia R$ 0,10/un). Se o preço de reforço cair para R$ 0,50, a economia sobe para R$ 0,30/un.</div>
+          </li>
+        </ol>
+        <p class="small text-white-50 mb-0">Adapte metas e custos à sua operação. Se precisar, adiciono planilha de simulação.</p>
+      </article>
+
+      <!-- Controles -->
+      <div class="controls">
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-light" id="prevBtn">⬅️ Anterior</button>
+          <button class="btn btn-amarelo" id="nextBtn">Próximo ➡️</button>
+        </div>
+        <div class="d-flex align-items-center gap-1" id="steps"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer py-3">
+    <div class="container d-flex justify-content-between flex-wrap gap-2">
+      <div>© <span id="year"></span> Senac — Atendimento Corporativo • Estilo visual azul/amarelo</div>
+      <div class="small">Use <kbd>←</kbd>/<kbd>→</kbd> ou clique nos <span class="text-warning">pontos</span> para navegar</div>
+    </div>
+  </footer>
+
+  <script>
+    // Ano dinâmico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Slides com fade in/out
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let idx = 0;
+
+    const steps = document.getElementById('steps');
+    slides.forEach((_, i)=>{
+      const b = document.createElement('button');
+      b.className = 'step border-0';
+      b.title = (i+1) + ' • ' + (slides[i].dataset.title || 'Slide');
+      b.addEventListener('click', ()=>go(i));
+      steps.appendChild(b);
+    });
+
+    function render(){
+      slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+      steps.querySelectorAll('.step').forEach((s,i)=> s.classList.toggle('active', i===idx));
+    }
+
+    function go(n){ idx = (n+slides.length)%slides.length; render(); }
+
+    document.getElementById('prevBtn').addEventListener('click', ()=>go(idx-1));
+    document.getElementById('nextBtn').addEventListener('click', ()=>go(idx+1));
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowRight') go(idx+1);
+      if(e.key==='ArrowLeft') go(idx-1);
+    });
+
+    // Auto-play opcional (habilite se quiser)
+    let autoplay = null;
+    // autoplay = setInterval(()=>go(idx+1), 12000);
+
+    render();
+  </script>
+</body>
+</html>

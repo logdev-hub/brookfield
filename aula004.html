@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KPIs de Logística Inbound — Indicadores, Exercícios e Glossário</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b2746; --bg-2:#11365f; --tile:rgba(255,255,255,.06); --border:rgba(255,255,255,.18);
+    --text:#eaf1fb; --muted:#bed3f9; --accent:#ffd24a; --accent-2:#ffea95;
+    --ok:#47d16d; --warn:#ffb74d; --bad:#ff6b6b;
+  }
+  body{ background:linear-gradient(135deg,var(--bg) 0%, var(--bg-2) 60%, #07213b 100%); color:var(--text); }
+  .navbar{ background:#09213a; }
+  .container-narrow{ max-width: 1150px; }
+  a{ color:var(--accent); } a:hover{ color:var(--accent-2); }
+  .tile{ background:var(--tile); border:1px solid var(--border); border-radius:1rem; padding:1rem; }
+  .tile h5, .tile h6{ color:#fff }
+  .muted{ color:var(--muted) }
+  .nav-pills .nav-link{ color:var(--text); border:1px solid transparent }
+  .nav-pills .nav-link.active{ background:var(--accent); color:#142740; }
+  .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+  .kpi-card{ background:rgba(255,255,255,.05); border:1px dashed var(--border); border-radius:.75rem; padding:.75rem }
+  .badge-soft{ background:rgba(255,255,255,.07); border:1px solid var(--border) }
+  .btn-accent{
+    --bs-btn-bg:var(--accent); --bs-btn-border-color:var(--accent);
+    --bs-btn-hover-bg:var(--accent-2); --bs-btn-hover-border-color:var(--accent-2);
+    color:#132845; font-weight:700;
+  }
+  table.table{ color:var(--text) } thead th{ background:rgba(255,255,255,.08) }
+  .ok{ color:var(--ok) } .warn{ color:var(--warn) } .bad{ color:var(--bad) }
+  .mini-grid{ display:grid; gap:1rem } @media(min-width: 992px){ .mini-grid{ grid-template-columns: repeat(3, 1fr) } }
+  hr.light{ border-top:1px solid var(--border); opacity:1 }
+  .lead{ color:#f1f6ff }
+  .formula{ background:rgba(255,255,255,.07); border:1px solid var(--border); padding:.5rem .75rem; border-radius:.5rem }
+  .formula .code{ background:transparent; padding:0 }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container container-narrow d-flex align-items-center justify-content-between py-2">
+    <span class="navbar-brand d-flex align-items-center gap-2">
+      <i class="bi bi-truck-front"></i><strong>KPIs Inbound</strong>
+      <span class="badge badge-soft ms-2">AutoParts Brasil • SteelCo • MetalParts</span>
+    </span>
+    <span class="small text-light">Tema escuro • Responsivo • Interativo</span>
+  </div>
+</nav>
+
+<main class="container container-narrow my-4">
+  <header class="text-center mb-4">
+    <h1 class="fw-bold">Indicadores de Desempenho na Logística Inbound</h1>
+    <p class="lead">Conceitos, fórmulas (HTML), exemplos práticos, storytelling, calculadoras e exercícios.</p>
+  </header>
+
+  <!-- Navegação -->
+  <ul class="nav nav-pills justify-content-center gap-2 mb-4 flex-wrap" id="mainTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#conceitos">1) Conceitos & Storytelling</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#kpis-basicos">2) KPIs Básicos</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#kpis-avancados">3) KPIs Avançados</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#aplicacao">4) Aplicação Integrada</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#exercicios">5) Exercícios</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#gabaritos">6) Gabaritos</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#glossario">7) Glossário</button></li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- Conceitos -->
+    <section class="tab-pane fade show active" id="conceitos">
+      <div class="tile">
+        <h3>O que é Logística Inbound?</h3>
+        <p>Conjunto de atividades desde o pedido ao fornecedor até o item <em>disponível</em> no estoque: compra, transporte, agendamento, descarga, conferência, registro no sistema e armazenagem. Para evitar paradas e desperdícios, usamos <strong>KPIs</strong> que medem tempo, qualidade, custo e confiabilidade.</p>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="kpi-card">
+              <h5 class="h6 mb-1">Storytelling — <strong>AutoParts Brasil</strong></h5>
+              <p class="mb-2">A fabricante recebe materiais de 10 fornecedores. Quando um atrasa, a linha para. A área de suprimentos monitora <span class="code">Lead Time</span>, <span class="code">OTD</span> e <span class="code">Acuracidade</span> para renegociar prazos, otimizar rotas e ajustar níveis de estoque.</p>
+              <ul class="mb-0">
+                <li><strong>Decisão:</strong> priorizar fornecedores próximos (SP) com lead time médio de 3 dias, em vez de 10.</li>
+                <li><strong>Resultado:</strong> menos capital empatado e mais flexibilidade de produção.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="kpi-card">
+              <h5 class="h6 mb-1">Storytelling — <strong>MetalParts</strong></h5>
+              <p class="mb-2">Tempo “doca ao estoque” médio era de 3h. Após reorganizar rotas internas e colocar coletores RF na recepção, caiu para 1h30. As docas ficaram livres mais rápido e o giro melhorou.</p>
+              <p class="mb-0"><span class="ok">✓ Impacto:</span> menos filas de caminhões e maior produtividade do time de recebimento.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPIs BÁSICOS -->
+    <section class="tab-pane fade" id="kpis-basicos">
+      <div class="tile">
+        <h3>KPIs Básicos de Logística Inbound</h3>
+        <p class="muted">Use as calculadoras com seus dados (valores iniciais são os exemplos).</p>
+
+        <div class="mini-grid">
+          <!-- Lead Time -->
+          <div class="tile">
+            <h5>2.1 Lead Time Inbound</h5>
+            <p><strong>Definição:</strong> tempo entre <em>pedido ao fornecedor</em> e <em>chegada dos insumos</em>.</p>
+            <div class="formula"><span class="code">Lead Time (dias) = Data de recebimento − Data do pedido</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-6"><label class="form-label">Tempos em dias</label>
+                <input id="lt-list" class="form-control form-control-sm"
+                  value="5,6,6,5" placeholder="Ex.: 5,6,6,5">
+              </div>
+              <div class="col-6 d-grid">
+                <button class="btn btn-accent btn-sm" onclick="calcLeadTime()">Calcular média</button>
+              </div>
+            </div>
+            <div class="mt-2">Média: <strong id="lt-out">—</strong></div>
+            <small class="muted">Quanto menor, melhor a agilidade e previsibilidade.</small>
+          </div>
+
+          <!-- OTD -->
+          <div class="tile">
+            <h5>2.2 On-Time Delivery (OTD)</h5>
+            <p>Proporção de entregas recebidas no prazo combinado.</p>
+            <div class="formula"><span class="code">OTD (%) = Entregas no prazo ÷ Total de entregas × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="otd-ok" class="form-control form-control-sm" value="18" type="number" min="0"></div>
+              <div class="col-4"><input id="otd-tot" class="form-control form-control-sm" value="20" type="number" min="1"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcOTD()">Calcular</button></div>
+            </div>
+            <div class="mt-2">OTD: <strong id="otd-out">—</strong></div>
+          </div>
+
+          <!-- Acurácia -->
+          <div class="tile">
+            <h5>2.3 Acuracidade de Estoque</h5>
+            <p>Quanto o estoque físico confere com o sistema.</p>
+            <div class="formula"><span class="code">Acuracidade (%) = Itens corretos ÷ Itens verificados × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="acc-ok" class="form-control form-control-sm" value="950" type="number" min="0"></div>
+              <div class="col-4"><input id="acc-tot" class="form-control form-control-sm" value="1000" type="number" min="1"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcAcc()">Calcular</button></div>
+            </div>
+            <div class="mt-2">Acuracidade: <strong id="acc-out">—</strong> <span id="acc-flag"></span></div>
+          </div>
+
+          <!-- Danificação -->
+          <div class="tile">
+            <h5>2.4 Taxa de Danificação</h5>
+            <p>Percentual de itens danificados durante transporte/recebimento.</p>
+            <div class="formula"><span class="code">Danificação (%) = Produtos danificados ÷ Total recebido × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="dam-bad" class="form-control form-control-sm" value="200" type="number" min="0"></div>
+              <div class="col-4"><input id="dam-tot" class="form-control form-control-sm" value="10000" type="number" min="1"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcDamage()">Calcular</button></div>
+            </div>
+            <div class="mt-2">Danificação: <strong id="dam-out">—</strong></div>
+            <small class="muted">Meta típica &lt; 1,5%.</small>
+          </div>
+
+          <!-- Custo por linha -->
+          <div class="tile">
+            <h5>2.5 Custo de Recebimento por Linha</h5>
+            <div class="formula"><span class="code">Custo por linha (R$) = Custo total de recebimento ÷ Nº de linhas</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="cost-rec" class="form-control form-control-sm" value="12000" type="number" min="0"></div>
+              <div class="col-4"><input id="cost-lin" class="form-control form-control-sm" value="3000" type="number" min="1"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcCostLine()">Calcular</button></div>
+            </div>
+            <div class="mt-2">Custo por linha: <strong id="cost-out">—</strong></div>
+          </div>
+
+          <!-- Giro -->
+          <div class="tile">
+            <h5>2.6 Giro de Estoque Inbound</h5>
+            <div class="formula"><span class="code">Giro = Custo consumido no período ÷ Estoque médio</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-5"><input id="turn-cogs" class="form-control form-control-sm" value="600000" type="number" min="0"></div>
+              <div class="col-5"><input id="turn-avg" class="form-control form-control-sm" value="150000" type="number" min="1"></div>
+              <div class="col-2 d-grid"><button class="btn btn-accent btn-sm" onclick="calcTurn()">OK</button></div>
+            </div>
+            <div class="mt-2">Giro: <strong id="turn-out">—</strong> (vezes/ano)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPIs AVANÇADOS -->
+    <section class="tab-pane fade" id="kpis-avancados">
+      <div class="tile">
+        <h3>KPIs Avançados</h3>
+        <div class="mini-grid">
+          <!-- Dock to Stock -->
+          <div class="tile">
+            <h5>1) Tempo “Doca ao Estoque”</h5>
+            <div class="formula"><span class="code">Dock→Stock = Hora fim do armazenamento − Hora de chegada na doca</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-6"><input id="dts-arr" class="form-control form-control-sm" placeholder="Chegada (HH:MM)" value="08:00"></div>
+              <div class="col-6"><input id="dts-end" class="form-control form-control-sm" placeholder="Finalização (HH:MM)" value="09:45"></div>
+            </div>
+            <div class="d-grid mt-2"><button class="btn btn-accent btn-sm" onclick="calcDockToStock()">Calcular</button></div>
+            <div class="mt-2">Tempo: <strong id="dts-out">—</strong></div>
+          </div>
+
+          <!-- Produtividade -->
+          <div class="tile">
+            <h5>2) Produtividade no Recebimento</h5>
+            <div class="formula"><span class="code">Produtividade = Quantidade recebida ÷ (Tempo em horas × Nº de pessoas)</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="pro-qtd" class="form-control form-control-sm" value="3000" type="number"></div>
+              <div class="col-4"><input id="pro-h" class="form-control form-control-sm" value="6" type="number" step="0.1"></div>
+              <div class="col-4"><input id="pro-n" class="form-control form-control-sm" value="4" type="number"></div>
+            </div>
+            <div class="d-grid mt-2"><button class="btn btn-accent btn-sm" onclick="calcProd()">Calcular</button></div>
+            <div class="mt-2">Produtividade: <strong id="pro-out">—</strong> pallets/hora/pessoa</div>
+          </div>
+
+          <!-- OTIF -->
+          <div class="tile">
+            <h5>3) OTIF — On Time In Full</h5>
+            <div class="formula"><span class="code">OTIF (%) = Pedidos completos e no prazo ÷ Pedidos totais × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="otif-ok" class="form-control form-control-sm" value="45" type="number"></div>
+              <div class="col-4"><input id="otif-tot" class="form-control form-control-sm" value="50" type="number"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcOTIF()">Calcular</button></div>
+            </div>
+            <div class="mt-2">OTIF: <strong id="otif-out">—</strong></div>
+          </div>
+
+          <!-- Retornáveis -->
+          <div class="tile">
+            <h5>4) Índice de Embalagens Retornáveis</h5>
+            <div class="formula"><span class="code">Uso (%) = Embalagens retornáveis ÷ Total de embalagens × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="ret-ok" class="form-control form-control-sm" value="1200" type="number"></div>
+              <div class="col-4"><input id="ret-tot" class="form-control form-control-sm" value="1500" type="number"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcReturn()">Calcular</button></div>
+            </div>
+            <div class="mt-2">Índice: <strong id="ret-out">—</strong></div>
+          </div>
+
+          <!-- Não conformidades -->
+          <div class="tile">
+            <h5>5) Índice de Não Conformidades</h5>
+            <div class="formula"><span class="code">Não conformidades (%) = Entregas com falhas ÷ Entregas totais × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="nc-bad" class="form-control form-control-sm" value="15" type="number"></div>
+              <div class="col-4"><input id="nc-tot" class="form-control form-control-sm" value="300" type="number"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcNC()">Calcular</button></div>
+            </div>
+            <div class="mt-2">Índice: <strong id="nc-out">—</strong></div>
+          </div>
+
+          <!-- Arrival on Time -->
+          <div class="tile">
+            <h5>6) Arrival On Time (AOT)</h5>
+            <div class="formula"><span class="code">AOT (%) = Recebimentos no horário acordado ÷ Total de recebimentos × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-4"><input id="aot-ok" class="form-control form-control-sm" value="48" type="number"></div>
+              <div class="col-4"><input id="aot-tot" class="form-control form-control-sm" value="50" type="number"></div>
+              <div class="col-4 d-grid"><button class="btn btn-accent btn-sm" onclick="calcAOT()">Calcular</button></div>
+            </div>
+            <div class="mt-2">AOT: <strong id="aot-out">—</strong></div>
+          </div>
+
+          <!-- Custo por unidade -->
+          <div class="tile">
+            <h5>7) Custo Logístico por Unidade Recebida</h5>
+            <div class="formula"><span class="code">Custo/unid (R$) = Custos inbound ÷ Unidades recebidas</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-5"><input id="cpu-cost" class="form-control form-control-sm" value="25000" type="number" min="0"></div>
+              <div class="col-5"><input id="cpu-qtd" class="form-control form-control-sm" value="10000" type="number" min="1"></div>
+              <div class="col-2 d-grid"><button class="btn btn-accent btn-sm" onclick="calcCPU()">OK</button></div>
+            </div>
+            <div class="mt-2">Custo médio: <strong id="cpu-out">—</strong></div>
+          </div>
+
+          <!-- Utilização de docas -->
+          <div class="tile">
+            <h5>8) Taxa de Utilização das Docas</h5>
+            <div class="formula"><span class="code">Utilização (%) = Tempo de uso das docas ÷ Tempo total disponível × 100</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-5"><input id="dock-use" class="form-control form-control-sm" value="9" type="number" step="0.1"></div>
+              <div class="col-5"><input id="dock-ava" class="form-control form-control-sm" value="12" type="number" step="0.1"></div>
+              <div class="col-2 d-grid"><button class="btn btn-accent btn-sm" onclick="calcDockUse()">OK</button></div>
+            </div>
+            <div class="mt-2">Utilização: <strong id="dock-out">—</strong></div>
+            <small class="muted">Acima de 85% pode indicar gargalo.</small>
+          </div>
+
+          <!-- Ciclo de recebimento -->
+          <div class="tile">
+            <h5>9) Tempo de Ciclo do Recebimento</h5>
+            <div class="formula"><span class="code">Ciclo = Hora de saída da doca − Hora de chegada</span></div>
+            <div class="row g-2 mt-2">
+              <div class="col-6"><input id="cyc-arr" class="form-control form-control-sm" value="07:00" placeholder="Chegada (HH:MM)"></div>
+              <div class="col-6"><input id="cyc-lea" class="form-control form-control-sm" value="10:30" placeholder="Saída (HH:MM)"></div>
+            </div>
+            <div class="d-grid mt-2"><button class="btn btn-accent btn-sm" onclick="calcCycle()">Calcular</button></div>
+            <div class="mt-2">Ciclo: <strong id="cyc-out">—</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Aplicação integrada -->
+    <section class="tab-pane fade" id="aplicacao">
+      <div class="tile">
+        <h3>Aplicação Integrada — SteelCo</h3>
+        <p>A SteelCo cruzou dados de seus KPIs inbound e descobriu: <span class="code">AOT = 92%</span>, <span class="code">Dock→Stock = 2h20</span>, <span class="code">Não Conformidades = 4,1%</span>. O gestor aplicou metas trimestrais e cláusulas contratuais. Em três meses, <strong>OTIF=95%</strong>, <strong>não conformidades=1,8%</strong> e atrasos de produção caíram <strong>35%</strong>.</p>
+        <hr class="light">
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="kpi-card">
+              <h5 class="h6">Dicas de implementação</h5>
+              <ul class="mb-0">
+                <li>Automatize coleta de dados (WMS/TMS/ERP + planilhas inteligentes).</li>
+                <li>Defina <em>metas por fornecedor</em> e faça <strong>reviews mensais</strong>.</li>
+                <li>Padronize checklists de recebimento e use leitores de código de barras.</li>
+                <li>Trabalhe com janelas de doca e confirmação de chegada (ETA/ETD).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="kpi-card">
+              <h5 class="h6">Painel recomendado (metas)</h5>
+              <table class="table table-sm align-middle mb-0">
+                <thead><tr><th>Indicador</th><th>Foco</th><th>Meta</th></tr></thead>
+                <tbody>
+                  <tr><td>Dock→Stock</td><td>Agilidade armazenamento</td><td>&le; 2h</td></tr>
+                  <tr><td>Produtividade</td><td>Eficiência</td><td>&ge; 100 pallets/h/equipe</td></tr>
+                  <tr><td>OTIF</td><td>Confiabilidade</td><td>&ge; 95%</td></tr>
+                  <tr><td>Não Conformidade</td><td>Qualidade</td><td>&le; 2%</td></tr>
+                  <tr><td>Custo por Unidade</td><td>Custos inbound</td><td>Abaixo da média histórica</td></tr>
+                  <tr><td>Utilização de Docas</td><td>Capacidade</td><td>70–85%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exercícios -->
+    <section class="tab-pane fade" id="exercicios">
+      <div class="tile">
+        <h3>Exercícios (sem gabarito aqui)</h3>
+        <ol>
+          <li class="mb-3">
+            <strong>Exercício 1 — Lead Time Inbound</strong><br>
+            Tecnometal fez 3 pedidos.<br>
+            <table class="table table-sm">
+              <thead><tr><th>Pedido</th><th>Data do Pedido</th><th>Data da Entrega</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>02/07</td><td>06/07</td></tr>
+                <tr><td>2</td><td>04/07</td><td>09/07</td></tr>
+                <tr><td>3</td><td>06/07</td><td>09/07</td></tr>
+              </tbody>
+            </table>
+            <em>Pergunta:</em> Qual o lead time médio?
+          </li>
+
+          <li class="mb-3">
+            <strong>Exercício 2 — On-Time Delivery (OTD)</strong><br>
+            PlastiFlex recebeu 40 entregas; 36 no prazo.<br>
+            <em>Pergunta:</em> Qual é o percentual de entregas pontuais?
+          </li>
+
+          <li class="mb-3">
+            <strong>Exercício 3 — Acuracidade de Estoque</strong><br>
+            Conferiu 1.500 itens; 1.425 estavam corretos.<br>
+            <em>Pergunta:</em> Qual o índice de acuracidade e o que significa?
+          </li>
+
+          <li class="mb-3">
+            <strong>Exercício 4 — Índice de Não Conformidades</strong><br>
+            AutoParts Brasil inspecionou 120 entregas; 9 com erro/avaria.<br>
+            <em>Pergunta:</em> Qual o percentual de não conformidades?
+          </li>
+
+          <li class="mb-3">
+            <strong>Exercício 5 — Custo por Unidade Recebida</strong><br>
+            Tecnocar: custos inbound R$ 18.000; 9.000 unidades.<br>
+            <em>Pergunta:</em> Qual o custo médio por unidade?
+          </li>
+        </ol>
+        <p class="muted">✅ Confira os gabaritos comentados na aba <strong>Gabaritos</strong>.</p>
+      </div>
+    </section>
+
+    <!-- Gabaritos -->
+    <section class="tab-pane fade" id="gabaritos">
+      <div class="tile">
+        <h3>Gabaritos Comentados (separados dos exercícios)</h3>
+        <ol>
+          <li class="mb-2">
+            <strong>Ex.1 — Lead Time</strong>: <code>(4 + 5 + 3) ÷ 3 = 4</code> dias.<br>
+            <span class="muted">Tempo bom; fornecedores locais podem reduzir ainda mais.</span>
+          </li>
+          <li class="mb-2">
+            <strong>Ex.2 — OTD</strong>: <code>36 ÷ 40 × 100 = 90%</code>.<br>
+            <span class="warn">Abaixo de 95%:</span> revisar causas de atraso.
+          </li>
+          <li class="mb-2">
+            <strong>Ex.3 — Acuracidade</strong>: <code>1425 ÷ 1500 × 100 = 95%</code>.<br>
+            <span class="muted">Divergência de 5% → reforçar conferências e apontamento.</span>
+          </li>
+          <li class="mb-2">
+            <strong>Ex.4 — Não Conformidades</strong>: <code>9 ÷ 120 × 100 = 7,5%</code>.<br>
+            <span class="bad">1 em cada 13 entregas com problema.</span>
+          </li>
+          <li class="mb-2">
+            <strong>Ex.5 — Custo por Unidade</strong>: <code>18000 ÷ 9000 = R$ 2,00</code>.<br>
+            <span class="muted">Se ultrapassar R$ 3,00, reavaliar tempos e equipe.</span>
+          </li>
+        </ol>
+
+        <hr class="light">
+        <h5>Resumo Final (valores de exemplo)</h5>
+        <table class="table table-sm">
+          <thead><tr><th>Indicador</th><th>Fórmula aplicada</th><th>Resultado</th><th>Interpretação</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Lead Time Inbound</td>
+              <td><code>Σ(tempo_entrega − tempo_pedido) ÷ n</code></td>
+              <td>4 dias</td>
+              <td>Tempo médio entre pedido e entrega.</td>
+            </tr>
+            <tr><td>On-Time Delivery</td><td><code>Entregas no prazo ÷ Total × 100</code></td><td>90%</td><td>Pontualidade do fornecedor.</td></tr>
+            <tr><td>Acuracidade de Estoque</td><td><code>Itens corretos ÷ Itens checados × 100</code></td><td>95%</td><td>Confiabilidade do controle de estoque.</td></tr>
+            <tr><td>Não Conformidades</td><td><code>Entregas com erro ÷ Totais × 100</code></td><td>7,5%</td><td>Qualidade do recebimento.</td></tr>
+            <tr><td>Custo por Unidade</td><td><code>Custo total ÷ Unidades</code></td><td>R$ 2,00</td><td>Custo médio do processo inbound.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Glossário -->
+    <section class="tab-pane fade" id="glossario">
+      <div class="tile">
+        <h3>Glossário das Métricas</h3>
+        <dl class="row">
+          <dt class="col-sm-4">Lead Time Inbound</dt>
+          <dd class="col-sm-8">Tempo entre realizar o pedido e receber o material. Ajuda a planejar compras e produção.</dd>
+
+          <dt class="col-sm-4">On-Time Delivery (OTD)</dt>
+          <dd class="col-sm-8">Percentual de entregas que chegam no prazo. Sinaliza confiabilidade do fornecedor.</dd>
+
+          <dt class="col-sm-4">Acuracidade de Estoque</dt>
+          <dd class="col-sm-8">Aderência entre o estoque físico e o registrado no sistema. Essencial para reabastecimento.</dd>
+
+          <dt class="col-sm-4">Taxa de Danificação</dt>
+          <dd class="col-sm-8">Percentual de itens danificados. Indica problemas de embalagem/manuseio.</dd>
+
+          <dt class="col-sm-4">Custo de Recebimento por Linha</dt>
+          <dd class="col-sm-8">Custo médio para processar uma linha de recebimento. Mostra eficiência do processo.</dd>
+
+          <dt class="col-sm-4">Giro de Estoque</dt>
+          <dd class="col-sm-8">Número de vezes que o estoque é renovado no período. Equilibra capital e risco de ruptura.</dd>
+
+          <dt class="col-sm-4">Dock-to-Stock (Doca ao Estoque)</dt>
+          <dd class="col-sm-8">Tempo da chegada do caminhão até o item estar armazenado e disponível no sistema.</dd>
+
+          <dt class="col-sm-4">Produtividade no Recebimento</dt>
+          <dd class="col-sm-8">Quantidade processada por hora por pessoa (ou equipe). Apoia dimensionamento.</dd>
+
+          <dt class="col-sm-4">OTIF (On Time In Full)</dt>
+          <dd class="col-sm-8">Pedidos recebidos pontualmente e completos. Métrica integrada de confiabilidade.</dd>
+
+          <dt class="col-sm-4">Embalagens Retornáveis</dt>
+          <dd class="col-sm-8">Percentual de uso de embalagens reutilizáveis. Relaciona-se com ESG e custos.</dd>
+
+          <dt class="col-sm-4">Não Conformidades</dt>
+          <dd class="col-sm-8">Entregas com erros/avarias. Aponta qualidade do fornecedor.</dd>
+
+          <dt class="col-sm-4">Arrival On Time (AOT)</dt>
+          <dd class="col-sm-8">Pontualidade de chegada conforme janela de doca (horário).</dd>
+
+          <dt class="col-sm-4">Custo por Unidade Recebida</dt>
+          <dd class="col-sm-8">Custo médio de toda a operação inbound por unidade processada.</dd>
+
+          <dt class="col-sm-4">Utilização de Docas</dt>
+          <dd class="col-sm-8">Percentual do tempo que as docas ficam ocupadas. Acima de 85% alerta para gargalo.</dd>
+
+          <dt class="col-sm-4">Ciclo de Recebimento</dt>
+          <dd class="col-sm-8">Duração do processo de recebimento (chegada → saída). Tempo alto indica retrabalho.</dd>
+        </dl>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="text-center py-3" style="background:#091d33;color:#bcd3f7">
+  <small>© <span id="year"></span> KPIs Inbound • Arquivo único (HTML • CSS • JS • Bootstrap)</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Helpers
+  const pct = (num, den)=> den>0 ? (num/den*100) : 0;
+  const brMoney = n => n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const hhmmToMinutes = (hhmm)=>{ const [h,m]=(hhmm||'0:0').split(':').map(Number); return h*60+(m||0); };
+  const minutesToHM = (min)=>{ const h=Math.floor(min/60), m=Math.round(min%60); return `${h}h${String(m).padStart(2,'0')}min`; };
+
+  // === Básicos
+  function calcLeadTime(){
+    const arr = (document.getElementById('lt-list').value||'').split(',').map(x=>Number(x.trim())).filter(x=>!isNaN(x));
+    const avg = arr.length? (arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+    document.getElementById('lt-out').textContent = `${avg.toFixed(1)} dia(s)`;
+  }
+  function calcOTD(){
+    const ok = Number(document.getElementById('otd-ok').value)||0;
+    const tot= Number(document.getElementById('otd-tot').value)||0;
+    document.getElementById('otd-out').textContent = `${pct(ok,tot).toFixed(1)}%`;
+  }
+  function calcAcc(){
+    const ok = Number(document.getElementById('acc-ok').value)||0;
+    const tot= Number(document.getElementById('acc-tot').value)||0;
+    const p = pct(ok,tot);
+    document.getElementById('acc-out').textContent = `${p.toFixed(1)}%`;
+    const flag = document.getElementById('acc-flag');
+    flag.textContent = p>=98? ' • ótimo' : (p>=95? ' • aceitável' : ' • atenção');
+    flag.className = p>=98? 'ok' : (p>=95? 'warn' : 'bad');
+  }
+  function calcDamage(){
+    const bad = Number(document.getElementById('dam-bad').value)||0;
+    const tot = Number(document.getElementById('dam-tot').value)||0;
+    document.getElementById('dam-out').textContent = `${pct(bad,tot).toFixed(2)}%`;
+  }
+  function calcCostLine(){
+    const c  = Number(document.getElementById('cost-rec').value)||0;
+    const ln = Number(document.getElementById('cost-lin').value)||1;
+    document.getElementById('cost-out').textContent = brMoney(c/ln);
+  }
+  function calcTurn(){
+    const cogs = Number(document.getElementById('turn-cogs').value)||0;
+    const avg  = Number(document.getElementById('turn-avg').value)||1;
+    document.getElementById('turn-out').textContent = (cogs/avg).toFixed(2);
+  }
+
+  // === Avançados
+  function calcDockToStock(){
+    const a = hhmmToMinutes(document.getElementById('dts-arr').value);
+    const b = hhmmToMinutes(document.getElementById('dts-end').value);
+    document.getElementById('dts-out').textContent = minutesToHM(Math.max(0,b-a));
+  }
+  function calcProd(){
+    const q = Number(document.getElementById('pro-qtd').value)||0;
+    const h = Number(document.getElementById('pro-h').value)||1;
+    const n = Number(document.getElementById('pro-n').value)||1;
+    document.getElementById('pro-out').textContent = (q/(h*n)).toFixed(2);
+  }
+  function calcOTIF(){
+    const ok = Number(document.getElementById('otif-ok').value)||0;
+    const tot= Number(document.getElementById('otif-tot').value)||0;
+    document.getElementById('otif-out').textContent = `${pct(ok,tot).toFixed(1)}%`;
+  }
+  function calcReturn(){
+    const ok = Number(document.getElementById('ret-ok').value)||0;
+    const tot= Number(document.getElementById('ret-tot').value)||0;
+    document.getElementById('ret-out').textContent = `${pct(ok,tot).toFixed(1)}%`;
+  }
+  function calcNC(){
+    const bad= Number(document.getElementById('nc-bad').value)||0;
+    const tot= Number(document.getElementById('nc-tot').value)||0;
+    document.getElementById('nc-out').textContent = `${pct(bad,tot).toFixed(2)}%`;
+  }
+  function calcAOT(){
+    const ok = Number(document.getElementById('aot-ok').value)||0;
+    const tot= Number(document.getElementById('aot-tot').value)||0;
+    document.getElementById('aot-out').textContent = `${pct(ok,tot).toFixed(1)}%`;
+  }
+  function calcCPU(){
+    const c = Number(document.getElementById('cpu-cost').value)||0;
+    const q = Number(document.getElementById('cpu-qtd').value)||1;
+    document.getElementById('cpu-out').textContent = brMoney(c/q);
+  }
+  function calcDockUse(){
+    const u = Number(document.getElementById('dock-use').value)||0;
+    const a = Number(document.getElementById('dock-ava').value)||1;
+    document.getElementById('dock-out').textContent = `${pct(u,a).toFixed(1)}%`;
+  }
+  function calcCycle(){
+    const a = hhmmToMinutes(document.getElementById('cyc-arr').value);
+    const l = hhmmToMinutes(document.getElementById('cyc-lea').value);
+    document.getElementById('cyc-out').textContent = minutesToHM(Math.max(0,l-a));
+  }
+
+  // Inicializa com os exemplos
+  calcLeadTime(); calcOTD(); calcAcc(); calcDamage(); calcCostLine(); calcTurn();
+  calcDockToStock(); calcProd(); calcOTIF(); calcReturn(); calcNC(); calcAOT(); calcCPU(); calcDockUse(); calcCycle();
+</script>
+</body>
+</html>

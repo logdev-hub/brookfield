@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📘 Curso Básico em Logística — Aula 1</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      /* Paleta inspirada nos materiais (azuis + amarelos Senac) */
+      --azul-escuro:#0a2a4a;  /* fundo nav/footer */
+      --azul:#15457a;         /* gradiente topo */
+      --azul-medio:#0e3b75;   /* gradiente topo */
+      --azul-light:#0f2742;   /* blocos laterais */
+      --amarelo:#ffc400;      /* acento */
+      --amarelo-2:#ffd84d;    /* hover/acento claro */
+      --laranja:#f5a524;      /* acento secundário */
+      --branco:#ffffff;       
+    }
+
+    body{background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, #083056 100%); color:#eaf1fb;}
+    .navbar{background:var(--azul-escuro);}    
+    .brand-badge{display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .75rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.05)}
+    .hero{
+      position:relative;overflow:hidden;color:var(--branco);
+      background: radial-gradient(1200px 400px at 80% 10%, rgba(255,255,255,.06), rgba(255,255,255,0)),
+                  linear-gradient(180deg, rgba(10,42,74,.0) 0%, rgba(10,42,74,.2) 100%);
+    }
+    .hero:before{
+      content:"";position:absolute;left:-120px;top:-40px;width:340px;height:200%;
+      background:linear-gradient(180deg,var(--amarelo) 0%,var(--laranja) 70%, var(--amarelo-2) 100%);
+      clip-path:polygon(0 0, 60% 10%, 60% 25%, 100% 38%, 60% 50%, 60% 65%, 100% 78%, 60% 90%, 60% 100%, 0 100%);
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.35));
+      opacity:.9
+    }
+    .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.35rem .6rem;border-radius:.75rem}
+    .card{border:0;border-radius:1rem;background:rgba(255,255,255,.06);backdrop-filter:blur(4px)}
+    .card .card-header{background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.1)}
+    .section-title span{color:var(--amarelo)}
+
+    .btn-amarelo{--bs-btn-color:#192d45;--bs-btn-bg:var(--amarelo);--bs-btn-border-color:var(--amarelo);--bs-btn-hover-bg:var(--amarelo-2);--bs-btn-hover-border-color:var(--amarelo-2);--bs-btn-active-bg:#ffcf33;color:#0a2340;font-weight:700}
+
+    .footer{background:var(--azul-escuro);color:#bcd3f7}
+    a, .link-warning{color:#ffd24a}
+    a:hover{color:#ffe17a}
+
+    .ratio > iframe{border-radius:.75rem}
+
+    /* Etiquetas/legendas */
+    .legend-dot{width:.65rem;height:.65rem;border-radius:50%;display:inline-block;margin-right:.35rem}
+    .dot-1{background:var(--amarelo)}
+    .dot-2{background:var(--laranja)}
+    .dot-3{background:#74a7ff}
+
+    /* Ocultar gabaritos por padrão (não incluímos conteúdo das respostas) */
+    .gabarito-placeholder{display:none}
+
+    /* Tabela/quadros visuais */
+    .table{--bs-table-bg:transparent;--bs-table-border-color:rgba(255,255,255,.2);color:#eaf1fb}
+    .table thead{color:#fff}
+
+    /* Badges lado a lado */
+    .pill{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .6rem;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+
+    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  
+    /* ===== Correção de contraste: força fontes claras em todo o layout ===== */
+    body, p, li, h1, h2, h3, h4, h5, h6{ color:#eaf1fb; }
+    .nav-link{ color:#d9e7ff; }
+    .nav-link:hover{ color:#ffffff; }
+    .card, .card-body, .card-header{ color:#eaf1fb; }
+    .card *:not(a):not(.btn){ color:#eaf1fb; }
+    .accordion-button{ color:#eaf1fb; background:rgba(255,255,255,.06); }
+    .accordion-button:not(.collapsed){ color:#eaf1fb; background:rgba(255,255,255,.1); }
+    .accordion-body{ color:#eaf1fb; }
+    .table, .table td, .table th{ color:#eaf1fb; }
+    .btn-outline-light{ color:#ffffff; border-color:rgba(255,255,255,.5); }
+    .btn-outline-light:hover{ background:rgba(255,255,255,.15); color:#ffffff; }
+  
+    /* === Tema escuro para o ACCORDION da Aula 1 (sem alterar outras áreas) === */
+    #accBase .accordion-item{ 
+      background: rgba(255,255,255,.05); 
+      border:1px solid rgba(255,255,255,.14); 
+      border-radius:14px; 
+      overflow:hidden; 
+      margin-bottom:.8rem;
+    }
+    #accBase .accordion-button{
+      color:#eaf1fb; 
+      background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.03) 100%);
+      font-weight:700; 
+      letter-spacing:.2px; 
+      padding:1rem 1.25rem; 
+      box-shadow:none; 
+    }
+    #accBase .accordion-button.collapsed{
+      background: rgba(255,255,255,.04); 
+      color:#dbe7ff;
+    }
+    #accBase .accordion-button:hover{
+      background: rgba(255,255,255,.08);
+    }
+    #accBase .accordion-button:focus{
+      border-color: rgba(255,196,0,.45);
+      box-shadow: 0 0 0 .2rem rgba(255,196,0,.15);
+    }
+    /* Chevron/brinco do Bootstrap em branco */
+    #accBase .accordion-button::after{ filter: invert(1) brightness(1.6); }
+
+    #accBase .accordion-body{
+      color:#eaf1fb; 
+      background: radial-gradient(800px 200px at 10% -10%, rgba(255,196,0,.08), transparent 60%);
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+    /* Separadores sutis entre itens */
+    #accBase .accordion-item + .accordion-item{ border-top:1px solid rgba(255,255,255,.08); }
+
+    /* Tipografia dentro do accordion */
+    #accBase .accordion-body p, 
+    #accBase .accordion-body li{ color:#eaf1fb; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-dark navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <span class="brand-badge">📦 Senac | Atendimento Corporativo</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#curso">Curso</a></li>
+          <li class="nav-item"><a class="nav-link" href="#aula1">Aula 1</a></li>
+          <li class="nav-item"><a class="nav-link" href="#videos">Vídeos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#leituras">Leituras</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO / INFO CURSO -->
+  <header class="hero py-5">
+    <div class="container position-relative">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1 class="display-5 fw-bold mb-2">📘 Curso: <span class="text-warning">Básico em Logística</span></h1>
+          <p class="lead mb-3">Modalidade: <strong>Presencial / Atendimento Corporativo</strong> • Local: <strong>Região Metropolitana de Guarulhos</strong></p>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="chip">⏱️ 32h (16 encontros de 2h)</span>
+            <span class="chip">🏭 Contexto logístico e industrial</span>
+            <span class="chip">🎯 Público: profissionais iniciantes e de operações</span>
+          </div>
+          <a href="#aula1" class="btn btn-amarelo btn-lg shadow-soft">Começar a Aula 1 ▶️</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+
+      <!-- Bloco: Sobre o curso -->
+      <section id="curso" class="mb-5">
+        <h2 class="section-title h3 fw-bold mb-3">Sobre o <span>curso</span> 💡</h2>
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="card h-100">
+              <div class="card-body">
+                <p class="mb-2">Este programa introdutório apresenta uma visão prática da <strong>logística</strong> com foco em operações de <em>armazenagem, transporte, expedição, estoque</em> e <em>apoio administrativo</em>, conectando conceitos a situações reais da região de <strong>Guarulhos</strong>.</p>
+                <ul class="mb-0">
+                  <li>✅ Linguagem acessível e exemplos práticos;</li>
+                  <li>🔗 Conexão com o contexto aeroportuário e parques logísticos;</li>
+                  <li>🧭 Atividades colaborativas e instrumentos de mapeamento.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="text-uppercase text-warning">Público-alvo 👥</h6>
+                <p class="mb-0">Profissionais em início de carreira ou atuantes em operações logísticas que desejam consolidar fundamentos e ampliar repertório prático.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AULA 1 -->
+      <section id="aula1" class="mb-5">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h2 class="section-title h3 fw-bold mb-0">Aula 1 — <span>Introdução à Logística e Contexto Histórico</span> 🧭</h2>
+          <span class="pill">📅 Encontro 1 • 14/10/2025</span>
+        </div>
+        <p class="text-white-50 mb-4">Objetivo: construir uma base conceitual de logística, sua evolução e o papel estratégico de Guarulhos e da logística aeroportuária.</p>
+
+        <!-- Base conceitual (accordion) -->
+        <div class="accordion" id="accBase">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="h1"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1" aria-expanded="true">1) O que é Logística 📦</button></h2>
+            <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#accBase">
+              <div class="accordion-body">
+                <p><strong>Definição:</strong> planejamento, execução e controle do fluxo de materiais, informações e recursos desde a origem até o consumo, para entregar <em>produto certo, quantidade certa, lugar certo, momento certo e menor custo</em> possível.</p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="h2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">2) Evolução histórica 🕰️</button></h2>
+            <div id="c2" class="accordion-collapse collapse" data-bs-parent="#accBase">
+              <div class="accordion-body">
+                <ul class="mb-0">
+                  <li>Origem militar (Alexandre, o Grande) → movimento de tropas e suprimentos;</li>
+                  <li>Guerras Mundiais → salto em <em>abastecimento e distribuição</em>;</li>
+                  <li>1950–60 → migração para o meio empresarial;</li>
+                  <li>1980 → surge o <strong>Supply Chain Management</strong>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="h3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">3) Logística no Brasil e em Guarulhos 🇧🇷✈️</button></h2>
+            <div id="c3" class="accordion-collapse collapse" data-bs-parent="#accBase">
+              <div class="accordion-body">
+                <p>Guarulhos é um dos principais polos logísticos do país, com o maior hub de cargas aéreas da América Latina, concentração de parques logísticos e conexões com Dutra, Ayrton Senna e Fernão Dias.</p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="h4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4">4) Logística aeroportuária 🛄</button></h2>
+            <div id="c4" class="accordion-collapse collapse" data-bs-parent="#accBase">
+              <div class="accordion-body">
+                <ul class="mb-0">
+                  <li>Agilidade em desembaraço aduaneiro;</li>
+                  <li>Armazenagem temporária de cargas internacionais;</li>
+                  <li>Controle de temperatura e <em>rastreabilidade</em> completa;</li>
+                  <li>Integração modal aéreo ↔ terrestre.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="h5"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c5">5) Panorama em parques logísticos (ex.: Brookfield) 🏭</button></h2>
+            <div id="c5" class="accordion-collapse collapse" data-bs-parent="#accBase">
+              <div class="accordion-body">
+                <p>Parques logísticos de padrão Classe A/AAA com foco em eficiência, sustentabilidade (ex.: certificação LEED) e atendimento a <em>e-commerce</em> e operadores logísticos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desafios em cards -->
+        <div class="row g-4 mt-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-header">🧩 Desafio Prático 1 — Mapeamento Logístico</div>
+              <div class="card-body">
+                <p>Em grupos de <strong>4–5</strong>, mapeie o fluxo completo de um <em>smartphone importado</em> (fornecedor → consumidor). Identifique <span class="legend-dot dot-1"></span>movimentações, <span class="legend-dot dot-2"></span>armazenagens e <span class="legend-dot dot-3"></span>transportes.</p>
+                <ul class="mb-0">
+                  <li>Ferramentas: flipchart ou papel kraft;</li>
+                  <li>Saída: fluxograma com pontos críticos e melhorias.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-header">🕰️ Desafio Prático 2 — Timeline Histórica</div>
+              <div class="card-body">
+                <p>Em duplas, crie uma linha do tempo (1950–2025) com <strong>8 marcos</strong> e relacione <strong>3</strong> com mudanças no cenário brasileiro.</p>
+                <p class="mb-0">Formato livre: digital (ex.: Canva) ou manual.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Atividades Individuais -->
+        <div class="row g-4 mt-1">
+          <div class="col-lg-7">
+            <div class="card h-100">
+              <div class="card-header">📝 Atividade Individual 1 — Estudo de Caso</div>
+              <div class="card-body">
+                <p><em>Leia e responda:</em> "A empresa XYZ Eletrônicos importa componentes da China que chegam pelo Aeroporto de Guarulhos..."</p>
+                <ol class="mb-3">
+                  <li>Liste as <strong>etapas logísticas</strong> (mín. 6).</li>
+                  <li>Explique por que <strong>Guarulhos</strong> é estratégico.</li>
+                  <li>Indique o <strong>principal desafio</strong> da operação.</li>
+                </ol>
+                <!-- Gabarito suprimido: não incluímos conteúdo das respostas -->
+                <button class="btn btn-outline-light w-100" disabled title="As respostas serão disponibilizadas posteriormente">🔒 Gabarito disponível posteriormente</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="card h-100">
+              <div class="card-header">✍️ Atividade Individual 2 — Texto Dissertativo</div>
+              <div class="card-body">
+                <p>Tema: <strong>“A importância da logística no desenvolvimento econômico de Guarulhos”</strong> (15–20 linhas).</p>
+                <ul class="mb-0">
+                  <li>(a) Características geográficas e estruturais;</li>
+                  <li>(b) Impacto em emprego e economia local;</li>
+                  <li>(c) Perspectivas futuras do setor.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VÍDEOS -->
+      <section id="videos" class="mb-5">
+        <h2 class="section-title h3 fw-bold mb-3">Materiais em <span>vídeo</span> 🎥</h2>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="mb-2">O QUE É LOGÍSTICA?! <span class="text-warning">• Quadrivium Academic • 15 min</span></h6>
+                <div class="ratio ratio-16x9 mb-2">
+                  <iframe src="https://www.youtube.com/embed/XMP9-H5JUBw" title="O que é Logística" allowfullscreen></iframe>
+                </div>
+                <a class="btn btn-sm btn-amarelo" href="https://www.youtube.com/watch?v=XMP9-H5JUBw" target="_blank" rel="noopener">Abrir no YouTube</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="mb-2">Como funciona a logística de uma empresa? <span class="text-warning">• Sebrae • 12 min</span></h6>
+                <div class="ratio ratio-16x9 mb-2">
+                  <iframe src="https://www.youtube.com/embed/fejFXRggIko" title="Logística na empresa" allowfullscreen></iframe>
+                </div>
+                <a class="btn btn-sm btn-amarelo" href="https://www.youtube.com/watch?v=fejFXRggIko" target="_blank" rel="noopener">Abrir no YouTube</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Leituras -->
+      <section id="leituras" class="mb-5">
+        <h2 class="section-title h3 fw-bold mb-3">Materiais de <span>leitura</span> 📚</h2>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr><th style="width:36px">#</th><th>Título</th><th>Origem</th><th>Link</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Encontro 1: Introdução — <em>Uma Breve Análise sobre a Evolução da Logística</em></td>
+                    <td>SEGET</td>
+                    <td><a href="https://www.aedb.br/seget/arquivos/artigos19/23728201.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td><em>Panorama da Evolução na Logística: O Caso Brasileiro</em></td>
+                    <td>Aya Editora (2022)</td>
+                    <td><a href="https://ayaeditora.com.br/wp-content/uploads/2022/01/L103C5.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mb-0 small text-white-50">Dica: marque trechos-chave que relacionem <em>evolução histórica</em> → <em>práticas atuais</em> na região de Guarulhos.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Próximos passos -->
+      <section class="mb-5">
+        <div class="card">
+          <div class="card-body d-lg-flex align-items-center justify-content-between">
+            <div>
+              <h5 class="mb-1">Próximos passos 🚀</h5>
+              <p class="mb-0 text-white-50">Tragam o esboço do fluxo (Desafio 1) e a timeline (Desafio 2). Na próxima aula, conectaremos aos conceitos de <strong>armazenagem</strong> e <strong>transporte</strong>.</p>
+            </div>
+            <a href="#" class="btn btn-outline-light disabled" aria-disabled="true" title="Disponível após a revisão em sala">📎 Baixar materiais do encontro (em breve)</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer py-4">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>© <span id="year"></span> Senac — Atendimento Corporativo • Curso Básico em Logística</div>
+      <div class="d-flex gap-2">
+        <span class="pill">🔵 Azul corporativo</span>
+        <span class="pill" style="background:var(--amarelo); color:#13263e; border-color:rgba(0,0,0,.1)">🟡 Acento amarelo</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Ano dinâmico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // (Opcional) Toggle de gabarito no futuro — mantido desativado por decisão pedagógica
+    function revelarGabarito(){
+      const el = document.querySelector('.gabarito-placeholder');
+      if(!el) return;
+      el.style.display = (el.style.display==='none' || !el.style.display) ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

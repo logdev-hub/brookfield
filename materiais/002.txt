@@ -1,0 +1,13 @@
+Atividade  - Grupos (Projeto)
+
+1 - Defina um tipo de empresa
+2 - Identifique os materiais que sua empresa movimenta
+	 - matérias-primas
+	 - produtos acabados
+	*** MUITOS = SELECIONE OS PRINCIPAIS
+3 - Faça a classificação ABC de seus materiais
+4 - Identifique a qual tipo de mercado pertencem estes materiais
+
+5 - Explique como você controlaria a logística inbound desta empresa
+6 - Defina quais indicadores você aplicaria a esta empresa (inbound) e crie um exemplo prático.
+7 - Para apresentar seus resultados, se quiser, utilize IA.

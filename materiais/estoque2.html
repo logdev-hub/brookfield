@@ -1,0 +1,573 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Estoque e Suprimentos 📊</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #16a085;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark);
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--light), white);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+        
+        .abc-a {
+            background-color: #ffeb3b;
+            font-weight: bold;
+        }
+        
+        .abc-b {
+            background-color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .abc-c {
+            background-color: #9e9e9e;
+            font-weight: bold;
+        }
+        
+        .market-concorrencia {
+            background-color: #e3f2fd;
+        }
+        
+        .market-oligopolio {
+            background-color: #fff3e0;
+        }
+        
+        .market-monopolio {
+            background-color: #fce4ec;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .btn-filter {
+            background-color: var(--secondary);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-filter:hover {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .summary-box {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            flex: 1 1 200px;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1rem;
+            }
+            
+            .summary-box {
+                flex-direction: column;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-header text-center">
+                    <h1 class="display-5 fw-bold">📊 Dashboard de Estoque e Suprimentos</h1>
+                    <p class="lead">Análise interativa dos dados de estoque e suprimentos com foco em otimização e gestão estratégica</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-itens">12</div>
+                        <div class="summary-label">Itens em Estoque 📦</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-valor">R$ 69.225,00</div>
+                        <div class="summary-label">Valor Total do Estoque 💰</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-quantidade">11.500</div>
+                        <div class="summary-label">Quantidade Total 📈</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="abc-a-count">2</div>
+                        <div class="summary-label">Itens ABC - Classe A 🎯</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="abc-b-count">3</div>
+                        <div class="summary-label">Itens ABC - Classe B ⚖️</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="abc-c-count">7</div>
+                        <div class="summary-label">Itens ABC - Classe C 📉</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-section">
+                    <h5 class="mb-3">🔍 Filtros Interativos</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="filter-market" class="form-label">Tipo de Mercado</label>
+                            <select id="filter-market" class="form-select">
+                                <option value="">Todos os Mercados</option>
+                                <option value="CONCORRÊNCIA PERFEITA">Concorrência Perfeita</option>
+                                <option value="OLIGOPÓLIO">Oligopólio</option>
+                                <option value="MONOPÓLIO">Monopólio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="filter-classification" class="form-label">Classificação ABC</label>
+                            <select id="filter-classification" class="form-select">
+                                <option value="">Todas as Classes</option>
+                                <option value="A">Classe A</option>
+                                <option value="B">Classe B</option>
+                                <option value="C">Classe C</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="filter-code" class="form-label">Código do Produto</label>
+                            <input type="text" id="filter-code" class="form-control" placeholder="Ex: MP0001">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button id="apply-filters" class="btn btn-filter">Aplicar Filtros 🔍</button>
+                        <button id="reset-filters" class="btn btn-outline-secondary ms-2">Limpar Filtros 🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <!-- ABC Curve Chart -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>📈 Curva ABC por Valor</span>
+                        <span id="abc-percentage">A: 71.5% | B: 21.7% | C: 6.8%</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="abcChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Market Type Distribution -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">🌍 Distribuição por Tipo de Mercado</div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="marketChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>📋 Dados de Estoque</span>
+                        <span id="filtered-count">Mostrando 12 de 12 itens</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-striped table-hover" id="stock-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Produto</th>
+                                        <th>Qtde de Mês</th>
+                                        <th>Valor Total</th>
+                                        <th>Classif</th>
+                                        <th>Tipo de Mercado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stock-table-body">
+                                    <!-- Data will be populated here -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                        <td><strong>R$ 69.225,00</strong></td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data based on the image provided
+        const stockData = [
+            { codigo: "MP0001", produto: "Eixo alto", qtdeMes: 500, valorTotal: 25000, classif: "A", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0002", produto: "Polia", qtdeMes: 2000, valorTotal: 20000, classif: "A", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0003", produto: "Mola", qtdeMes: 5000, valorTotal: 15000, classif: "B", tipoMercado: "OLIGOPÓLIO" },
+            { codigo: "MP0004", produto: "Eixo baixo", qtdeMes: 600, valorTotal: 3000, classif: "B", tipoMercado: "OLIGOPÓLIO" },
+            { codigo: "MP0005", produto: "Anel", qtdeMes: 1000, valorTotal: 2500, classif: "B", tipoMercado: "OLIGOPÓLIO" },
+            { codigo: "MP0006", produto: "Eixo", qtdeMes: 100, valorTotal: 2000, classif: "C", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0007", produto: "Placa", qtdeMes: 1000, valorTotal: 1000, classif: "C", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0008", produto: "Porca", qtdeMes: 1000, valorTotal: 500, classif: "C", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0009", produto: "Parafuso", qtdeMes: 100, valorTotal: 100, classif: "C", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0010", produto: "Anel liso", qtdeMes: 50, valorTotal: 75, classif: "C", tipoMercado: "CONCORRÊNCIA PERFEITA" },
+            { codigo: "MP0011", produto: "Chaveta", qtdeMes: 80, valorTotal: 40, classif: "C", tipoMercado: "MONOPÓLIO" },
+            { codigo: "MP0012", produto: "Arruela", qtdeMes: 20, valorTotal: 10, classif: "C", tipoMercado: "OLIGOPÓLIO" }
+        ];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+        });
+
+        function initializeDashboard() {
+            // Calculate and display summary statistics
+            updateSummaryStats();
+            
+            // Render charts
+            renderABCChart();
+            renderMarketChart();
+            
+            // Populate table
+            populateTable(stockData);
+            
+            // Set up event listeners for filters
+            setupFilters();
+        }
+
+        function updateSummaryStats() {
+            // Count items by ABC classification
+            const abcCounts = {
+                A: stockData.filter(item => item.classif === 'A').length,
+                B: stockData.filter(item => item.classif === 'B').length,
+                C: stockData.filter(item => item.classif === 'C').length
+            };
+            
+            // Calculate total value and quantity
+            const totalValue = stockData.reduce((sum, item) => sum + item.valorTotal, 0);
+            const totalQuantity = stockData.reduce((sum, item) => sum + item.qtdeMes, 0);
+            
+            // Update DOM elements
+            document.getElementById('total-itens').textContent = stockData.length;
+            document.getElementById('total-valor').textContent = formatCurrency(totalValue);
+            document.getElementById('total-quantidade').textContent = totalQuantity.toLocaleString();
+            document.getElementById('abc-a-count').textContent = abcCounts.A;
+            document.getElementById('abc-b-count').textContent = abcCounts.B;
+            document.getElementById('abc-c-count').textContent = abcCounts.C;
+            
+            // Calculate ABC percentages
+            const abcPercentages = {
+                A: (stockData.filter(item => item.classif === 'A').reduce((sum, item) => sum + item.valorTotal, 0) / totalValue * 100).toFixed(1),
+                B: (stockData.filter(item => item.classif === 'B').reduce((sum, item) => sum + item.valorTotal, 0) / totalValue * 100).toFixed(1),
+                C: (stockData.filter(item => item.classif === 'C').reduce((sum, item) => sum + item.valorTotal, 0) / totalValue * 100).toFixed(1)
+            };
+            
+            document.getElementById('abc-percentage').textContent = `A: ${abcPercentages.A}% | B: ${abcPercentages.B}% | C: ${abcPercentages.C}%`;
+        }
+
+        function renderABCChart() {
+            // Calculate values for each ABC class
+            const abcValues = {
+                A: stockData.filter(item => item.classif === 'A').reduce((sum, item) => sum + item.valorTotal, 0),
+                B: stockData.filter(item => item.classif === 'B').reduce((sum, item) => sum + item.valorTotal, 0),
+                C: stockData.filter(item => item.classif === 'C').reduce((sum, item) => sum + item.valorTotal, 0)
+            };
+            
+            const ctx = document.getElementById('abcChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Classe A', 'Classe B', 'Classe C'],
+                    datasets: [{
+                        label: 'Valor por Classificação ABC',
+                        data: [abcValues.A, abcValues.B, abcValues.C],
+                        backgroundColor: [
+                            '#FFD700', // Gold for A
+                            '#FFA500', // Orange for B
+                            '#808080'  // Gray for C
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percentage = ((value / (abcValues.A + abcValues.B + abcValues.C)) * 100).toFixed(1);
+                                    return `${context.label}: ${formatCurrency(value)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMarketChart() {
+            // Count items by market type
+            const marketCounts = {
+                'CONCORRÊNCIA PERFEITA': stockData.filter(item => item.tipoMercado === 'CONCORRÊNCIA PERFEITA').length,
+                'OLIGOPÓLIO': stockData.filter(item => item.tipoMercado === 'OLIGOPÓLIO').length,
+                'MONOPÓLIO': stockData.filter(item => item.tipoMercado === 'MONOPÓLIO').length
+            };
+            
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concorrência Perfeita', 'Oligopólio', 'Monopólio'],
+                    datasets: [{
+                        label: 'Distribuição por Tipo de Mercado',
+                        data: [
+                            marketCounts['CONCORRÊNCIA PERFEITA'],
+                            marketCounts['OLIGOPÓLIO'],
+                            marketCounts['MONOPÓLIO']
+                        ],
+                        backgroundColor: [
+                            '#BBDEFB', // Light blue for Concorrência
+                            '#FFE0B2', // Light orange for Oligopólio
+                            '#FCE4EC'  // Light pink for Monopólio
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = Object.values(marketCounts).reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${context.label}: ${value} itens (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateTable(data) {
+            const tableBody = document.getElementById('stock-table-body');
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Apply CSS classes based on classification and market type
+                if (item.classif === 'A') row.classList.add('abc-a');
+                else if (item.classif === 'B') row.classList.add('abc-b');
+                else row.classList.add('abc-c');
+                
+                if (item.tipoMercado === 'CONCORRÊNCIA PERFEITA') row.classList.add('market-concorrencia');
+                else if (item.tipoMercado === 'OLIGOPÓLIO') row.classList.add('market-oligopolio');
+                else if (item.tipoMercado === 'MONOPÓLIO') row.classList.add('market-monopolio');
+                
+                row.innerHTML = `
+                    <td>${item.codigo}</td>
+                    <td>${item.produto}</td>
+                    <td>${item.qtdeMes.toLocaleString()}</td>
+                    <td>${formatCurrency(item.valorTotal)}</td>
+                    <td>${item.classif}</td>
+                    <td>${item.tipoMercado}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Update filtered count
+            document.getElementById('filtered-count').textContent = `Mostrando ${data.length} de ${stockData.length} itens`;
+        }
+
+        function setupFilters() {
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+            document.getElementById('reset-filters').addEventListener('click', resetFilters);
+        }
+
+        function applyFilters() {
+            const marketFilter = document.getElementById('filter-market').value;
+            const classificationFilter = document.getElementById('filter-classification').value;
+            const codeFilter = document.getElementById('filter-code').value.trim().toUpperCase();
+            
+            let filteredData = stockData;
+            
+            // Apply market filter
+            if (marketFilter) {
+                filteredData = filteredData.filter(item => item.tipoMercado === marketFilter);
+            }
+            
+            // Apply classification filter
+            if (classificationFilter) {
+                filteredData = filteredData.filter(item => item.classif === classificationFilter);
+            }
+            
+            // Apply code filter
+            if (codeFilter) {
+                filteredData = filteredData.filter(item => item.codigo.includes(codeFilter));
+            }
+            
+            // Update table with filtered data
+            populateTable(filteredData);
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-market').value = '';
+            document.getElementById('filter-classification').value = '';
+            document.getElementById('filter-code').value = '';
+            populateTable(stockData);
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📘 Curso Básico em Logística — Índice</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Ícones Bootstrap (opcional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    :root{
+      /* Paleta consistente com as páginas enviadas (azul/amarelo Senac) */
+      --azul-escuro:#0a2a4a;   /* nav/footer */
+      --azul:#15457a;          /* gradiente */
+      --azul-medio:#0e3b75;
+      --azul-profundo:#082a4e;
+      --amarelo:#ffc400;       /* acento principal */
+      --amarelo-2:#ffd84d;     /* hover/acento claro */
+      --texto:#eaf1fb;         /* texto padrão claro */
+      --borda:rgba(255,255,255,.18);
+      --tile:rgba(255,255,255,.06);
+    }
+    html,body{height:100%}
+    body{
+      background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, var(--azul-profundo) 100%);
+      color:var(--texto);
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,"Noto Sans",Arial;
+    }
+    /* NAV */
+    .navbar{ background:var(--azul-escuro); }
+    .brand-badge{
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:.35rem .75rem;border:1px solid var(--borda);
+      border-radius:999px;background:rgba(255,255,255,.05)
+    }
+    .docente-badge{ background:rgba(255,255,255,.1); border:1px solid var(--borda); border-radius:999px; padding:.25rem .6rem }
+    a{ color:#ffd24a } a:hover{ color:#ffe17a }
+    /* HERO */
+    .hero{
+      position:relative; overflow:hidden; color:#fff;
+      background: radial-gradient(1200px 400px at 80% 10%, rgba(255,255,255,.06), rgba(255,255,255,0)),
+                  linear-gradient(180deg, rgba(10,42,74,.0) 0%, rgba(10,42,74,.2) 100%);
+    }
+    .hero:before{
+      content:""; position:absolute; left:-120px; top:-40px; width:340px; height:200%;
+      background:linear-gradient(180deg,var(--amarelo) 0%,var(--amarelo-2) 70%, #ffe98a 100%);
+      clip-path:polygon(0 0, 60% 10%, 60% 25%, 100% 38%, 60% 50%, 60% 65%, 100% 78%, 60% 90%, 60% 100%, 0 100%);
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.35));
+      opacity:.9
+    }
+    .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.35rem .6rem;border-radius:.75rem}
+    /* CARDS DE LINKS */
+    .tile{
+      background:var(--tile);
+      border:1px solid var(--borda);
+      border-radius:1rem;
+      padding:1rem;
+      height:100%;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .tile:hover{ transform: translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.25) }
+    .tile h3,.tile h5{ color:#fff }
+    .badge-chip{ background:rgba(255,255,255,.1); border:1px solid var(--borda); padding:.3rem .55rem; border-radius:.6rem }
+    .btn-amarelo{
+      --bs-btn-color:#192d45; --bs-btn-bg:var(--amarelo); --bs-btn-border-color:var(--amarelo);
+      --bs-btn-hover-bg:var(--amarelo-2); --bs-btn-hover-border-color:var(--amarelo-2);
+      --bs-btn-active-bg:#ffcf33; font-weight:700;
+    }
+    .footer{ background:var(--azul-escuro); color:#bcd3f7 }
+    /* BUSCA */
+    .search-wrap{ position:sticky; top:.75rem; z-index:5 }
+    .form-control.search{ background:#0d3a62; color:#eaf6ff; border-color:rgba(255,255,255,.35) }
+    .form-control.search::placeholder{ color:#cfe1ff; opacity:.9 }
+    .form-control.search:focus{
+      background:#0f4676; color:#ffffff; border-color:#7ec3ff;
+      box-shadow:0 0 0 .2rem rgba(126,195,255,.15);
+    }
+  </style>
+</head>
+
+<body>
+<nav class="navbar navbar-dark">
+  <div class="container container-narrow d-flex align-items-center justify-content-between py-2">
+    <span class="navbar-brand d-flex align-items-center gap-2">
+    <span class="badge badge-soft ms-2">Materiais Complementares</span>
+    </span>
+    <a class="small link-light" href="index.html">← Voltar ao índice</a>
+  </div>
+</nav>
+
+<main class="container container-narrow my-4">
+  <header class="text-center mb-4">
+    <h1 class="fw-bold">Materiais Complementares</h1>
+    <p class="muted">Arquivos de apoio e vídeo de referência utilizados em sala.</p>
+  </header>
+
+  <section class="container-narrow my-4">
+    <div class="tile p-4">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+          <h2 class="fw-bold mb-2">📦 Arquivos</h2>
+          <ul class="list-unstyled mb-4">
+            <li class="mb-2">
+              <i class="bi bi-file-text me-1"></i>
+              <a class="link-light" href="materiais/001.txt" download>Anotações da aula</a>
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-journal-text me-1"></i>
+              <a class="link-light" href="materiais/002.txt" download>Atividade para 28/10 </a>
+            </li>
+
+            <li class="mb-2">
+              <i class="bi bi-journal-text me-1"></i>
+              <a class="link-light" href="materiais/abc.xlsx" download> Planilha - Curva ABC</a>
+            </li>
+
+
+            <li class="mb-2">
+              <i class="bi bi-journal-text me-1"></i>
+              <a class="link-light" href="materiais/curva abc.pdf" download>Slides - Curva ABC</a>
+            </li>
+
+            
+          </ul>
+
+        </div>
+
+        <div class="col-lg-6">
+          <h2 class="fw-bold mb-2">🎬 Vídeo</h2>
+        <div class="ratio ratio-16x9 rounded-3 overflow-hidden" style="border:1px solid var(--borda)">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/hzuj-MyJR5I?rel=0&modestbranding=1&playsinline=1"
+    title="Materiais Complementares — vídeo"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen>
+  </iframe>
+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="py-4 border-top border-secondary-50">
+  <div class="container container-narrow small text-center muted">
+    <span>© 2025 — Materiais Complementares | Curso Básico em Logística</span>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

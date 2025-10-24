@@ -1,0 +1,21 @@
+PROMPT   ---> ENGENHARIA DE PROMPT (BASES)
+
+- CONTEXTO
+- DADOS
+- ORDEM ("DAR UMA DIREÇÃO PARA A IA")
+
+https://chat.qwen.ai/ ----> GRATUITO
+https://claude.ai/    ----> PAGA / GRATUITO
+
+A partir de agora você é um profissional de área de Logística, mais especificamente um analista de estoques e suprimentos e precisa desenvolver um painel interativo com dados sobre a sua operação
+
+Os dados estão disponíveis na imagem que lhe enviarei. Ela está em anexo.
+
+Faça um relatório profissional com design atrativo em HTML, CSS, Javascript e Bootstrap, utilize emojis para maior atratividade e faça tudo em único arquivo. 
+
+Pontos importantes:
+1 - Faça gráficos para explorar os resultados
+2 - Permita filtros na tabela por tipo de mercado, classificação e código do produto.
+3 - Faça uma representação da Curva ABC considerando os códigos dos materiais, bem como o valor total de cada produto.
+4 - Faça algo em formato de dashboard sem abrir mão da responsividade
+

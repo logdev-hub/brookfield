@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aula 5 — Recebimento & Conferência (Inbound)</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b2746; --bg-2:#11365f; --tile:rgba(255,255,255,.06); --border:rgba(255,255,255,.18);
+    --text:#eaf1fb; --muted:#bed3f9; --accent:#ffd24a; --accent-2:#ffea95;
+    --ok:#47d16d; --warn:#ffb74d; --bad:#ff6b6b;
+  }
+  body{ background:linear-gradient(135deg,var(--bg) 0%, var(--bg-2) 60%, #07213b 100%); color:var(--text); }
+  .navbar{ background:#09213a; }
+  .container-narrow{ max-width: 1150px; }
+  a{ color:var(--accent); } a:hover{ color:var(--accent-2); }
+  .tile{ background:var(--tile); border:1px solid var(--border); border-radius:1rem; padding:1rem; }
+  .tile h5, .tile h6, h1, h2, h3{ color:#fff }
+  .muted{ color:var(--muted) }
+  .btn-accent{
+    --bs-btn-bg:var(--accent); --bs-btn-border-color:var(--accent);
+    --bs-btn-hover-bg:var(--accent-2); --bs-btn-hover-border-color:var(--accent-2);
+    color:#132845; font-weight:700;
+  }
+  .badge-soft{ background:rgba(255,255,255,.07); border:1px solid var(--border) }
+  .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+  .flow svg{ width:100%; height:auto; display:block }
+  .legend dot{width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:.35rem}
+  .grid-3{ display:grid; gap:1rem } @media(min-width: 992px){ .grid-3{ grid-template-columns: repeat(3, 1fr) } }
+  .grid-2{ display:grid; gap:1rem } @media(min-width: 992px){ .grid-2{ grid-template-columns: repeat(2, 1fr) } }
+  .form-check .form-check-input:checked{ background-color:#22c55e; border-color:#22c55e }
+  .meter{height:10px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
+  .meter>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#47d16d,#ffd24a);transition:width .3s}
+  .table{ color:var(--text) } thead th{ background:rgba(255,255,255,.08) }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container container-narrow d-flex align-items-center justify-content-between py-2">
+    <span class="navbar-brand d-flex align-items-center gap-2">
+      <i class="bi bi-box-seam"></i><strong>Aula 5 — Recebimento & Conferência</strong>
+      <span class="badge badge-soft ms-2">Processos de Entrada de Materiais</span>
+    </span>
+    <span class="small text-light">Tema escuro • Responsivo • Interativo</span>
+  </div>
+</nav>
+
+<main class="container container-narrow my-4">
+  <header class="text-center mb-4">
+    <h1 class="fw-bold">📥 Entrada de Materiais — do Agendamento à Armazenagem</h1>
+    <p class="lead">Fundamentos, storytelling, fluxograma interativo, papéis & responsabilidades, exemplos e prática.</p>
+  </header>
+
+  <!-- Storytelling -->
+  <section class="tile mb-3">
+    <h3>📖 Storytelling — <strong>GRU Tech</strong> na doca 03</h3>
+    <p>08h00: o motorista da <strong>TransGuaru</strong> chega na portaria com o <span class="code">nº do agendamento</span>. A conferente <strong>Lívia</strong> valida a <span class="code">ASN</span> no WMS e direciona o caminhão para a doca 03. 08h10: inicia a <strong>descarga</strong>. 08h35: <em>check</em> de <strong>avarias</strong>, contagem por amostragem e <strong>conferência cega</strong> com coletor RF. 09h05: documentos fiscais conferidos, <strong>entrada</strong> no ERP e <strong>etiquetagem</strong>. 09h20: endereço liberado, <strong>put-away</strong> executado. 09h40: itens <strong>disponíveis</strong> no sistema para kitting. Tudo isso medido pelo <span class="code">Dock→Stock</span>.</p>
+    <div class="muted">Resumo: <strong>Agendar → Chegar → Descarregar → Conferir físico/fiscal → Registrar → Endereçar → Armazenar</strong>.</div>
+  </section>
+
+  <!-- Fluxograma -->
+  <section class="tile flow mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">🧭 Fluxograma do Recebimento (clique nos passos)</h3>
+      <div class="small">Dica: use com a turma para simular gargalos.</div>
+    </div>
+    <svg viewBox="0 0 1100 340" xmlns="http://www.w3.org/2000/svg" id="fluxo">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#ffd24a"/></marker>
+        <style>
+          .bx{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.35)}
+          .tx{fill:#eaf1fb;font-size:13px}
+          .ln{stroke:#ffd24a;stroke-width:2.2;fill:none;stroke-linecap:round}
+          .hl{stroke:#22c55e;stroke-width:3}
+          .sel{stroke:#22c55e}
+        </style>
+      </defs>
+
+      <!-- Linha 1 -->
+      <rect class="bx" x="20"  y="30" width="160" height="52" rx="12" data-step="agendamento"/>
+      <text class="tx" x="100" y="60" text-anchor="middle">🗓️ Agendamento</text>
+
+      <rect class="bx" x="210" y="30" width="180" height="52" rx="12" data-step="chegada"/>
+      <text class="tx" x="300" y="60" text-anchor="middle">🚚 Chegada / Portaria</text>
+
+      <rect class="bx" x="420" y="30" width="180" height="52" rx="12" data-step="doca"/>
+      <text class="tx" x="510" y="60" text-anchor="middle">🚪 Doca & Descarga</text>
+
+      <rect class="bx" x="630" y="30" width="180" height="52" rx="12" data-step="conf-fisica"/>
+      <text class="tx" x="720" y="60" text-anchor="middle">📦 Conferência Física</text>
+
+      <rect class="bx" x="840" y="30" width="230" height="52" rx="12" data-step="conf-fiscal"/>
+      <text class="tx" x="955" y="60" text-anchor="middle">🧾 Conferência Fiscal (NF-e)</text>
+
+      <path class="ln" marker-end="url(#arr)" d="M180,56 L210,56"/>
+      <path class="ln" marker-end="url(#arr)" d="M390,56 L420,56"/>
+      <path class="ln" marker-end="url(#arr)" d="M600,56 L630,56"/>
+      <path class="ln" marker-end="url(#arr)" d="M810,56 L840,56"/>
+
+      <!-- Linha 2 -->
+      <rect class="bx" x="140" y="140" width="220" height="52" rx="12" data-step="registro"/>
+      <text class="tx" x="250" y="170" text-anchor="middle">💻 Registro ERP/WMS & Etiquetagem</text>
+
+      <rect class="bx" x="400" y="140" width="200" height="52" rx="12" data-step="enderecamento"/>
+      <text class="tx" x="500" y="170" text-anchor="middle">📍 Endereçamento (Put-away)</text>
+
+      <rect class="bx" x="630" y="140" width="190" height="52" rx="12" data-step="armazenagem"/>
+      <text class="tx" x="725" y="170" text-anchor="middle">🏷️ Armazenagem</text>
+
+      <rect class="bx" x="850" y="140" width="220" height="52" rx="12" data-step="disponivel"/>
+      <text class="tx" x="960" y="170" text-anchor="middle">✅ Disponível p/ produção/expedição</text>
+
+      <path class="ln" marker-end="url(#arr)" d="M360,166 L400,166"/>
+      <path class="ln" marker-end="url(#arr)" d="M600,166 L630,166"/>
+      <path class="ln" marker-end="url(#arr)" d="M820,166 L850,166"/>
+
+      <!-- Desvios -->
+      <rect class="bx" x="420" y="250" width="240" height="52" rx="12" data-step="nao-conforme"/>
+      <text class="tx" x="540" y="280" text-anchor="middle">❌ Não Conformidade → Quarentena / Devolução</text>
+      <path class="ln" marker-end="url(#arr)" d="M720,82 C720,120 540,120 540,250"/>
+    </svg>
+
+    <div class="grid-3 mt-3">
+      <div class="tile">
+        <h6>🎯 Objetivo de cada etapa</h6>
+        <ul class="mb-0 small" id="etapa-txt">
+          <li><strong>Agendamento:</strong> confirmar janela e ASN.</li>
+          <li><strong>Chegada:</strong> cadastro e direcionamento.</li>
+          <li><strong>Doca:</strong> segurança + descarga eficiente.</li>
+          <li><strong>Conferência física:</strong> quantidade, avaria, lote/serial.</li>
+          <li><strong>Conferência fiscal:</strong> checagem NF-e/CT-e.</li>
+          <li><strong>Registro:</strong> ERP/WMS e etiquetas.</li>
+          <li><strong>Endereçamento:</strong> put-away otimizado (slotting).</li>
+          <li><strong>Armazenagem:</strong> condições corretas (ESD, Li-ion etc.).</li>
+          <li><strong>Disponível:</strong> liberar para o próximo processo.</li>
+        </ul>
+      </div>
+      <div class="tile">
+        <h6>👥 Papéis & responsabilidades</h6>
+        <ul class="mb-0 small">
+          <li><strong>Compras:</strong> pedidos/ASN, follow-up e SLA.</li>
+          <li><strong>Transporte:</strong> respeitar janela e documentação.</li>
+          <li><strong>Recebimento:</strong> descarga, conferência e apontamento.</li>
+          <li><strong>Qualidade:</strong> amostragem e relatório de NC.</li>
+          <li><strong>Fiscal:</strong> NF-e, impostos e arquivos digitais.</li>
+          <li><strong>TI/Processos:</strong> WMS/ERP e coletores RF.</li>
+        </ul>
+      </div>
+      <div class="tile">
+        <h6>⚠️ Riscos & controles</h6>
+        <ul class="mb-0 small">
+          <li>Fila de docas → <em>booking</em> e AOT.</li>
+          <li>Avarias → treinamento e embalagens corretas.</li>
+          <li>Divergência de quantidades → conferência cega + RF.</li>
+          <li>Erros fiscais → conferência 100% NF-e.</li>
+          <li>Demora no put-away → métricas Dock→Stock.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculadora de tempo de ciclo e produtividade -->
+  <section class="tile mb-3">
+    <h3>⏱️ Calculadoras rápidas</h3>
+    <div class="grid-2">
+      <div>
+        <h6>Tempo de Ciclo do Recebimento</h6>
+        <div class="row g-2">
+          <div class="col-6"><input id="cic-cheg" class="form-control form-control-sm" placeholder="Chegada (HH:MM)" value="08:00"></div>
+          <div class="col-6"><input id="cic-saida" class="form-control form-control-sm" placeholder="Saída (HH:MM)" value="10:30"></div>
+        </div>
+        <div class="d-grid mt-2"><button class="btn btn-accent btn-sm" onclick="calcCycle()">Calcular</button></div>
+        <div class="mt-2">Ciclo: <strong id="cic-out">—</strong></div>
+      </div>
+      <div>
+        <h6>Produtividade (pallets/h/pessoa)</h6>
+        <div class="row g-2">
+          <div class="col-4"><input id="pro-q" class="form-control form-control-sm" value="2800" type="number"></div>
+          <div class="col-4"><input id="pro-h" class="form-control form-control-sm" value="6" type="number" step="0.1"></div>
+          <div class="col-4"><input id="pro-n" class="form-control form-control-sm" value="4" type="number"></div>
+        </div>
+        <div class="d-grid mt-2"><button class="btn btn-accent btn-sm" onclick="calcProd()">Calcular</button></div>
+        <div class="mt-2">Produtividade: <strong id="pro-out">—</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exercícios práticos -->
+  <section class="tile">
+    <h3>🧩 Exercícios práticos</h3>
+    <ol>
+      <li class="mb-2"><strong>Mapeie</strong> seu fluxo atual (5 a 9 passos). Marque onde ocorrem gargalos.</li>
+      <li class="mb-2">Simule uma chegada com <em>ASN divergente</em>. Qual o desvio padrão e quem aciona?</li>
+      <li class="mb-2">Calcule o <strong>Dock→Stock</strong> médio de 5 recebimentos e defina uma meta.</li>
+      <li class="mb-2">Proponha 3 melhorias de <strong>slotting</strong> para reduzir o tempo de put-away.</li>
+      <li class="mb-2">Crie um <strong>checklist</strong> de 10 itens para aplicar amanhã (ou use a Aula 6).</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="text-center py-3" style="background:#091d33;color:#bcd3f7">
+  <small>© <span id="year"></span> Aula 5 — Recebimento & Conferência (Inbound)</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Utils
+  const hhmmToMinutes = (hhmm)=>{ const [h,m]=(hhmm||'0:0').split(':').map(Number); return (h||0)*60+(m||0); };
+  const minutesToHM   = (min)=>{ const h=Math.floor(min/60), m=Math.round(min%60); return `${h}h${String(m).padStart(2,'0')}min`; };
+
+  // Calculadoras
+  function calcCycle(){
+    const a = hhmmToMinutes(document.getElementById('cic-cheg').value);
+    const b = hhmmToMinutes(document.getElementById('cic-saida').value);
+    document.getElementById('cic-out').textContent = minutesToHM(Math.max(0,b-a));
+  }
+  function calcProd(){
+    const q = Number(document.getElementById('pro-q').value)||0;
+    const h = Number(document.getElementById('pro-h').value)||1;
+    const n = Number(document.getElementById('pro-n').value)||1;
+    document.getElementById('pro-out').textContent = (q/(h*n)).toFixed(2);
+  }
+
+  // Fluxograma interativo: destaca caixa clicada e explica
+  const info = {
+    "agendamento":"Confirmação de janela de doca, placa e ASN. Evita filas e divergências.",
+    "chegada":"Portaria valida documentação, EPIs e direciona para doca.",
+    "doca":"Checklist de segurança e início da descarga.",
+    "conf-fisica":"Conferência cega, avarias, lotes e seriais.",
+    "conf-fiscal":"Validação NF-e/CT-e, CFOP, impostos e status SEFAZ.",
+    "registro":"Entrada no ERP/WMS, geração de etiquetas e vinculação da NF-e.",
+    "enderecamento":"Definir local com base em ABC/slotting e giro esperado.",
+    "armazenagem":"Armazenar conforme normas (ESD, Li-ion, empilhamento).",
+    "disponivel":"Itens liberados no sistema para kitting/produção/expedição.",
+    "nao-conforme":"Segregar, abrir RNC, negociar com fornecedor ou devolver."
+  };
+  const ul = document.getElementById('etapa-txt');
+  const svg = document.getElementById('fluxo');
+  svg.querySelectorAll('[data-step]').forEach(el=>{
+    el.style.cursor='pointer';
+    el.addEventListener('click', ()=>{
+      svg.querySelectorAll('[data-step]').forEach(x=>x.removeAttribute('stroke'));
+      el.setAttribute('stroke','#22c55e');
+      const key = el.getAttribute('data-step');
+      // Atualiza explicação (primeiro LI vira destaque)
+      ul.innerHTML = `<li><strong>${key.replaceAll('-',' ')}</strong>: ${info[key]}</li>` +
+        Object.entries(info).filter(([k])=>k!==key).map(([k,v])=>`<li><strong>${k.replaceAll('-',' ')}</strong>: ${v}</li>`).join('');
+    });
+  });
+</script>
+</body>
+</html>

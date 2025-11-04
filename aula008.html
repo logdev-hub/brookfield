@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aula 8 — Estoques (LEC, SS, ROP & Custos) — Versão Didática</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b2746; --bg-2:#11365f; --tile:rgba(255,255,255,.06); --border:rgba(255,255,255,.18);
+    --text:#eaf1fb; --muted:#bed3f9; --accent:#ffd24a; --accent-2:#ffea95; --ok:#47d16d; --warn:#ffb74d;
+  }
+  body{ background:linear-gradient(135deg,var(--bg) 0%, var(--bg-2) 60%, #07213b 100%); color:var(--text); }
+  .navbar{ background:#09213a; }
+  .container-narrow{ max-width: 1150px; }
+  a{ color:var(--accent); } a:hover{ color:var(--accent-2); }
+  .tile{ background:var(--tile); border:1px solid var(--border); border-radius:1rem; padding:1rem; }
+  .tile h5, .tile h6, h1, h2, h3{ color:#fff }
+  .muted{ color:var(--muted) }
+  .btn-accent{ --bs-btn-bg:var(--accent); --bs-btn-border-color:var(--accent);
+    --bs-btn-hover-bg:var(--accent-2); --bs-btn-hover-border-color:var(--accent-2); color:#132845; font-weight:700; }
+  .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+  .grid-2{ display:grid; gap:1rem } @media(min-width: 992px){ .grid-2{ grid-template-columns: repeat(2, 1fr) } }
+  .table{ color:var(--text) } thead th{ background:rgba(255,255,255,.08) }
+  details[open] summary i{ transform: rotate(90deg); }
+  summary i{ transition: transform .2s; }
+  .meter{height:10px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
+  .meter>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#47d16d,#ffd24a);transition:width .3s}
+  .callout{ border-left:4px solid var(--accent); padding:.5rem .75rem; background:rgba(255,255,255,.05); border-radius:.5rem }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container container-narrow d-flex align-items-center justify-content-between py-2">
+    <span class="navbar-brand d-flex align-items-center gap-2">
+      <i class="bi bi-box2"></i><strong>Aula 8 — LEC, SS, ROP & Custos</strong>
+      <span class="badge badge-soft ms-2">Passo a passo didático</span>
+    </span>
+    <span class="small text-light">Tema escuro • Responsivo • Interativo</span>
+  </div>
+</nav>
+
+<main class="container container-narrow my-4">
+  <header class="text-center mb-4">
+    <h1 class="fw-bold">📦 Do conceito ao cálculo: LEC, SS e ROP</h1>
+    <p class="lead">Cada fórmula explicada e comentada, com exemplo resolvido e calculadora detalhada.</p>
+  </header>
+
+  <section class="tile mb-3">
+    <h3>🧠 Conceitos e fórmulas</h3>
+    <div class="grid-2">
+      <div>
+        <p><strong>1) Custo de Manter por unidade/ano (H)</strong></p>
+        <div class="callout"><span class="code">H = i × preço</span><br><span class="small muted">i = taxa anual (ex.: 0,18 para 18%/ano)</span></div>
+        <p><strong>2) Lote Econômico de Compra (LEC / EOQ)</strong></p>
+        <div class="callout"><span class="code">LEC = √(2DS / H)</span><br><span class="small muted">D = demanda anual; S = custo por pedido.</span></div>
+      </div>
+      <div>
+        <p><strong>3) Estoque de Segurança (SS)</strong></p>
+        <div class="callout"><span class="code">SS = z × σ × √L</span><br><span class="small muted">z = fator do nível de serviço; σ = desvio diário; L = lead time (dias).</span></div>
+        <p><strong>4) Ponto de Pedido (ROP)</strong></p>
+        <div class="callout"><span class="code">ROP = d × L + SS</span><br><span class="small muted">d = demanda média diária.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tile mb-3">
+    <h3>📚 Exemplo resolvido (com comentários)</h3>
+    <details open>
+      <summary class="muted"><i class="bi bi-caret-right-fill me-1"></i><strong>Ver o passo a passo</strong></summary>
+      <ol class="small mt-2">
+        <li><strong>Dados:</strong> D=75.000 un/ano; d=250 un/dia; S=200 R$; i=0,18; preço=1,50 R$; z=1,88; L=5 dias; σ=60.</li>
+        <li><strong>H:</strong> H = i×preço = 0,18×1,50 = <span class="code">0,27 R$/un/ano</span>. <em>Comentário:</em> custo de capital/armazenagem por unidade ao ano.</li>
+        <li><strong>LEC:</strong> LEC = √(2DS/H) = √(2×75.000×200 / 0,27) ≈ <span class="code">10.541 un</span>. <em>Equilibra</em> custo de pedir × custo de manter.</li>
+        <li><strong>SS:</strong> SS = z×σ×√L = 1,88×60×√5 ≈ <span class="code">252 un</span>. <em>Protege</em> contra variabilidade durante o lead time.</li>
+        <li><strong>ROP:</strong> ROP = d×L + SS = 250×5 + 252 = <span class="code">1.502 un</span>. <em>Quando atingir</em> esse nível, emitir pedido.</li>
+        <li><strong>n:</strong> n = D/LEC = 75.000 / 10.541 ≈ <span class="code">7,12 pedidos/ano</span>.</li>
+        <li><strong>Estoque Médio:</strong> EM = LEC/2 + SS = 10.541/2 + 252 ≈ <span class="code">5.522 un</span>.</li>
+        <li><strong>Custos anuais:</strong>
+          <ul>
+            <li>Aquisição = D×preço = 75.000×1,50 = <span class="code">R$ 112.500,00</span></li>
+            <li>Pedir = n×S ≈ 7,12×200 = <span class="code">R$ 1.424,00</span></li>
+            <li>Manter = EM×H ≈ 5.522×0,27 = <span class="code">R$ 1.491,00</span></li>
+          </ul>
+          <div class="callout">Total ≈ <span class="code">R$ 115.415</span>. <span class="small muted">(Aquisição + Manter + Pedir)</span></div>
+        </li>
+      </ol>
+    </details>
+  </section>
+
+  <section class="tile">
+    <h3>🛠️ Calculadora detalhada (com explicação)</h3>
+    <div class="grid-2">
+      <div>
+        <div class="row g-2">
+          <div class="col-6"><label class="form-label small">Demanda anual (D)</label><input id="D" class="form-control form-control-sm" value="75000" type="number"></div>
+          <div class="col-6"><label class="form-label small">Demanda diária (d)</label><input id="d" class="form-control form-control-sm" value="250" type="number"></div>
+          <div class="col-6"><label class="form-label small">Custo por pedido (S)</label><input id="S" class="form-control form-control-sm" value="200" type="number" step="0.01"></div>
+          <div class="col-6"><label class="form-label small">Taxa anual (i)</label><input id="i" class="form-control form-control-sm" value="0.18" type="number" step="0.01"></div>
+          <div class="col-6"><label class="form-label small">Preço unitário (p)</label><input id="p" class="form-control form-control-sm" value="1.50" type="number" step="0.01"></div>
+          <div class="col-6"><label class="form-label small">Lead time (L dias)</label><input id="L" class="form-control form-control-sm" value="5" type="number"></div>
+          <div class="col-6"><label class="form-label small">Desvio diário (σ)</label><input id="sigma" class="form-control form-control-sm" value="60" type="number"></div>
+          <div class="col-6"><label class="form-label small">z (nível de serviço)</label><input id="z" class="form-control form-control-sm" value="1.88" type="number" step="0.01"></div>
+        </div>
+        <div class="d-flex gap-2 mt-2">
+          <button class="btn btn-accent btn-sm" onclick="calc()">Calcular</button>
+          <button class="btn btn-outline-light btn-sm" onclick="explicar()">🧾 Explicar</button>
+        </div>
+      </div>
+      <div>
+        <div class="row g-2">
+          <div class="col-6 small">H: <strong id="H">—</strong></div>
+          <div class="col-6 small">LEC: <strong id="LEC">—</strong></div>
+          <div class="col-6 small">SS: <strong id="SS">—</strong></div>
+          <div class="col-6 small">ROP: <strong id="ROP">—</strong></div>
+          <div class="col-6 small">n (ped./ano): <strong id="n">—</strong></div>
+          <div class="col-6 small">Custo pedir: <strong id="Cpedir">—</strong></div>
+          <div class="col-6 small">Estoque médio: <strong id="EM">—</strong></div>
+          <div class="col-6 small">Custo manter: <strong id="Cmanter">—</strong></div>
+          <div class="col-6 small">Aquisição: <strong id="Caquis">—</strong></div>
+          <div class="col-6 small">Total anual: <strong id="Ctotal">—</strong></div>
+        </div>
+        <div class="meter mt-2"><span id="bar"></span></div>
+        <details class="mt-2">
+          <summary class="muted"><i class="bi bi-caret-right-fill me-1"></i><strong>Mostrar passo a passo (explicação automática)</strong></summary>
+          <div id="explicacao" class="mt-2 small"></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="text-center py-3" style="background:#091d33;color:#bcd3f7">
+  <small>© <span id="year"></span> Aula 8 — Versão Didática</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function calc(){
+    const D = Number(D_input.value)||0;
+    const d = Number(d_input.value)||0;
+    const S = Number(S_input.value)||0;
+    const i = Number(i_input.value)||0;
+    const p = Number(p_input.value)||0;
+    const L = Number(L_input.value)||0;
+    const sigma = Number(sigma_input.value)||0;
+    const z = Number(z_input.value)||0;
+
+    const H = i*p;
+    const LEC = Math.sqrt( (2*D*S)/Math.max(H,1e-9) );
+    const SS = z * sigma * Math.sqrt(Math.max(L,0));
+    const ROP = d*L + SS;
+    const n = D/Math.max(LEC,1e-9);
+    const Cpedir = n*S;
+    const EM = (LEC/2) + SS;
+    const Cmanter = EM*H;
+    const Caquis = D*p;
+    const Ctotal = Caquis + Cmanter + Cpedir;
+
+    H_out.textContent = 'R$ ' + H.toFixed(2);
+    LEC_out.textContent = Math.round(LEC).toLocaleString('pt-BR');
+    SS_out.textContent = Math.round(SS).toLocaleString('pt-BR');
+    ROP_out.textContent = Math.round(ROP).toLocaleString('pt-BR');
+    n_out.textContent = n.toFixed(2);
+    Cpedir_out.textContent = 'R$ ' + Cpedir.toFixed(2);
+    EM_out.textContent = Math.round(EM).toLocaleString('pt-BR');
+    Cmanter_out.textContent = 'R$ ' + Cmanter.toFixed(2);
+    Caquis_out.textContent = 'R$ ' + Caquis.toFixed(2);
+    Ctotal_out.textContent = 'R$ ' + Ctotal.toFixed(2);
+    bar.style.width = Math.min(100, (100000/Math.max(Ctotal,1e-9))*100) + '%';
+
+    return {D,d,S,i,p,L,sigma,z,H,LEC,SS,ROP,n,Cpedir,EM,Cmanter,Caquis,Ctotal};
+  }
+
+  function explicar(){
+    const r = calc();
+    const el = document.getElementById('explicacao');
+    el.innerHTML = `
+      <div class="callout mb-2"><strong>1) H (custo de manter)</strong><br>
+        H = i × preço = ${r.i.toFixed(2)} × ${r.p.toFixed(2)} = <span class="code">R$ ${ (r.H).toFixed(2) }</span><br>
+        <span class="small muted">Interpretação: custo de capital + armazenagem por unidade ao ano.</span>
+      </div>
+      <div class="callout mb-2"><strong>2) LEC (lote econômico)</strong><br>
+        LEC = √(2DS/H) = √(2×${r.D}×${r.S.toFixed(2)} / ${r.H.toFixed(2)}) = <span class="code">${ Math.round(r.LEC).toLocaleString('pt-BR') } un</span><br>
+        <span class="small muted">Equilibra custo de pedir e de manter.</span>
+      </div>
+      <div class="callout mb-2"><strong>3) SS (segurança)</strong><br>
+        SS = z × σ × √L = ${r.z.toFixed(2)} × ${r.sigma.toFixed(0)} × √${r.L} = <span class="code">${ Math.round(r.SS).toLocaleString('pt-BR') } un</span><br>
+        <span class="small muted">Proteção contra variação da demanda durante o lead time.</span>
+      </div>
+      <div class="callout mb-2"><strong>4) ROP (ponto de pedido)</strong><br>
+        ROP = d × L + SS = ${r.d} × ${r.L} + ${Math.round(r.SS)} = <span class="code">${ Math.round(r.ROP).toLocaleString('pt-BR') } un</span><br>
+        <span class="small muted">Quando o estoque atingir esse nível, emitir pedido.</span>
+      </div>
+      <div class="callout mb-2"><strong>5) n, EM e custos</strong><br>
+        n = D/LEC = ${r.D} / ${Math.round(r.LEC)} = <span class="code">${r.n.toFixed(2)}</span> pedidos/ano<br>
+        EM = LEC/2 + SS = ${Math.round(r.LEC)}/2 + ${Math.round(r.SS)} = <span class="code">${Math.round(r.EM).toLocaleString('pt-BR')}</span> un<br>
+        C_pedir = n×S = ${r.n.toFixed(2)} × ${r.S.toFixed(2)} = <span class="code">R$ ${r.Cpedir.toFixed(2)}</span><br>
+        C_manter = EM×H = ${Math.round(r.EM)} × ${r.H.toFixed(2)} = <span class="code">R$ ${r.Cmanter.toFixed(2)}</span><br>
+        Aquisição = D×preço = ${r.D} × ${r.p.toFixed(2)} = <span class="code">R$ ${r.Caquis.toFixed(2)}</span><br>
+        <strong>Total</strong> = Aquisição + Manter + Pedir = <span class="code">R$ ${r.Ctotal.toFixed(2)}</span>
+      </div>
+    `;
+  }
+
+  // Mapear elementos
+  const D_input = document.getElementById('D');
+  const d_input = document.getElementById('d');
+  const S_input = document.getElementById('S');
+  const i_input = document.getElementById('i');
+  const p_input = document.getElementById('p');
+  const L_input = document.getElementById('L');
+  const sigma_input = document.getElementById('sigma');
+  const z_input = document.getElementById('z');
+
+  const H_out = document.getElementById('H');
+  const LEC_out = document.getElementById('LEC');
+  const SS_out = document.getElementById('SS');
+  const ROP_out = document.getElementById('ROP');
+  const n_out = document.getElementById('n');
+  const Cpedir_out = document.getElementById('Cpedir');
+  const EM_out = document.getElementById('EM');
+  const Cmanter_out = document.getElementById('Cmanter');
+  const Caquis_out = document.getElementById('Caquis');
+  const Ctotal_out = document.getElementById('Ctotal');
+  const bar = document.getElementById('bar');
+
+  // Cálculo inicial
+  (function(){ calc(); explicar(); })();
+</script>
+</body>
+</html>

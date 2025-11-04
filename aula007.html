@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aula 7 — Seleção de Fornecedores (Média Ponderada) — Versão Didática</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b2746; --bg-2:#11365f; --tile:rgba(255,255,255,.06); --border:rgba(255,255,255,.18);
+    --text:#eaf1fb; --muted:#bed3f9; --accent:#ffd24a; --accent-2:#ffea95; --danger:#ff6b6b; --ok:#47d16d;
+  }
+  body{ background:linear-gradient(135deg,var(--bg) 0%, var(--bg-2) 60%, #07213b 100%); color:var(--text); }
+  .navbar{ background:#09213a; }
+  .container-narrow{ max-width: 1150px; }
+  a{ color:var(--accent); } a:hover{ color:var(--accent-2); }
+  .tile{ background:var(--tile); border:1px solid var(--border); border-radius:1rem; padding:1rem; }
+  .tile h5, .tile h6, h1, h2, h3{ color:#fff }
+  .muted{ color:var(--muted) }
+  .btn-accent{ --bs-btn-bg:var(--accent); --bs-btn-border-color:var(--accent);
+    --bs-btn-hover-bg:var(--accent-2); --bs-btn-hover-border-color:var(--accent-2); color:#132845; font-weight:700; }
+  .badge-soft{ background:rgba(255,255,255,.07); border:1px solid var(--border) }
+  .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+  .grid-2{ display:grid; gap:1rem } @media(min-width: 992px){ .grid-2{ grid-template-columns: repeat(2, 1fr) } }
+  .table{ color:var(--text) } thead th{ background:rgba(255,255,255,.08) }
+  .callout{ border-left:4px solid var(--accent); padding:.5rem .75rem; background:rgba(255,255,255,.05); border-radius:.5rem }
+  .hl{ background:rgba(255,210,74,.2); padding:.2rem .35rem; border-radius:.35rem }
+  .good{ color: var(--ok); }
+  details[open] summary i{ transform: rotate(90deg); }
+  summary i{ transition: transform .2s; }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container container-narrow d-flex align-items-center justify-content-between py-2">
+    <span class="navbar-brand d-flex align-items-center gap-2">
+      <i class="bi bi-people"></i><strong>Aula 7 — Seleção de Fornecedores</strong>
+      <span class="badge badge-soft ms-2">Média Ponderada — Passo a passo</span>
+    </span>
+    <span class="small text-light">Tema escuro • Responsivo • Interativo</span>
+  </div>
+</nav>
+
+<main class="container container-narrow my-4">
+  <header class="text-center mb-4">
+    <h1 class="fw-bold">📑 Comparando fornecedores com <span class="hl">média ponderada</span></h1>
+    <p class="lead">Explicação didática e ferramenta com explicação automática de cada passo.</p>
+  </header>
+
+  <section class="tile mb-3">
+    <h3>🧠 Ideia central</h3>
+    <p><strong>Problema:</strong> temos vários critérios (ex.: preço, qualidade, prazo, ESG) e precisamos escolher 1 fornecedor.</p>
+    <p><strong>Solução:</strong> dar um <em>peso</em> para cada critério (importância) e avaliar cada fornecedor com <em>notas</em> (0–10). Depois, calcular a <strong>média ponderada</strong>.</p>
+    <div class="callout mb-2">
+      <div><strong>Fórmula (com pesos quaisquer):</strong> <span class="code">Nota Ponderada = (Σ (nota_i × peso_i)) ÷ Σ pesos</span></div>
+      <div class="small muted">Se normalizar pesos para somarem 1: <span class="code">Nota = Σ (nota_i × peso_normalizado_i)</span>.</div>
+    </div>
+    <ul class="small">
+      <li><span class="hl">Notas</span>: desempenho 0–10 em cada critério.</li>
+      <li><span class="hl">Pesos</span>: importância relativa do critério.</li>
+      <li><span class="hl">Justiça</span>: valide pesos com operações/qualidade/finanças; faça análise de sensibilidade.</li>
+    </ul>
+  </section>
+
+  <!-- Simulador com passo a passo -->
+  <section class="tile mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">🛠️ Simulador + Explicação passo a passo</h3>
+      <div class="d-flex gap-2">
+        <button class="btn btn-accent btn-sm" onclick="addLinha()">+ Critério</button>
+        <button class="btn btn-outline-light btn-sm" onclick="explicar()">🧾 Explicar</button>
+      </div>
+    </div>
+    <div class="table-responsive mt-2">
+      <table class="table table-sm align-middle" id="tbl">
+        <thead>
+          <tr>
+            <th style="width:28%">Critério</th>
+            <th style="width:10%">Peso</th>
+            <th>Forn. A</th>
+            <th>Forn. B</th>
+            <th>Forn. C</th>
+            <th style="width:10%">Remover</th>
+          </tr>
+        </thead>
+        <tbody id="body">
+          <tr>
+            <td contenteditable="true">Preço</td>
+            <td><input type="number" class="form-control form-control-sm" value="4" step="1" min="0"></td>
+            <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="9" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="7" step="0.1" min="0" max="10"></td>
+            <td class="text-center"><button class="btn btn-outline-light btn-sm" onclick="delLinha(this)"><i class="bi bi-x-lg"></i></button></td>
+          </tr>
+          <tr>
+            <td contenteditable="true">Qualidade</td>
+            <td><input type="number" class="form-control form-control-sm" value="3" step="1" min="0"></td>
+            <td><input type="number" class="form-control form-control-sm" value="9" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="7" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+            <td class="text-center"><button class="btn btn-outline-light btn-sm" onclick="delLinha(this)"><i class="bi bi-x-lg"></i></button></td>
+          </tr>
+          <tr>
+            <td contenteditable="true">Prazo</td>
+            <td><input type="number" class="form-control form-control-sm" value="2" step="1" min="0"></td>
+            <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+            <td><input type="number" class="form-control form-control-sm" value="7" step="0.1" min="0" max="10"></td>
+            <td class="text-center"><button class="btn btn-outline-light btn-sm" onclick="delLinha(this)"><i class="bi bi-x-lg"></i></button></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total de Pesos</th>
+            <th id="totPesos">9</th>
+            <th id="notaA">—</th>
+            <th id="notaB">—</th>
+            <th id="notaC">—</th>
+            <th class="text-end">
+              <button class="btn btn-accent btn-sm" onclick="calc()">Calcular</button>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <details class="mt-3">
+      <summary class="muted"><i class="bi bi-caret-right-fill me-1"></i><strong>Mostrar passo a passo (explicação automática)</strong></summary>
+      <div id="explicacao" class="mt-2 small"></div>
+    </details>
+  </section>
+
+  <!-- Caso completo comentado -->
+  <section class="tile">
+    <h3>🧩 Caso comentado (linha a linha)</h3>
+    <ol>
+      <li><strong>Defina os critérios</strong> (ex.: Preço, Qualidade, Prazo, ESG). <span class="muted">Evite critérios duplicados.</span></li>
+      <li><strong>Atribua pesos</strong> (0 a 10, por exemplo). <span class="muted">Não precisam somar 10; dividiremos pelo Σpesos.</span></li>
+      <li><strong>Atribua notas</strong> 0–10 por fornecedor e por critério. <span class="muted">Padronize evidências.</span></li>
+      <li><strong>Multiplique nota × peso</strong> em cada célula.</li>
+      <li><strong>Some por fornecedor</strong>: Σ(nota×peso).</li>
+      <li><strong>Divida por Σpesos</strong>: <span class="code">Resultado = Σ(nota×peso)/Σpesos</span>.</li>
+      <li><strong>Compare</strong> (maior média = melhor dado o conjunto de pesos).</li>
+      <li><strong>Sensibilidade</strong>: altere pesos e verifique robustez da decisão.</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="text-center py-3" style="background:#091d33;color:#bcd3f7">
+  <small>© <span id="year"></span> Aula 7 — Versão Didática</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function totalPesos(){
+    let tot = 0;
+    document.querySelectorAll('#body tr').forEach(tr=>{
+      const peso = Number(tr.cells[1].querySelector('input').value)||0;
+      tot += peso;
+    });
+    document.getElementById('totPesos').textContent = tot;
+    return tot;
+  }
+  function calc(){
+    const tot = totalPesos() || 1;
+    let somaA=0,somaB=0,somaC=0, linhas=[];
+    document.querySelectorAll('#body tr').forEach(tr=>{
+      const crit = tr.cells[0].innerText.trim()||'Critério';
+      const peso = Number(tr.cells[1].querySelector('input').value)||0;
+      const a = Number(tr.cells[2].querySelector('input').value)||0;
+      const b = Number(tr.cells[3].querySelector('input').value)||0;
+      const c = Number(tr.cells[4].querySelector('input').value)||0;
+      somaA += a*peso; somaB += b*peso; somaC += c*peso;
+      linhas.push({crit,peso,a,b,c});
+    });
+    const rA = somaA/tot, rB = somaB/tot, rC = somaC/tot;
+    document.getElementById('notaA').textContent = (isFinite(rA)?rA:0).toFixed(2);
+    document.getElementById('notaB').textContent = (isFinite(rB)?rB:0).toFixed(2);
+    document.getElementById('notaC').textContent = (isFinite(rC)?rC:0).toFixed(2);
+    return {tot,linhas,rA,rB,rC};
+  }
+  function addLinha(){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td contenteditable="true">Novo critério</td>
+      <td><input type="number" class="form-control form-control-sm" value="1" step="1" min="0"></td>
+      <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+      <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+      <td><input type="number" class="form-control form-control-sm" value="8" step="0.1" min="0" max="10"></td>
+      <td class="text-center"><button class="btn btn-outline-light btn-sm" onclick="delLinha(this)"><i class="bi bi-x-lg"></i></button></td>
+    `;
+    document.getElementById('body').appendChild(tr);
+    totalPesos();
+  }
+  function delLinha(btn){
+    btn.closest('tr').remove();
+    totalPesos();
+  }
+  function explicar(){
+    const out = document.getElementById('explicacao');
+    const r = calc();
+    const linhasHtml = r.linhas.map(l=>`
+      <tr>
+        <td>${l.crit}</td>
+        <td class="text-end">${l.peso}</td>
+        <td class="text-end">${l.a}</td>
+        <td class="text-end">${l.b}</td>
+        <td class="text-end">${l.c}</td>
+        <td class="text-end">${(l.a*l.peso).toFixed(2)}</td>
+        <td class="text-end">${(l.b*l.peso).toFixed(2)}</td>
+        <td class="text-end">${(l.c*l.peso).toFixed(2)}</td>
+      </tr>
+    `).join('');
+    const melhor = Math.max(r.rA, r.rB, r.rC);
+    const qual = !isFinite(melhor) ? '-' : (melhor===r.rA?'A':(melhor===r.rB?'B':'C'));
+
+    out.innerHTML = `
+      <div class="callout mb-2"><strong>1) Conferência dos dados</strong>: Somatório dos pesos = <span class="hl">${r.tot}</span>.</div>
+      <div class="callout mb-2"><strong>2) Multiplicar cada nota pelo respectivo peso</strong> (nota×peso):</div>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Critério</th><th class="text-end">Peso</th><th class="text-end">A (nota)</th><th class="text-end">B</th><th class="text-end">C</th><th class="text-end">A (nota×peso)</th><th class="text-end">B</th><th class="text-end">C</th></tr></thead>
+          <tbody>${linhasHtml}</tbody>
+        </table>
+      </div>
+      <div class="callout mb-2"><strong>3) Somar por fornecedor</strong>: Σ(nota×peso) e dividir por Σpesos = ${r.tot}.</div>
+      <ul>
+        <li><strong>Resultado A</strong> = ${isFinite(r.rA)?r.rA.toFixed(2):'—'}</li>
+        <li><strong>Resultado B</strong> = ${isFinite(r.rB)?r.rB.toFixed(2):'—'}</li>
+        <li><strong>Resultado C</strong> = ${isFinite(r.rC)?r.rC.toFixed(2):'—'}</li>
+      </ul>
+      <div class="callout"><strong>4) Decisão</strong>: fornecedor <strong class="good">${qual}</strong> apresenta a maior média ponderada considerando os pesos atuais.</div>
+      <p class="small muted mb-0">Dica: altere os pesos (análise de sensibilidade) e verifique se a decisão permanece.</p>
+    `;
+  }
+
+  totalPesos(); calc();
+</script>
+</body>
+</html>

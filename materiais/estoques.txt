@@ -1,0 +1,127 @@
+Básico de Logística
+
+*** Movimentação Interna de Materiais
+
+Conceitos Básicos de Controle de Estoques
+
+1) Custo de Manter Estoques
+2) LEC (Lote Econômico de Compras)
+3) Estoque de Segurança
+4) Ponto de Pedido
+5) Estoque Médio
+
+*** Sistema de Reposição Contínua: forma de reabastecimento pelo nível de estoque ----> CALCULADO
+			- Lead time 
+			- Demanda
+			- Custo (Preço, Armazenagem, Pedido)
+Estoque
+	- Reposição Contínua ---> Reabastecer (comb no automóvel)
+				   ---> nível de comb no carro
+				       ---> reserva
+				   ---> "de acordo com o nível de estoque" 
+			
+	- Reposição Periódica --> exemplo (Compra mensal de supermercado)
+				  *** fixa um período para fazer reposição
+				  "data fixa" ===> ESTABELECIDA
+
+PRODUTO (1 SKU): X 
+Dados (base para calcular o sistema de rep contínua): 
+D=75.000 un/ano;  -------> D = demanda anual      
+d=250 un/dia;     -------> d = demanda diária
+S=200 R$;         -------> S = custo do pedido (gasto para comprar um lote 						de X)
+i=0,18;           -------> i = taxa básica de juros (SELIC) = 18%
+preço=1,50 R$;    -------> preço = preço de uma unidade  
+z=1,88;           -------> z = nível de confiança (casa de 97% de conf.) 
+L=5 dias;         -------> L = lead time   (tempo entre pedir e receber)
+σ=60.             -------> σ = desvio padrão (variação) = +ou- 60 unid
+
+*Passo 1 - Custo de Manter (H)
+
+H = i×preço   ---> 0,18 x 1,50  = R$ 0,27 / unid (manter armazenado).
+
+*Passo 2 - Calcular o LEC (Lote Econ de Compras)
+
+LEC = √(2 . D. S /  H)  = √(2 . 75000. 200 /  0,27)= 10.540 
+
+Irei comprar do meu fornecedor lotes de 10.540 unidades
+
+*Passo 3 - Calcular o Estoque de Segurança (SS)
+
+SS = z×σ×√L   = 1,88 x 60 x √5     =  1,88 x 60 x 2,24 = 252 unidades
+
+Margem de segurança ("Vou ter um pouco mais de material no estoque")
+
+*Passo 4 - Calcular o Ponto de Pedido (ROP)
+
+ROP = d × L + SS   = (250 x 5) + 252  = 1502 unidades
+
+Quando o nível de estoque do seu material, atingir 1502 unidades, você deve solicitar uma reposição com o valor do LEC
+
+*Passo 5 - Qtde de Pedidos no ano
+   n = D/LEC    = 75000 / 10540 = 7,12 pedidos/ano
+
+*Passo 6 - Calcular o Estoque Médio (EM)
+EM = LEC/2 + SS   = 10540/2 + 252 = 5522 unidades
+
+Em MÉDIA ficaram armazenadas cerca de 5522 unidades
+
+*Passo 7 - Custo Total de Estoque
+ a) Aquisição (para comprar) =  D × preço = 75000 x 1,50 =  112.500,00
+ b) Pedir (para trazer p/ a empresa) = n × S  = 7,12 x 200 =      1.424,00
+ c) Manter (para armazenar) = EM×H = 5522 x 0,27 =              1.491,00
+
+CUSTO TOTAL PARA O PRODUTO X = a + b + c = R$ 115.415
+
+
+Desafio para o próxima aula
+
+Considerando o seu grupo de projeto:
+	
+	- Escolher dois produtos e efetuar os cálculos de reposição 	contínua
+
+		a) Fazer todos os cálculos
+		b) Explicar para que servem todos os resultados
+		c) Apresentar
+
+
+Bruno Marchellimda da Conceição
+
+Bruno Marchelli da Conceição
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+

@@ -1,0 +1,97 @@
+Aula 9
+
+Objetivos da aula:
+
+- Fluxogramas (continuação)
+- Desenvolvimento de cálculos relacionadas a movimentação interna:
+	- Balanceamento de operações
+	- Cálculos de Capacidade
+
+
+1)Fluxograma: representação visual de um processo
+
+Ponto principal: mapear as etapas com detalhes.
+Exemplo ---> draw.io / Fluxo de Recebimento de Materiais
+
+fluxos (todos estes processos):
+	1- recebimento
+	2- preparação (put away --> endereçamento / unitização)
+	3- armazenagem de materiais
+	4- separação (picking)
+	5- expedição 
+
+	composição:
+		- passo a passo (atividade por atividade)
+		- recursos (tempo, pessoas, maq, equip...)
+			*** cada uma das etapas
+
+- Cálculos relacionadas a movimentação interna:
+
+a) Capacidade Produtiva = GRAU DE PRODUTIVIDADE DA EMPRESA
+
+Exemplo: Guarulhos Express
+ *- turno: 8 horas
+ *- movimenta: 1 pallet/min
+ Paradas ( paralisação em min, horas, em função de algum evento)
+	- paradas planejadas: horário de almoço, troca de turno, 	reuniões...
+	- paradas não planejadas: acidente de trabalho, queda de 	energia, quebra de equipamentos
+  *- Total de paradas não planejadas = 20 minutos
+  *- Total de paradas planejadas = 30 minutos + 60 minutos
+  *- Movimentação do dia = 350 pallets, porém 10 são refugos
+
+  Capacidade:
+	1) Capacidade Instalada (utopia)
+		 8 horas x 60 min = 480 minutos
+		480 minutos / 1 pallet/minuto = 480 pallets/dia
+		* Ter uma ideia do máximo a ser produzido no dia
+
+
+	2) Capacidade Disponível (paradas planejadas):
+		480 min - 90 min (planejados) = 390 minutos
+		450 minutos / 1 pallet/minuto = 390 pallets/dia
+
+
+	3) Capacidade Efetiva (paradas planejadas e não planejadas):
+		390 minutos - 20 minutos = 370 minutos
+		370 minutos /  1 pallet/minuto =  370 pallets/dia
+
+	4) Capacidade Realizada: 
+  		 350 pallets  - 370 pallets =  - 20 pallets (a menos)
+		 350 pallets - 10 refugos = 340 pallets
+		 340 pallets  - 370 pallets = -30 pallets (a menos)
+
+
+	5) Índice de Eficiência Global (OEE)
+		a) Disponibilidade  = %
+		b) Performance      = % 
+		c) Qualidade        = %
+	    Índice de Eficiência Global = a x b x c = ? % 
+
+	a) Disponibilidade  =(Cap. Efetiva / Cap. Instalada) x 100
+			      (370         /  480) x = 0,77
+		** ideal = 90%
+        
+	b) Performance = (( qtde de paletes/dia x tempo) / Cap Efet)
+			    ( 350 x 1 )   /     370  = 0,94
+		** ideal = 95% e 98%
+			    
+	c) Qualidade = (qtde não ok / qtde total)
+				340/350  = 0,97
+		** ideal = 95% e 98%
+
+	Índice de Eficiência Global = a x b x c = ? % 
+       Índice de Eficiência Global = 0,77 x 0,94 x 0,97 = 0,70 x 100 
+							    70%
+
+
+
+
+
+
+
+
+
+
+
+
+

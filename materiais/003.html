@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>📦 Armazenagem — Lei de Little, EOQ/LEF e Balanceamento (Página Única)</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --azul-escuro:#0a2a4a;
+      --azul:#15457a;
+      --azul-suave:#e8f1fb;
+      --amarelo:#ffc400;
+      --cinza:#6c757d;
+      --bg:#f7fafc;
+      --ok:#198754;
+      --warn:#b35c00;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg); color:#1f2937}
+    .hero{
+      background: linear-gradient(135deg,var(--azul-escuro),var(--azul));
+      color:#fff; border-bottom:4px solid var(--amarelo);
+    }
+    .chip{display:inline-block;padding:.2rem .6rem;border-radius:999px;font-size:.85rem}
+    .chip-light{background:var(--azul-suave);color:var(--azul)}
+    .chip-warn{background:#fff3cd;color:#664d03}
+    .chip-ok{background:#d1e7dd;color:#0f5132}
+    .formula{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background:#fff; border:1px dashed #cbd5e1; border-radius:.5rem; padding:.9rem 1rem;}
+    .kpi{font-weight:700;color:var(--azul-escuro)}
+    .callout{border-left:5px solid var(--azul); background:#fff; padding:1rem; border-radius:.5rem}
+    .card{box-shadow:0 6px 24px rgba(2,6,23,.06)}
+    .example-badge{position:absolute; top:.75rem; right:.75rem}
+    .anchor-offset{scroll-margin-top:90px}
+    .table-sm td,.table-sm th{padding:.4rem .5rem}
+    .btn-copy{border:dashed 1px #cbd5e1}
+    .small-legend{font-size:.9rem;color:#475569}
+    footer{background:#0b233d;color:#cbd5e1}
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top bg-white border-bottom shadow-sm" aria-label="Navegação principal">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-primary" href="#top">📦 Armazenagem</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topnav" aria-controls="topnav" aria-expanded="false" aria-label="Alternar navegação">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="topnav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto small fw-medium gap-2">
+          <li class="nav-item"><a class="nav-link" href="#siglas">Siglas</a></li>
+          <li class="nav-item"><a class="nav-link" href="#capacidades">Capacidades</a></li>
+          <li class="nav-item"><a class="nav-link" href="#little">Lei de Little</a></li>
+          <li class="nav-item"><a class="nav-link" href="#eoq">EOQ/LEF</a></li>
+          <li class="nav-item"><a class="nav-link" href="#balance">Balanceamento</a></li>
+          <li class="nav-item"><a class="nav-link" href="#exercicios">Exercícios</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resumo">Resumo</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" class="hero py-5">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="chip" style="background:rgba(255,255,255,.2);color:#fff">Conteúdo didático • Página única</span>
+          <h1 class="display-6 fw-bold mt-2">Lei de Little, EOQ/LEF e Balanceamento de Operações</h1>
+          <p class="lead mb-0">Conceitos essenciais para dimensionar fluxos, estoques e recursos em qualquer armazém.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="#resumo" class="btn btn-warning fw-bold me-2"><i class="bi bi-lightbulb"></i> Resumo Didático</a>
+          <button class="btn btn-outline-light" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir/Salvar PDF</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+
+      <!-- SIGLAS & UNIDADES -->
+      <section id="siglas" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">Guia rápido</span>
+          <h2 class="fw-bold mt-2">Legenda de Siglas & Unidades</h2>
+          <p class="text-secondary small">Todas as fórmulas usam unidades consistentes. Adote uma base de tempo única (hora, dia ou ano) antes de calcular.</p>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="callout h-100 small">
+              <h6 class="mb-2">Fluxo & Tempo</h6>
+              <ul class="mb-0">
+                <li><strong>WIP</strong> — Work In Process (itens em processo)</li>
+                <li><strong>TH</strong> — Throughput (taxa de saída, ex.: pallets/h)</li>
+                <li><strong>CT</strong> — Cycle Time (tempo médio por item, ex.: h)</li>
+                <li><strong>Takt</strong> — Ritmo ideal por unidade (tempo disponível ÷ demanda)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="callout h-100 small">
+              <h6 class="mb-2">Lote Econômico</h6>
+              <ul class="mb-0">
+                <li><strong>EOQ</strong> — Economic Order Quantity</li>
+                <li><strong>LEF</strong>/<strong>EPQ</strong> — Lote Econômico de Fabricação (produção/recebimento finito)</li>
+                <li><strong>D</strong> — Demanda anual (un/ano)</li>
+                <li><strong>S</strong> — Custo de pedido/setup (R$)</li>
+                <li><strong>H</strong> — Custo de posse anual por unidade (R$/un/ano)</li>
+                <li><strong>p</strong> — Taxa de produção/recebimento (un/tempo)</li>
+                <li><strong>d</strong> — Taxa de consumo/saída (un/tempo)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="callout h-100 small">
+              <h6 class="mb-2">Efetividade & Qualidade</h6>
+              <ul class="mb-0">
+                <li><strong>OEE</strong> — Overall Equipment Effectiveness</li>
+                <li><strong>Disponibilidade</strong> — Tempo efetivo ÷ tempo total</li>
+                <li><strong>Performance</strong> — Produção real ÷ capacidade efetiva</li>
+                <li><strong>Qualidade</strong> — Unidades boas ÷ unidades produzidas</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAPACIDADES -->
+      <section id="capacidades" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">0) Capacidade de Armazenagem</span>
+          <h2 class="fw-bold mt-2">Capacidades de Armazenagem & OEE</h2>
+          <p class="text-secondary small">Como medir potencial, perdas e efetividade global de uma operação de armazém.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">a) Capacidade <span class="kpi">Instalada</span></h5>
+                <p class="small mb-1"><strong>O que significa:</strong> potencial máximo teórico com recursos 100% disponíveis.</p>
+                <div class="small text-secondary mb-2"><strong>Variáveis:</strong> tempo de ciclo (min/un) • tempo total de operação (min/dia)</div>
+                <p class="small mb-0"><strong>Importância:</strong> avaliar picos de demanda e orientar investimentos/expansões.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">b) Capacidade <span class="kpi">Disponível</span></h5>
+                <p class="small mb-1"><strong>O que significa:</strong> potencial após descontar <em>paradas planejadas</em> (limpeza, inventário, manutenção).</p>
+                <div class="small text-secondary mb-2"><strong>Variáveis:</strong> tempo parado planejado (min/dia)</div>
+                <p class="small mb-0"><strong>Importância:</strong> reflete o tempo realmente dedicado à operação.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">c) Capacidade <span class="kpi">Efetiva</span></h5>
+                <p class="small mb-1"><strong>O que significa:</strong> potencial após todas as paradas (planejadas e <em>não planejadas</em>).</p>
+                <div class="small text-secondary mb-2"><strong>Variáveis:</strong> paradas não planejadas (falhas, bloqueios, acidentes)</div>
+                <p class="small mb-0"><strong>Importância:</strong> evidencia impacto de imprevistos e oportunidades de melhoria.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">d) Capacidade <span class="kpi">Realizada</span></h5>
+                <p class="small mb-1"><strong>O que significa:</strong> volume efetivamente movimentado, já considerando refugos/perdas.</p>
+                <div class="small text-secondary mb-2"><strong>Variáveis:</strong> produção bruta • rejeitos (avarias, erros)</div>
+                <p class="small mb-0"><strong>Importância:</strong> permite comparar realizado × planejado e localizar gargalos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="callout">
+              <h5 class="mb-1">e) OEE — Overall Equipment Effectiveness</h5>
+              <p class="small mb-2"><strong>O que significa:</strong> efetividade global: <strong>Disponibilidade × Performance × Qualidade</strong>.</p>
+              <ul class="small mb-0">
+                <li><strong>Disponibilidade</strong>: % do tempo útil (tempo efetivo ÷ tempo total).</li>
+                <li><strong>Performance</strong>: velocidade real ÷ taxa ideal (ou produção real ÷ capacidade efetiva).</li>
+                <li><strong>Qualidade</strong>: % de movimentações corretas (boas ÷ totais).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. LEI DE LITTLE -->
+      <section id="little" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">1) Fluxo & Estoques em Processo</span>
+          <h2 class="fw-bold mt-2">Lei de Little — Armazenagem</h2>
+          <p class="text-secondary small">Relação direta entre <strong>WIP</strong> (itens em processo), <strong>TH</strong> (throughput) e <strong>CT</strong> (tempo de ciclo).</p>
+        </div>
+
+        <div class="row g-4 align-items-stretch">
+          <div class="col-lg-5">
+            <div class="callout h-100">
+              <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-calculator fs-4 text-primary"></i><h5 class="mb-0">O que é / Variáveis / Importância</h5></div>
+              <ul class="small mb-2">
+                <li><strong>O que significa:</strong> conecta WIP, TH e CT.</li>
+                <li><strong>Variáveis:</strong> WIP (médio), TH (itens/h), CT (h).</li>
+                <li><strong>Importância:</strong> dimensiona buffers/áreas de espera; identifica acumulações/gargalos; orienta balanceamento.</li>
+              </ul>
+              <div class="formula">
+                <div><span class="kpi">WIP</span> = <span class="kpi">TH</span> × <span class="kpi">CT</span></div>
+              </div>
+              <div class="alert alert-secondary small mt-3">
+                <strong>Antes de calcular:</strong>
+                <ul class="mb-0">
+                  <li>Garanta unidades consistentes (ex.: TH em pallets/h e CT em horas).</li>
+                  <li>Confirme a janela de observação (pico, média do dia, turno?).</li>
+                  <li>Considere variações por turno/equipe (sazonalidade e horários de pico).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="row g-4">
+              <!-- Exemplo 1 -->
+              <div class="col-12">
+                <div class="card position-relative h-100">
+                  <span class="badge text-bg-primary example-badge">Exemplo 1</span>
+                  <div class="card-body">
+                    <h5 class="card-title">PalletMax — área de conferência</h5>
+                    <p class="mb-2"><strong>Contexto ampliado:</strong> A área recebe caminhões a cada 10–15 min. O objetivo é evitar fila de doca. Em média, <strong>90 pallets/h</strong> entram/saem e cada pallet fica <strong>0,5 h</strong> aguardando conferência.</p>
+                    <ol class="small mb-2">
+                      <li><strong>Padronize unidades:</strong> TH em pallets/h; CT em h.</li>
+                      <li><strong>Aplique a fórmula:</strong> WIP = 90 × 0,5.</li>
+                      <li><strong>Calcule:</strong> WIP = <strong>45 pallets</strong>.</li>
+                      <li><strong>Interprete:</strong> Espaço para ~45 pallets é necessário para evitar transbordo. Se a doca acumula mais, CT aumentou ou TH está acima do planejado.</li>
+                    </ol>
+                    <div class="alert alert-info small mt-2">
+                      <strong>Decisão & Ação:</strong> ajustar escala de conferentes nos horários de pico e criar trilhas de fluxo unidirecional para reduzir CT.
+                    </div>
+                    <p class="small text-secondary mb-0"><strong>Armadilhas comuns:</strong> medir TH apenas na saída (desbalanceia a conta) e ignorar pallets já conferidos aguardando etiqueta.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Exemplo 2 -->
+              <div class="col-md-6">
+                <div class="card h-100 position-relative">
+                  <span class="badge text-bg-primary example-badge">Exemplo 2</span>
+                  <div class="card-body">
+                    <h5 class="card-title">MegaArmazenagem — separação</h5>
+                    <p class="mb-2"><strong>Contexto ampliado:</strong> A equipe faz <em>picking</em> por onda e o embarque é a cada hora cheia. TH médio <strong>30 pallets/h</strong>, permanência média <strong>1,2 h</strong> na área de separação.</p>
+                    <ol class="small mb-2">
+                      <li>WIP = TH × CT = 30 × 1,2.</li>
+                      <li><strong>Resultado:</strong> <strong>36 pallets</strong> aguardando expedição.</li>
+                      <li><strong>Leitura operacional:</strong> Se a área física comporta 24 pallets, será preciso reduzir CT (melhorar picking) ou escalonar expedições.</li>
+                    </ol>
+                    <div class="alert alert-info small mt-2">
+                      <strong>Decisão & Ação:</strong> antecipar pré-embarque 10 min antes e aplicar agrupamento por rota para reduzir retrabalho.
+                    </div>
+                    <p class="small text-secondary mb-0"><strong>Armadilhas comuns:</strong> misturar pallets de rotas distintas no mesmo <em>buffer</em>, aumentando CT por reordenação.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Exemplo 3 -->
+              <div class="col-md-6">
+                <div class="card h-100 position-relative">
+                  <span class="badge text-bg-primary example-badge">Exemplo 3</span>
+                  <div class="card-body">
+                    <h5 class="card-title">FrioFácil — triagem</h5>
+                    <p class="mb-2"><strong>Contexto ampliado:</strong> Produtos refrigerados exigem permanência curta para preservar cadeia fria. TH <strong>70 pallets/h</strong>; CT <strong>0,25 h</strong>.</p>
+                    <ol class="small mb-2">
+                      <li>WIP = 70 × 0,25 = <strong>17,5 pallets</strong>.</li>
+                      <li><strong>Leitura:</strong> O ideal é manter <em>buffer</em> até 18 pallets; acima disso, risco de <em>break</em> de temperatura e baixa qualidade.</li>
+                    </ol>
+                    <div class="alert alert-info small mt-2">
+                      <strong>Decisão & Ação:</strong> priorizar docas frias e etiquetar por cor conforme faixa de temperatura para acelerar CT.</div>
+                    <p class="small text-secondary mb-0"><strong>Armadilhas comuns:</strong> CT subestimado por atrasos de TI na impressão da etiqueta de lote.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-5"/>
+
+      <!-- 2. EOQ / LEF -->
+      <section id="eoq" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">2) Lote Econômico</span>
+          <h2 class="fw-bold mt-2">EOQ / LEF (EPQ) — Armazenagem</h2>
+          <p class="text-secondary small">Define o tamanho de lote que minimiza o custo total (pedido/setup + posse).</p>
+        </div>
+
+        <div class="row g-4 align-items-stretch mb-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">O que significa • Variáveis • Importância</h5>
+                <ul class="small mb-2">
+                  <li><strong>O que significa:</strong> EOQ (recebimento instantâneo) e LEF/EPQ (recebimento/produção a taxa <em>p</em> enquanto consome <em>d</em>).</li>
+                  <li><strong>Variáveis:</strong> D (demanda/ano), S (custo de pedido/setup), H (custo de posse anual/un), p (taxa de recebimento), d (taxa de consumo).</li>
+                  <li><strong>Importância:</strong> evita faltas/excessos, reduz custos e orienta suprimentos e negociação com fornecedores.</li>
+                </ul>
+                <div class="formula mb-2">EOQ = √( (2 × D × S) / H )</div>
+                <div class="formula">LEF (EPQ) = √( (2 × D × S / H) × p/(p − d) )</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="callout h-100">
+              <h5 class="mb-2"><i class="bi bi-check2-square text-warning"></i> Passos recomendados</h5>
+              <ol class="small mb-3">
+                <li>Uniformize a base de tempo (ex.: ano para D, dia para p e d → converta se necessário).</li>
+                <li>Calcule primeiro o termo <em>T</em> = (2×D×S)/H.</li>
+                <li>EOQ = √T; para LEF, multiplique <em>T</em> por p/(p−d) e extraia a raiz.</li>
+                <li>Arredonde conforme política (ex.: múltiplos de pallet/caixa).</li>
+              </ol>
+              <div class="alert alert-secondary small mb-2">
+                <strong>Antes de calcular:</strong> confirme lead time de fornecedores, restrição de espaço (m²/m³), capacidade financeira e políticas de desconto por volume.
+              </div>
+              <ul class="small mb-0">
+                <li><strong>Armadilhas comuns:</strong> usar H subestimado (ignorar custo de capital/seguros), misturar bases de tempo, esquecer que <strong>p</strong> deve ser &gt; <strong>d</strong> para LEF.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exemplos EOQ/LEF com passo a passo -->
+        <div class="row g-4">
+          <!-- Exemplo 1 -->
+          <div class="col-12">
+            <div class="card position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 1</span>
+              <div class="card-body">
+                <h5 class="card-title">Estoques Rápidos — caixas</h5>
+                <p class="small">D=120.000/ano • S=R$300 • H=R$0,40 • p=1.000/dia • d=400/dia</p>
+                <p class="small text-secondary">Contexto didático: fornecedor principal aceita pedidos semanais e concede desconto apenas acima de 12.000 un. Espaço de armazenagem é limitado a 18.000 un.</p>
+                <ol class="small mb-2">
+                  <li><strong>Termo T:</strong> (2×120.000×300)/0,40 = 180.000.000.</li>
+                  <li><strong>EOQ:</strong> √180.000.000 ≈ <strong>13.416</strong> un.</li>
+                  <li><strong>Fator LEF:</strong> p/(p−d) = 1.000/600 = 1,6667.</li>
+                  <li><strong>LEF:</strong> √(180.000.000 × 1,6667) = √300.000.000 ≈ <strong>17.320</strong> un.</li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> EOQ atende política mínima sem estourar espaço; LEF indica lote maior caso recebimento seja fracionado durante o consumo — checar capacidade de docas e empilhadeiras.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exemplo 2 -->
+          <div class="col-12">
+            <div class="card position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 2</span>
+              <div class="card-body">
+                <h5 class="card-title">Embalagens Pro — bobinas plásticas</h5>
+                <p class="small">D=90.000/ano • S=R$200 • H=R$0,50 • p=1.500/dia • d=1.200/dia</p>
+                <p class="small text-secondary">Contexto didático: consumo varia com campanhas; fornecedor tem lead time de 5 dias e cobra taxa fixa por pedido.</p>
+                <ol class="small mb-2">
+                  <li><strong>T:</strong> (2×90.000×200)/0,50 = 72.000.000.</li>
+                  <li><strong>EOQ:</strong> √72.000.000 ≈ <strong>8.485</strong> un.</li>
+                  <li><strong>p/(p−d):</strong> 1.500/300 = 5.</li>
+                  <li><strong>LEF:</strong> √(72.000.000 × 5) = √360.000.000 ≈ <strong>18.974</strong> un.</li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> considerar programação <em>just-in-time</em> com fornecedor para suavizar picos; revisar H incluindo custo de refrigeração/embalagem.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exemplo 3 -->
+          <div class="col-12">
+            <div class="card position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 3</span>
+              <div class="card-body">
+                <h5 class="card-title">FrioFácil — caixas refrigeradas</h5>
+                <p class="small">D=50.000/ano • S=R$150 • H=R$0,30 • p=800/dia • d=200/dia</p>
+                <p class="small text-secondary">Contexto didático: área fria tem custo alto de energia; prioridade é reduzir inventário sem arriscar ruptura.</p>
+                <ol class="small mb-2">
+                  <li><strong>T:</strong> (2×50.000×150)/0,30 = 50.000.000.</li>
+                  <li><strong>EOQ:</strong> √50.000.000 ≈ <strong>7.071</strong> un.</li>
+                  <li><strong>p/(p−d):</strong> 800/600 ≈ 1,3333.</li>
+                  <li><strong>LEF:</strong> √(50.000.000 × 1,3333) ≈ √66.666.667 ≈ <strong>8.165</strong> un.</li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> usar LEF apenas quando recebimento é contínuo ao longo do dia; se as entregas forem <em>batch</em>, mantenha EOQ e negocie frequência maior com o fornecedor.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-5"/>
+
+      <!-- 3. BALANCEAMENTO -->
+      <section id="balance" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">3) Recursos & Capacidade</span>
+          <h2 class="fw-bold mt-2">Balanceamento de Operação — Armazenagem</h2>
+          <p class="text-secondary small">Distribuir tarefas entre operadores/estações para atender ao <em>takt time</em> sem filas ou ociosidade.</p>
+        </div>
+
+        <div class="row g-4 align-items-stretch mb-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">O que significa • Variáveis • Importância</h5>
+                <ul class="small mb-2">
+                  <li><strong>O que significa:</strong> balancear tarefas para que o tempo por movimentação ≈ takt.</li>
+                  <li><strong>Variáveis:</strong> tempos de tarefas (Σ), takt time, número mínimo de operadores.</li>
+                  <li><strong>Importância:</strong> aumenta eficiência, facilita treinamento/escala e reduz espera na expedição.</li>
+                </ul>
+                <div class="formula">N<sub>mín</sub> = ⌈ (Σ tempos de tarefas) / (Takt) ⌉</div>
+              <div class="alert alert-secondary small mt-3"><strong>Antes de calcular:</strong> defina a demanda do período (para o takt), valide tempos padrão por amostragem e considere variação por mix/SKU.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="callout h-100">
+              <h5 class="mb-2"><i class="bi bi-lightning-charge text-primary"></i> Passos práticos</h5>
+              <ol class="small mb-0">
+                <li>Liste tarefas e tempos padrão (cronoanálise).</li>
+                <li>Calcule o takt pela demanda (tempo disponível/demanda).</li>
+                <li>Distribua tarefas equilibrando estações (gargalo define ritmo).</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exemplos balanceamento com passo a passo -->
+        <div class="row g-4">
+          <!-- Exemplo 1 -->
+          <div class="col-md-4">
+            <div class="card h-100 position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 1</span>
+              <div class="card-body">
+                <h5 class="card-title">MixLog — separação</h5>
+                <p class="small text-secondary">Cenário didático: duas estações de etiquetagem e uma de transporte. Picos às 10h e 16h.</p>
+                <ol class="small mb-2">
+                  <li>Σ tempos = 0,30+0,25+0,18+0,35+0,22 = <strong>1,30</strong></li>
+                  <li>N<sub>mín</sub> = ⌈1,30/0,80⌉ = ⌈1,625⌉ = <strong>2</strong></li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> dividir transporte em duas rotas fixas e realocar etiquetagem para suavizar o gargalo de 0,35 min.</div>
+              </div>
+            </div>
+          </div>
+          <!-- Exemplo 2 -->
+          <div class="col-md-4">
+            <div class="card h-100 position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 2</span>
+              <div class="card-body">
+                <h5 class="card-title">Docas 5 — expedição</h5>
+                <p class="small text-secondary">Cenário didático: conferência concentrada no início da janela de embarque; última checagem causa fila na doca 2.</p>
+                <ol class="small mb-2">
+                  <li>Σ tempos = 0,54+0,33+0,21+0,44 = <strong>1,52</strong></li>
+                  <li>N<sub>mín</sub> = ⌈1,52/1,00⌉ = <strong>2</strong></li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> redistribuir a inspeção final para antes do posicionamento na doca; testar <em>pre-staging</em> por rota.</div>
+              </div>
+            </div>
+          </div>
+          <!-- Exemplo 3 -->
+          <div class="col-md-4">
+            <div class="card h-100 position-relative">
+              <span class="badge text-bg-primary example-badge">Exemplo 3</span>
+              <div class="card-body">
+                <h5 class="card-title">LogEle — recebimento</h5>
+                <p class="small text-secondary">Cenário didático: fluxo irregular de caminhões entre 8h–10h; sistema de registro manual para itens especiais.</p>
+                <ol class="small mb-2">
+                  <li>Σ tempos = 0,20+0,19+0,24+0,36 = <strong>0,99</strong></li>
+                  <li>N<sub>mín</sub> = ⌈0,99/0,60⌉ = <strong>2</strong></li>
+                </ol>
+                <div class="alert alert-info small mb-0"><strong>Decisão & Ação:</strong> agrupar identificação+inspeção e preparar kits de etiquetas para reduzir 0,36 min do registro.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-5"/>
+
+      <!-- EXERCÍCIOS -->
+      <section id="exercicios" class="anchor-offset mb-5">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">Prática</span>
+          <h2 class="fw-bold mt-2">Exercícios — Capacidades na Operação de Armazenagem</h2>
+          <p class="text-secondary small">Aplicação de capacidades (instalada, disponível, efetiva, realizada) e OEE.</p>
+        </div>
+
+        <!-- Exercício 1 -->
+        <div class="card mb-4 position-relative">
+          <span class="badge text-bg-primary example-badge">Exercício 1</span>
+          <div class="card-body">
+            <h5 class="card-title">Guarulhos Express — turno de 8h, 1 min/pallet</h5>
+            <p class="small">Planejada: 30 min • Não planejada: 20 min • Movimentados: 350 (10 refugos) • Demanda: 400</p>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>Passo a passo</h6>
+                  <ol class="small mb-0">
+                    <li><strong>Capacidade Instalada:</strong> 8×60 = 480 min ⇒ 480/1 = <strong>480 pallets/dia</strong>.</li>
+                    <li><strong>Capacidade Disponível:</strong> 480 − 30 = 450 min ⇒ <strong>450 pallets/dia</strong>.</li>
+                    <li><strong>Capacidade Efetiva:</strong> 450 − 20 = 430 min ⇒ <strong>430 pallets/dia</strong>.</li>
+                    <li><strong>Capacidade Realizada:</strong> 350 − 10 = <strong>340 pallets/dia</strong> (úteis).</li>
+                  </ol>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>OEE</h6>
+                  <ul class="small mb-2">
+                    <li><strong>Disponibilidade:</strong> 430/480 ≈ 0,896</li>
+                    <li><strong>Performance:</strong> (350×1)/430 = 350/430 ≈ 0,814</li>
+                    <li><strong>Qualidade:</strong> 340/350 = 0,971</li>
+                  </ul>
+                  <div class="formula mb-0">OEE ≈ 0,896 × 0,814 × 0,971 ≈ <strong>0,707</strong> (70,7%)</div>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-light border small mb-4"><strong>Interpretação didática:</strong> capacidade efetiva de 430 vs. demanda 400 indica folga teórica; OEE 70,7% revela perdas relevantes em performance — investigar causa dos 20 min não planejados e retrabalho de 10 pallets.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercício 2 -->
+        <div class="card mb-4 position-relative">
+          <span class="badge text-bg-primary example-badge">Exercício 2</span>
+          <div class="card-body">
+            <h5 class="card-title">FrescoFácil — 3 operadores, turno de 7h, 2 min/caixa</h5>
+            <p class="small">Planejada: 25 min • Não planejada: 15 min • Movimentadas: 175 (7 refugos) • Demanda: 200</p>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>Passo a passo</h6>
+                  <ol class="small mb-0">
+                    <li><strong>Total:</strong> 7×60 = 420 min ⇒ Instalada = 420/2 = <strong>210 caixas/dia</strong>.</li>
+                    <li><strong>Disponível:</strong> (420 − 25)/2 = 395/2 = <strong>197 caixas/dia</strong> (arred.).</li>
+                    <li><strong>Efetiva:</strong> (395 − 15)/2 = 380/2 = <strong>190 caixas/dia</strong>.</li>
+                    <li><strong>Realizada:</strong> 175 − 7 = <strong>168 caixas/dia</strong>.</li>
+                  </ol>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>OEE</h6>
+                  <ul class="small mb-2">
+                    <li><strong>Disponibilidade:</strong> 380/420 = 0,905</li>
+                    <li><strong>Performance:</strong> (175×2)/380 = 350/380 ≈ 0,921</li>
+                    <li><strong>Qualidade:</strong> 168/175 = 0,96</li>
+                  </ul>
+                  <div class="formula mb-0">OEE ≈ 0,905 × 0,921 × 0,96 ≈ <strong>0,801</strong> (80,1%)</div>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-light border small mb-4"><strong>Interpretação didática:</strong> apesar de alta disponibilidade, a performance foi o segundo componente mais crítico — revisar deslocamentos em câmara fria e tempo de abertura de portas.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercício 3 -->
+        <div class="card mb-4 position-relative">
+          <span class="badge text-bg-primary example-badge">Exercício 3</span>
+          <div class="card-body">
+            <h5 class="card-title">Rápido Sul — cross-docking, 6h, 1,5 min/pallet</h5>
+            <p class="small">Planejada: 18 min • Não planejada: 12 min • Expedidos: 210 (5 devolvidos) • Demanda: 230</p>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>Passo a passo</h6>
+                  <ol class="small mb-0">
+                    <li><strong>Total:</strong> 6×60 = 360 min ⇒ Instalada = 360/1,5 = <strong>240 pallets/dia</strong>.</li>
+                    <li><strong>Disponível:</strong> (360 − 18)/1,5 = 342/1,5 = <strong>228 pallets/dia</strong>.</li>
+                    <li><strong>Efetiva:</strong> (342 − 12)/1,5 = 330/1,5 = <strong>220 pallets/dia</strong>.</li>
+                    <li><strong>Realizada:</strong> 210 − 5 = <strong>205 pallets/dia</strong>.</li>
+                  </ol>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="callout h-100">
+                  <h6>OEE</h6>
+                  <ul class="small mb-2">
+                    <li><strong>Disponibilidade:</strong> 330/360 ≈ 0,917</li>
+                    <li><strong>Performance:</strong> (210×1,5)/330 = 315/330 ≈ 0,955</li>
+                    <li><strong>Qualidade:</strong> 205/210 ≈ 0,976</li>
+                  </ul>
+                  <div class="formula mb-0">OEE ≈ 0,917 × 0,955 × 0,976 ≈ <strong>0,856</strong> (85,6%)</div>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-light border small mb-0"><strong>Interpretação didática:</strong> operação próxima do potencial; foco em reduzir paradas não planejadas (esteira) pode elevar OEE acima de 88%.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="my-5"/>
+
+      <!-- Resumo final -->
+      <section id="resumo" class="anchor-offset">
+        <div class="text-center mb-4">
+          <span class="chip chip-light">Conclusões</span>
+          <h2 class="fw-bold mt-2">Resumo Didático Final</h2>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-3">
+            <div class="callout h-100">
+              <h5>Capacidades & OEE</h5>
+              <ul class="small mb-0">
+                <li><strong>Instalada</strong> mostra o teto teórico.</li>
+                <li><strong>Disponível</strong> remove paradas planejadas.</li>
+                <li><strong>Efetiva</strong> remove todas as paradas.</li>
+                <li><strong>Realizada</strong> é o que de fato entregou.</li>
+                <li><strong>OEE</strong> reúne disponibilidade, performance e qualidade.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="callout h-100">
+              <h5>Lei de Little</h5>
+              <ul class="small mb-0">
+                <li>Mantenha unidades consistentes.</li>
+                <li>Reduzir <strong>CT</strong> reduz <strong>WIP</strong> no mesmo <strong>TH</strong>.</li>
+                <li>Use para dimensionar áreas de espera.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="callout h-100">
+              <h5>EOQ / LEF</h5>
+              <ul class="small mb-0">
+                <li>Uniformize bases de tempo.</li>
+                <li>Arredonde ao múltiplo logístico (pallet/caixa).</li>
+                <li>LEF > EOQ quando <strong>p</strong> é finito e <strong>p</strong> &gt; <strong>d</strong>.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="callout h-100">
+              <h5>Balanceamento</h5>
+              <ul class="small mb-0">
+                <li>Gargalo define o ritmo.</li>
+                <li>Rebalancear reduz esperas/ocioso.</li>
+                <li>Revisar tempos periodicamente (melhoria contínua).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-4 small" role="alert">
+          🔎 <strong>Pontos importantes:</strong> (1) padronize unidades; (2) valide premissas (p, d, D, S, H, takt); (3) documente paradas e rejeitos; (4) use os indicadores para priorizar ações de melhoria.
+        </div>
+      </section>
+
+      <div class="text-center mt-5">
+        <a href="#top" class="btn btn-outline-primary"><i class="bi bi-arrow-up-circle"></i> Voltar ao topo</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 mt-5">
+    <div class="container d-flex justify-content-between align-items-center small">
+      <span>📦 Armazenagem — Conteúdo didático</span>
+      <span class="text-secondary">Bootstrap 5 • Página única</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

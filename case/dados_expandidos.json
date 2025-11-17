@@ -1,0 +1,163 @@
+{
+  "armazenagem_expandida": {
+    "capacidades": {
+      "instalada": {
+        "volume_m3": 9600,
+        "paletes": 5333,
+        "produtos": 266667,
+        "descricao": "Capacidade teórica máxima (área total × altura teto)"
+      },
+      "disponivel": {
+        "volume_m3": 4800,
+        "paletes": 2667,
+        "produtos": 133333,
+        "descricao": "Excluindo áreas não-armazenagem"
+      },
+      "real": {
+        "volume_m3": 3120,
+        "paletes": 1733,
+        "produtos": 86667,
+        "descricao": "Com fator de utilização (65%)"
+      },
+      "efetiva": {
+        "volume_m3": 2340,
+        "paletes": 1300,
+        "produtos": 65000,
+        "taxa_ocupacao": 75,
+        "descricao": "Volume efetivamente utilizado"
+      }
+    },
+    "indices_eficiencia": {
+      "global": 24.38,
+      "operacional": 48.75,
+      "fator_localizacao": 65,
+      "taxa_ocupacao": 75,
+      "espaco_livre_percentual": 25.0
+    }
+  },
+  "skus_parametros": [
+    {
+      "id": 1,
+      "codigo": "P001",
+      "nome": "SSD 1TB NVMe",
+      "classe_abc": "A",
+      "parametros": {
+        "demanda": {
+          "anual_unidades": 2400,
+          "diaria_media": 6.67,
+          "desvio_padrao_diaria": 2.5,
+          "coeficiente_variacao": 37.5
+        },
+        "custos": {
+          "unitario": 450.0,
+          "armazenagem_anual_percentual": 20.0,
+          "armazenagem_anual_valor": 90.0,
+          "pedido": 250.0
+        },
+        "lead_time": {
+          "dias": 15,
+          "dias_minimo": 10,
+          "dias_maximo": 25
+        },
+        "cálculos": {
+          "lec": 115,
+          "numero_pedidos_ano": 20.8,
+          "intervalo_dias": 17,
+          "estoque_seguranca": 16,
+          "estoque_minimo": 16,
+          "ponto_pedido": 116,
+          "estoque_maximo": 231,
+          "nivel_servico": 0.95
+        },
+        "gestão": {
+          "revisao_estoque": "Diária",
+          "localizacao": "Porta-paletes nível 1-3",
+          "giro_anual": 2.1,
+          "custo_medio_estoque": 59040
+        }
+      }
+    },
+    {
+      "id": 2,
+      "codigo": "P011",
+      "nome": "Mouse Gamer",
+      "classe_abc": "B",
+      "parametros": {
+        "demanda": {
+          "anual_unidades": 2400,
+          "diaria_media": 6.67,
+          "desvio_padrao_diaria": 1.8,
+          "coeficiente_variacao": 27.0
+        },
+        "custos": {
+          "unitario": 180.0,
+          "armazenagem_anual_percentual": 20.0,
+          "armazenagem_anual_valor": 36.0,
+          "pedido": 200.0
+        },
+        "lead_time": {
+          "dias": 20,
+          "dias_minimo": 15,
+          "dias_maximo": 30
+        },
+        "cálculos": {
+          "lec": 92,
+          "numero_pedidos_ano": 26.1,
+          "intervalo_dias": 14,
+          "estoque_seguranca": 12,
+          "estoque_minimo": 12,
+          "ponto_pedido": 145,
+          "estoque_maximo": 237,
+          "nivel_servico": 0.9
+        },
+        "gestão": {
+          "revisao_estoque": "Semanal",
+          "localizacao": "Porta-paletes nível 4-5",
+          "giro_anual": 2.8,
+          "custo_medio_estoque": 22320
+        }
+      }
+    },
+    {
+      "id": 3,
+      "codigo": "P009",
+      "nome": "Cabo HDMI 2m",
+      "classe_abc": "C",
+      "parametros": {
+        "demanda": {
+          "anual_unidades": 5400,
+          "diaria_media": 15.0,
+          "desvio_padrao_diaria": 3.2,
+          "coeficiente_variacao": 21.3
+        },
+        "custos": {
+          "unitario": 35.0,
+          "armazenagem_anual_percentual": 20.0,
+          "armazenagem_anual_valor": 7.0,
+          "pedido": 150.0
+        },
+        "lead_time": {
+          "dias": 10,
+          "dias_minimo": 7,
+          "dias_maximo": 15
+        },
+        "cálculos": {
+          "lec": 235,
+          "numero_pedidos_ano": 22.9,
+          "intervalo_dias": 16,
+          "estoque_seguranca": 18,
+          "estoque_minimo": 18,
+          "ponto_pedido": 168,
+          "estoque_maximo": 403,
+          "nivel_servico": 0.85
+        },
+        "gestão": {
+          "revisao_estoque": "Mensal",
+          "localizacao": "Gaveteiros/Prateleiras",
+          "giro_anual": 4.1,
+          "custo_medio_estoque": 6615
+        }
+      }
+    }
+  ]
+}

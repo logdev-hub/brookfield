@@ -5,116 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DistribuidoraTech Brasil - Diagnóstico Logístico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+/* =========================
+   PALETA E TEMAS (LIGHT / DARK)
+   ========================== */
 :root {
-  --color-white: rgba(255, 255, 255, 1);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-cream-100: rgba(255, 255, 253, 1);
-  --color-gray-200: rgba(245, 245, 245, 1);
-  --color-gray-300: rgba(167, 169, 169, 1);
-  --color-gray-400: rgba(119, 124, 124, 1);
-  --color-slate-500: rgba(98, 108, 113, 1);
-  --color-brown-600: rgba(94, 82, 64, 1);
-  --color-charcoal-700: rgba(31, 33, 33, 1);
-  --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
-  --color-teal-300: rgba(50, 184, 198, 1);
-  --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
-  --color-teal-600: rgba(29, 116, 128, 1);
-  --color-teal-700: rgba(26, 104, 115, 1);
-  --color-teal-800: rgba(41, 150, 161, 1);
-  --color-red-400: rgba(255, 84, 89, 1);
-  --color-red-500: rgba(192, 21, 47, 1);
-  --color-orange-400: rgba(230, 129, 97, 1);
-  --color-orange-500: rgba(168, 75, 47, 1);
-  --color-brown-600-rgb: 94, 82, 64;
-  --color-teal-500-rgb: 33, 128, 141;
-  --color-slate-900-rgb: 19, 52, 59;
-  --color-slate-500-rgb: 98, 108, 113;
-  --color-red-500-rgb: 192, 21, 47;
-  --color-red-400-rgb: 255, 84, 89;
-  --color-orange-500-rgb: 168, 75, 47;
-  --color-orange-400-rgb: 230, 129, 97;
-  --color-bg-1: rgba(59, 130, 246, 0.08);
-  --color-bg-2: rgba(245, 158, 11, 0.08);
-  --color-bg-3: rgba(34, 197, 94, 0.08);
-  --color-bg-4: rgba(239, 68, 68, 0.08);
-  --color-bg-5: rgba(147, 51, 234, 0.08);
-  --color-bg-6: rgba(249, 115, 22, 0.08);
-  --color-bg-7: rgba(236, 72, 153, 0.08);
-  --color-bg-8: rgba(6, 182, 212, 0.08);
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Fundo claro padrão */
+  --color-background: #f5f5f7;
+  --color-surface: #ffffff;
+
+  --color-slate-900: #111827;
+  --color-slate-500: #6b7280;
+
+  --color-teal-300: #4fd1c5;
+  --color-teal-400: #38b2ac;
+  --color-teal-500: #21808d;
+  --color-teal-600: #1d7480;
+  --color-teal-700: #155e63;
+
+  --color-brown-600: #5e5240;
+
+  --color-red-400: #fb7185;
+  --color-red-500: #c0152f;
+
+  --color-orange-400: #fb923c;
+  --color-orange-500: #ea580c;
+
+  --color-bg-1: rgba(59,130,246,0.08);
+  --color-bg-2: rgba(245,158,11,0.08);
+  --color-bg-3: rgba(34,197,94,0.08);
+  --color-bg-4: rgba(239,68,68,0.08);
+  --color-bg-5: rgba(147,51,234,0.08);
+  --color-bg-6: rgba(249,115,22,0.08);
+  --color-bg-7: rgba(236,72,153,0.08);
+  --color-bg-8: rgba(6,182,212,0.08);
+
   --color-text: var(--color-slate-900);
   --color-text-secondary: var(--color-slate-500);
   --color-primary: var(--color-teal-500);
   --color-primary-hover: var(--color-teal-600);
   --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
-  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+
+  --color-secondary: rgba(94,82,64,0.12);
+  --color-secondary-hover: rgba(94,82,64,0.2);
+  --color-secondary-active: rgba(94,82,64,0.25);
+  --color-border: rgba(94,82,64,0.2);
+
+  --color-card-border: rgba(15,23,42,0.08);
+  --color-card-border-inner: rgba(15,23,42,0.08);
+
   --color-error: var(--color-red-500);
   --color-success: var(--color-teal-500);
   --color-warning: var(--color-orange-500);
   --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  --color-btn-primary-text: #ffffff;
+
+  --color-focus-ring: rgba(33,128,141,0.4);
+  --color-select-caret: rgba(15,23,42,0.8);
+
   --font-family-base: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
   --font-size-base: 14px;
   --font-weight-medium: 500;
   --font-weight-semibold: 550;
   --font-weight-bold: 600;
+
   --space-8: 8px;
   --space-16: 16px;
   --space-24: 24px;
   --space-32: 32px;
+
   --radius-base: 8px;
   --radius-lg: 12px;
+
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+  /* Caixinhas claras (ajustadas abaixo no dark) */
+  --soft-contrast-bg: rgba(255,255,255,0.85);
+  --soft-contrast-text: #111827;
+  --calc-box-bg: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-gray-400-rgb: 119, 124, 124;
-    --color-teal-300-rgb: 50, 184, 198;
-    --color-gray-300-rgb: 167, 169, 169;
-    --color-gray-200-rgb: 245, 245, 245;
-    --color-bg-1: rgba(29, 78, 216, 0.15);
-    --color-bg-2: rgba(180, 83, 9, 0.15);
-    --color-bg-3: rgba(21, 128, 61, 0.15);
-    --color-bg-4: rgba(185, 28, 28, 0.15);
-    --color-bg-5: rgba(107, 33, 168, 0.15);
-    --color-bg-6: rgba(194, 65, 12, 0.15);
-    --color-bg-7: rgba(190, 24, 93, 0.15);
-    --color-bg-8: rgba(8, 145, 178, 0.15);
-    --color-background: var(--color-charcoal-700);
-    --color-surface: var(--color-charcoal-800);
-    --color-text: var(--color-gray-200);
-    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-    --color-primary: var(--color-teal-300);
-    --color-primary-hover: var(--color-teal-400);
-    --color-primary-active: var(--color-teal-800);
-    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
-    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
-    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-error: var(--color-red-400);
-    --color-success: var(--color-teal-300);
-    --color-warning: var(--color-orange-400);
-    --color-info: var(--color-gray-300);
-    --color-btn-primary-text: var(--color-slate-900);
-    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
-  }
-}
-
+/* Tema escuro controlado por [data-theme="dark"] */
+/* =========================
+   ESTILOS GERAIS
+   ========================== */
 body {
     font-family: var(--font-family-base);
     background-color: var(--color-background);
@@ -122,6 +104,7 @@ body {
     line-height: 1.6;
 }
 
+/* Navbar + botão de tema */
 .navbar {
     background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -148,6 +131,14 @@ body {
     font-weight: 600;
 }
 
+.theme-toggle-btn {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+}
+
+/* Hero */
 .hero-section {
     background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
     color: white;
@@ -168,6 +159,7 @@ body {
     opacity: 0.95;
 }
 
+/* Cabeçalhos de seção */
 .section-header {
     background: var(--color-bg-1);
     padding: 2rem;
@@ -189,6 +181,7 @@ body {
     font-size: 1.05rem;
 }
 
+/* Cards gerais */
 .card {
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius-lg);
@@ -196,6 +189,7 @@ body {
     transition: all 0.3s ease;
     background-color: var(--color-surface);
     margin-bottom: 1.5rem;
+    color: var(--color-text);
 }
 
 .card:hover {
@@ -210,6 +204,7 @@ body {
     font-size: 1.1rem;
 }
 
+/* Navegação rápida */
 .nav-card {
     cursor: pointer;
     height: 100%;
@@ -229,6 +224,7 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* Badges ABC */
 .badge-classe-a {
     background-color: #dc3545;
     color: white;
@@ -247,6 +243,7 @@ body {
     font-weight: 600;
 }
 
+/* KPI cards */
 .kpi-card {
     border-left: 4px solid var(--color-primary);
     padding: 1.5rem;
@@ -265,6 +262,7 @@ body {
     color: var(--color-text-secondary);
 }
 
+/* Steps processo */
 .processo-step {
     position: relative;
     padding: 1.5rem;
@@ -294,6 +292,7 @@ body {
     content: '';
 }
 
+/* Números dos steps */
 .step-number {
     display: inline-block;
     width: 40px;
@@ -307,6 +306,7 @@ body {
     margin-right: 1rem;
 }
 
+/* Fórmula padrão */
 .formula {
     background: var(--color-bg-5);
     padding: 1rem;
@@ -317,6 +317,7 @@ body {
     margin: 1rem 0;
 }
 
+/* Blocos de cálculo grandes */
 .calculo-card {
     background: var(--color-bg-3);
     border: 2px solid #28a745;
@@ -332,6 +333,7 @@ body {
     margin: 1rem 0;
 }
 
+/* Tabelas */
 .table {
     background: var(--color-surface);
     color: var(--color-text);
@@ -346,6 +348,7 @@ body {
     background-color: var(--color-bg-1);
 }
 
+/* Diagrama cadeia */
 .supply-chain-diagram {
     display: flex;
     justify-content: space-between;
@@ -356,6 +359,7 @@ body {
     margin: 2rem 0;
 }
 
+/* Tabs SKUs */
 #skuTabs .nav-link {
     color: var(--color-text);
     font-weight: 600;
@@ -376,6 +380,7 @@ body {
     color: var(--color-primary);
 }
 
+/* Diversos */
 .supply-level {
     flex: 1;
     text-align: center;
@@ -398,6 +403,7 @@ body {
     background-color: var(--color-primary);
 }
 
+/* Botão voltar ao topo */
 .back-to-top {
     position: fixed;
     bottom: 30px;
@@ -421,6 +427,7 @@ body {
     transform: translateY(-3px);
 }
 
+/* Rodapé */
 .footer {
     background: #343a40;
     color: white;
@@ -428,6 +435,7 @@ body {
     margin-top: 4rem;
 }
 
+/* Navegação entre seções */
 .section-nav {
     display: flex;
     justify-content: space-between;
@@ -436,31 +444,34 @@ body {
     border-top: 2px solid var(--color-border);
 }
 
+/* Responsivo */
 @media (max-width: 768px) {
     .hero-section h1 {
         font-size: 2rem;
     }
-    
+
     .supply-chain-diagram {
         flex-direction: column;
     }
-    
+
     .supply-arrow {
         transform: rotate(90deg);
         margin: 1rem 0;
     }
-    
+
     .nav-card {
         margin-bottom: 1rem;
     }
 }
 
+/* Informações chave */
 .info-item {
     margin-bottom: 1rem;
     padding: 0.8rem;
     background: var(--color-bg-1);
     border-radius: var(--radius-base);
     border-left: 3px solid var(--color-primary);
+    color: var(--color-text);
 }
 
 .info-label {
@@ -469,6 +480,22 @@ body {
     margin-right: 0.5rem;
 }
 
+/* Caixas claras que ficavam ilegíveis no dark */
+.soft-contrast {
+    background: var(--soft-contrast-bg) !important;
+    color: var(--soft-contrast-text) !important;
+}
+
+/* Bloco de cálculo das fórmulas (lado direito) */
+.calc-box {
+    font-family: var(--font-family-mono);
+    background: var(--calc-box-bg);
+    padding: 1rem;
+    border-radius: var(--radius-base);
+    color: var(--color-text);
+}
+
+/* Cartões de fornecedor/cliente */
 .supplier-card, .client-card {
     padding: 1rem;
     margin-bottom: 1rem;
@@ -484,7 +511,6 @@ body {
 .client-card {
     border-left: 4px solid #28a745;
 }
-
     </style>
 </head>
 <body>
@@ -507,6 +533,9 @@ body {
                     <li class="nav-item"><a class="nav-link" href="#secao6">6. Estoques</a></li>
                     <li class="nav-item"><a class="nav-link" href="#secao7">7. Armazenagem</a></li>
                 </ul>
+
+                <!-- Botão de alternância de tema -->
+
             </div>
         </div>
     </nav>
@@ -622,7 +651,7 @@ body {
                     </div>
                 </div>
 
-                <div class="mt-4 p-3" style="background: var(--color-bg-2); border-radius: var(--radius-base);">
+                <div class="mt-4 p-3 soft-contrast">
                     <h5 style="color: var(--color-primary);">📝 Descrição Detalhada</h5>
                     <p>A <strong>DistribuidoraTech Brasil</strong> é uma distribuidora especializada em componentes eletrônicos, peças de informática e acessórios tecnológicos. Atua como intermediária entre fabricantes internacionais/nacionais e o mercado varejista, além de atender integradores de sistemas e canais de e-commerce.</p>
                     <p class="mb-0">Fundada em São Paulo, principal hub tecnológico do Brasil, a empresa possui infraestrutura logística moderna e foco em atendimento B2B e B2C, com portfólio diversificado de produtos de alta tecnologia.</p>
@@ -2107,7 +2136,7 @@ body {
         </div>
     </section>
 
-    <!-- Footer -->
+
     <footer class="footer">
         <div class="container text-center">
             <h5>📦 DistribuidoraTech Brasil - Diagnóstico Logístico</h5>
@@ -2120,6 +2149,41 @@ body {
     <button class="back-to-top" id="backToTop" onclick="scrollToSection('home')">⬆️</button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script do tema + scroll suave -->
+    <script>
+    // Scroll suave
+    function scrollToSection(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Botão "voltar ao topo"
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.style.display = 'block';
+        } else {
+            backToTopBtn.style.display = 'none';
+        }
+    });
+
+    // Alternância de tema
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('dtb-theme', theme);
+        themeToggle.textContent = theme === 'dark'
+            ? '☀️ Modo claro'
+            : '🌙 Modo escuro';
+    }
+
+    </script>
+
+    <!-- Seu app.js original (tabelas, KPIs etc.) -->
     <script src="app.js"></script>
 </body>
 </html>

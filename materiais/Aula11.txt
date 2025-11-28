@@ -1,0 +1,147 @@
+Aula 11 
+
+Objetivos da aula:
+
+A- Cálculos básicos relacionados a movimentação interna
+B- Atribuições / Cargos
+C- Materiais Importados
+
+
+1)  Capacidade de Armazenagem
+	- Consideramos a área útil
+		- espaço de fato que temos para armazenar materiais
+		- descontamos: corredores, área de serviço, saídas de 			emergência... ---> resultado  = m2 (largura x comprimento)
+		
+		largura x comprimento x altura = m3 (volume)
+
+Exemplo
+	a) Área Útil = 1200 m2
+	b) Altura da Área Útil: 8 metros*   (descontando um pouco o         
+altura)
+	c) Metragem cúbica de pallet = 0,48 m3   (larg x alt x comp)
+	d) % cubagem por posição = 0,85% 
+			1 pallet = ocupa 0,85% do espaço total
+	e) Número de posições (vagas) = 488 pallets
+	f) Vagas ocupadas = 420 pallets
+
+	1) Volume disponível => m2 ou m3
+	2) Volume ocupado => m3
+
+
+	1) Volume disponível
+		Área Útil x  Altura 
+		 1200     x    8       = 9.600 m3 (capac. total)
+                  m2           m	          (aluguel de terc.)
+
+	2) Volumes ocupado
+		Qtde Pallets x M3 do pallet  x % de cada pallet
+		   420       x  0,48         x  0,85    =   171,36 m³
+
+
+	420 pallets ocupa 171,36 m³ de um total de 9.600 m3
+
+		(171,36 / 9600) x 100   =   % de ocupação do espaço
+					= quase 2%
+
+2) Dimensionamento de Docas
+  - Qtde de Cargas e Descargas /dia = 18
+  - Tempo/carga ou descarga (h) = 0,9 ===> aprox.  54 minutos   (MÉDIA)
+					           90% de uma hora
+  - Jornada diária de trabalho = 8h
+  - Jornada diária de trabalho (efetiva) = 7h (REAL)
+
+
+Qtde de Cargas e Descargas         Tempo/carga ou descarga
+	18                   x             0,9               =  16,2 h
+
+		
+16,2    /  Jornada diária de trabalho (REAL)  = 16,2 / 7 = 2,31 docas
+							    3 docas
+
+
+3)  Dimensionamento de Empilhadeiras
+
+	a) Pallets/h necessários = 90 pallets
+	b) Distância ida-volta (m) da emp = 180 metros
+	c) Velocidade (m/s) = 1,5 m/s
+	d) Carga + Desc (s) = 60 segundos   (manuseio)
+	e) Pallets por ciclo = 1 pallet
+
+	Passo a passo:
+	1)  Tempo desloc. (s) = Dist   /   Vel   
+                                180    /   1,5   = 120,0 segundos
+                                                   (2 min)
+
+	2) Tempo ciclo =      desloc   +    manuseio (d)
+				120    +       60       = 180 segundos
+							  (3 min)
+
+	3) Ciclos/h =  
+	                60 * 60 = 3600 segundos
+			3600 / tempo de ciclo
+			3600 / 180 = 20
+	   20 ciclos por hora = 1 pallet = a cada 1 hora = movimentar 20 							    paletes  
+
+	*** 120 paletts movimentados por hora (média do CD)
+
+			120 / 20 = 6 empilhadeiras
+
+	4) Picking — produtividade e roteirização
+
+		a) Linhas no turno: 240     (skus coletados no turno)
+						<> total de produtos
+		b) horas disp no turno: 6
+		c) Quanto eu quero otimizar: 15% = 0,15
+
+		produtividade
+
+			Linhas no turno / horas disp no turno
+				240     /  6         =  40,0 linhas/h
+
+
+		otimização de 15% (mais produtivo)
+
+			   40 x (1 + 0,15) = 46 linhas/h (META) 
+			  
+		eficiência = 40 /46 = 0,87 (aprox.) ===> 87%
+
+
+ Materiais importados
+
+** Alinhamento acerca do cronograma de importação / deadline
+	- Solicite:
+		- Booking (agenda de transporte internacional)						*** estimativa de data de chegada
+		- Código de rastreio de carga
+		- Conexão com operadores logísticos da operação (contato)
+		- Conexão com o despachante aduaneiro (PRAZO)
+
+
+		
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		

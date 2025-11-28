@@ -1,0 +1,62 @@
+Aula 12
+
+Objetivos da aula:
+
+- Exercícios da aula passada (individual)
+
+- Custos com equipamentos de movimentação
+	- Empilhadeiras (Combustão e Elétrica)
+
+
+Com base neste exemplo, você pode aplicar a qualquer outro equipamento.
+
+IMAM ---> Instituto de Movimentação e Armazenagem de Materiais
+		- Publica livros sobre o tema
+		- Cursos / Workshops / Palestras
+		- Feiras
+
+
+1) Custos com empilhadeiras
+	
+	- Se você não tiver os dados referentes a custos ---> Não consigo saber a 	
+							     viabilidade da operação
+
+Passo 1 -  Informações Gerais (dados sobre o equipamento e sua operação)
+
+Passo 2 - Dados financeiros (preço, depreciação, taxa de juros, custo de oportunidade...)
+
+		Depreciação = desvalorização (o quanto um produto perde valor de mercado)
+			- Depreciação Linear
+			- Depreciação "Composta" (Juros compostos)
+					--> "Juros sobre juros"
+
+	Depreciação = 
+             (Valor de compra + Peças manutenção - Valor Residual)/Vida Útil [horas]
+
+
+	Custo de oportunidade = 
+	      (Preço do equipamento x SELIC) / (Tempo de operação em horas x Dias 			trabalhados no ano)
+
+	"Quanto de dinheiro deixo de investir na empresa por comprar este equipamento"
+
+
+	Gastos com pneus = (Custo Unit de Pneus x Qtde) / duração do pneu em horas
+
+
+	Gasto com combustível (Gasto mensal com combustível) / (temp de operação em horas 								por dia  x qtde de dias 								trabalhados no mês)
+
+	Gastos com mão de obra direta = (sal de operadores x qtde) / (horas produtivas x 									qtde de dias no 									mês)
+
+		
+
+
+
+
+
+
+
+
+
+
+
+

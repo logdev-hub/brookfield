@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Aula 13 — Inventários e Procedimentos Operacionais</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap & Ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --azul-escuro:#0a2a4a; --azul:#15457a; --azul-medio:#0e3b75; --azul-profundo:#082a4e;
+      --amarelo:#ffc400; --amarelo-2:#ffd84d; --texto:#eaf1fb; --borda:rgba(255,255,255,.18); --tile:rgba(255,255,255,.06);
+    }
+    html,body{height:100%}
+    body{
+      background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, var(--azul-profundo) 100%);
+      color:var(--texto); font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,"Noto Sans",Arial;
+    }
+    .navbar{ background:var(--azul-escuro) }
+    .badge-chip{ background:rgba(255,255,255,.1); border:1px solid var(--borda); padding:.35rem .6rem; border-radius:.65rem }
+    .hero{
+      position:relative; overflow:hidden; color:#fff; padding:3rem 0;
+      background: radial-gradient(1200px 400px at 80% 10%, rgba(255,255,255,.06), rgba(255,255,255,0)),
+                  linear-gradient(180deg, rgba(10,42,74,.0) 0%, rgba(10,42,74,.2) 100%);
+    }
+    .hero:before{
+      content:""; position:absolute; left:-120px; top:-40px; width:340px; height:200%;
+      background:linear-gradient(180deg,var(--amarelo) 0%,var(--amarelo-2) 70%, #ffe98a 100%);
+      clip-path:polygon(0 0, 60% 10%, 60% 25%, 100% 38%, 60% 50%, 60% 65%, 100% 78%, 60% 90%, 60% 100%, 0 100%);
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.35)); opacity:.9
+    }
+    .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.35rem .6rem;border-radius:.75rem}
+    .tile{ background:var(--tile); border:1px solid var(--borda); border-radius:1rem; padding:1rem; }
+    .btn-amarelo{
+      --bs-btn-color:#192d45; --bs-btn-bg:var(--amarelo); --bs-btn-border-color:var(--amarelo);
+      --bs-btn-hover-bg:var(--amarelo-2); --bs-btn-hover-border-color:var(--amarelo-2);
+      --bs-btn-active-bg:#ffcf33; font-weight:700;
+    }
+    .code{ font-family: ui-monospace, Menlo, Consolas, monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+    .callout{ border-left:4px solid var(--amarelo); padding:.8rem 1rem; background:rgba(255,255,255,.05); border-radius:.5rem }
+    .table{ color:var(--texto) } thead th{ background:rgba(255,255,255,.08) }
+    .footer{ background:var(--azul-escuro); color:#bcd3f7 }
+    details[open] summary i{ transform: rotate(90deg); } summary i{ transition: transform .2s; }
+    hr.sep{ border:0; height:1px; background:rgba(255,255,255,.2); margin:1rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html"><span class="badge-chip">📦 Senac | Curso Básico em Logística</span></a>
+    <span class="small">Tema escuro</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="chip">Aula 13</span>
+    <h1 class="display-6 fw-bold mt-2">Inventários e Procedimentos Operacionais</h1>
+    <p class="lead">Inventário geral • Inventário rotativo • Contagens cíclicas • Ajustes de estoque • POP passo a passo</p>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-amarelo btn-sm" href="index.html"><i class="bi bi-arrow-left"></i> Voltar ao índice</a>
+      <button class="btn btn-outline-light btn-sm" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container my-4">
+
+  <!-- Objetivos -->
+  <section class="tile mb-3">
+    <h3>🎯 Objetivos</h3>
+    <ul>
+      <li>Compreender tipos de <strong>inventário físico</strong> (geral, rotativo, cíclico).</li>
+      <li>Montar um <strong>procedimento operacional padrão (POP)</strong> para contagens.</li>
+      <li>Executar <strong>ajustes de estoque</strong> de forma controlada e rastreável.</li>
+      <li>Aumentar a <strong>acuracidade de estoque</strong> e reduzir divergências.</li>
+    </ul>
+  </section>
+
+  <!-- Tipos de inventário -->
+  <section class="tile mb-3">
+    <h3>📦 Tipos de Inventário</h3>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <ul>
+          <li><strong>Inventário geral</strong>: contagem de todos os itens em data específica (normalmente anual).</li>
+          <li><strong>Inventário rotativo</strong>: contagens distribuídas ao longo do ano por grupos de itens.</li>
+          <li><strong>Inventário por amostragem</strong>: verificação estatística de parte do estoque.</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <div class="callout">
+          <strong>Benefício do rotativo:</strong> menor parada da operação, maior frequência de verificação e foco nos itens críticos.<br>
+          <em>Melhor prática:</em> combinar inventário rotativo com inventário geral periódico para auditoria completa.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POP Inventário -->
+  <section class="tile mb-3">
+    <h3>📝 POP — Passo a Passo do Inventário</h3>
+    <p><span class="code">POP = Quem faz • O que faz • Como faz • Com que documentos • Em quanto tempo</span></p>
+    <details open>
+      <summary class="muted"><i class="bi bi-caret-right-fill me-1"></i><strong>Roteiro básico de inventário</strong></summary>
+      <ol class="small mt-2">
+        <li><strong>Planejamento</strong>: definir escopo (ruas/itens), data, equipe, janelas de parada parcial.</li>
+        <li><strong>Congelamento</strong>: bloquear movimentos de entrada/saída nos endereços em contagem.</li>
+        <li><strong>Contagem cega</strong>: equipe 1 conta sem ver saldo do sistema, registrando quantidades.</li>
+        <li><strong>Recontagem</strong>: equipe 2 confere itens com divergências ou alto valor.</li>
+        <li><strong>Apuração</strong>: comparar físico x sistema, identificar desvios e registrar justificativas.</li>
+        <li><strong>Ajustes</strong>: lançar acertos no sistema com autorização e trilha de auditoria.</li>
+        <li><strong>Pós-inventário</strong>: analisar causas raiz (processo, cadastro, avarias, furtos, etc.).</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- Acuracidade -->
+  <section class="tile mb-3">
+    <h3>📈 Acuracidade de Estoque</h3>
+    <p><span class="code">Acuracidade (%) = Itens corretos ÷ Itens contados × 100</span></p>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label small">Itens contados</label>
+        <input id="itensCont13" class="form-control form-control-sm" type="text" inputmode="decimal" value="500">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small">Itens sem divergência</label>
+        <input id="itensOk13" class="form-control form-control-sm" type="text" inputmode="decimal" value="470">
+      </div>
+      <div class="col-md-4 d-grid">
+        <button class="btn btn-amarelo btn-sm mt-4" onclick="acur13()">Calcular acuracidade</button>
+      </div>
+    </div>
+    <div class="small mt-2" id="outAcur13">—</div>
+  </section>
+
+  <!-- Ajustes de estoque -->
+  <section class="tile mb-3">
+    <h3>⚖️ Ajustes de Estoque e Boas Práticas</h3>
+    <ul>
+      <li><strong>Registrar motivo</strong> de cada ajuste (erro de digitação, avaria, perda, transferência, etc.).</li>
+      <li><strong>Separar perfis</strong>: quem conta não é quem lança o ajuste no sistema.</li>
+      <li><strong>Monitorar indicadores</strong>: valor ajustado/mês, % itens com divergência, reincidências por endereço.</li>
+      <li><strong>Atuar na causa raiz</strong>: revisar processos de recebimento, conferência, picking e devoluções.</li>
+    </ul>
+  </section>
+
+  <!-- Estudo de caso -->
+  <section class="tile">
+    <h3>📚 Estudo de Caso Simplificado</h3>
+    <div class="callout">
+      <strong>Cenário:</strong> operador logístico com 8.000 SKUs e alto índice de divergências inicia inventário rotativo por classificação ABC.<br>
+      <em>Resultados esperados:</em> aumento da acuracidade, redução de rupturas e menor perda de tempo em buscas e retrabalho.
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer py-4 mt-auto">
+  <div class="container d-flex justify-content-between align-items-center">
+    <small>© <span id="year"></span> Senac — Curso Básico em Logística</small>
+    <small class="text-light">Docente: <strong>Leandro Pereira</strong></small>
+  </div>
+</footer>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  function getNum(id, fb=0){ const el=document.getElementById(id); if(!el) return fb; let v=String(el.value||'').trim(); if(v==='')return fb; if(v.includes(',')) v=v.replace(/\./g,'').replace(',','.'); const n=Number(v); return Number.isFinite(n)?n:fb; }
+  function fmt(n,frac=1){ try{return n.toLocaleString('pt-BR',{minimumFractionDigits:frac,maximumFractionDigits:frac})}catch{return String(n)} }
+
+  function acur13(){
+    const tot=getNum('itensCont13',0);
+    const ok=getNum('itensOk13',0);
+    if(tot<=0){
+      outAcur13.innerHTML='<span class="text-warning">Itens contados deve ser > 0.</span>';
+      return;
+    }
+    const acur = (ok/tot)*100;
+    outAcur13.innerHTML = `Acuracidade ≈ <strong>${fmt(acur,1)}%</strong> (${fmt(ok,0)} de ${fmt(tot,0)} itens sem divergência)`;
+  }
+</script>
+</body>
+</html>

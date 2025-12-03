@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Aula 14 — Logística Reversa e Sustentabilidade</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap & Ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --azul-escuro:#0a2a4a; --azul:#15457a; --azul-medio:#0e3b75; --azul-profundo:#082a4e;
+      --amarelo:#ffc400; --amarelo-2:#ffd84d; --texto:#eaf1fb; --borda:rgba(255,255,255,.18); --tile:rgba(255,255,255,.06);
+    }
+    html,body{height:100%}
+    body{
+      background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, var(--azul-profundo) 100%);
+      color:var(--texto); font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,"Noto Sans",Arial;
+    }
+    .navbar{ background:var(--azul-escuro) }
+    .badge-chip{ background:rgba(255,255,255,.1); border:1px solid var(--borda); padding:.35rem .6rem; border-radius:.65rem }
+    .hero{
+      position:relative; overflow:hidden; color:#fff; padding:3rem 0;
+      background: radial-gradient(1200px 400px at 80% 10%, rgba(255,255,255,.06), rgba(255,255,255,0)),
+                  linear-gradient(180deg, rgba(10,42,74,.0) 0%, rgba(10,42,74,.2) 100%);
+    }
+    .hero:before{
+      content:""; position:absolute; left:-120px; top:-40px; width:340px; height:200%;
+      background:linear-gradient(180deg,var(--amarelo) 0%,var(--amarelo-2) 70%, #ffe98a 100%);
+      clip-path:polygon(0 0, 60% 10%, 60% 25%, 100% 38%, 60% 50%, 60% 65%, 100% 78%, 60% 90%, 60% 100%, 0 100%);
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.35)); opacity:.9
+    }
+    .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.35rem .6rem;border-radius:.75rem}
+    .tile{ background:var(--tile); border:1px solid var(--borda); border-radius:1rem; padding:1rem; }
+    .btn-amarelo{
+      --bs-btn-color:#192d45; --bs-btn-bg:var(--amarelo); --bs-btn-border-color:var(--amarelo);
+      --bs-btn-hover-bg:var(--amarelo-2); --bs-btn-hover-border-color:var(--amarelo-2);
+      --bs-btn-active-bg:#ffcf33; font-weight:700;
+    }
+    .code{ font-family: ui-monospace, Menlo, Consolas, monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+    .callout{ border-left:4px solid var(--amarelo); padding:.8rem 1rem; background:rgba(255,255,255,.05); border-radius:.5rem }
+    .table{ color:var(--texto) } thead th{ background:rgba(255,255,255,.08) }
+    .footer{ background:var(--azul-escuro); color:#bcd3f7 }
+    details[open] summary i{ transform: rotate(90deg); } summary i{ transition: transform .2s; }
+    hr.sep{ border:0; height:1px; background:rgba(255,255,255,.2); margin:1rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html"><span class="badge-chip">📦 Senac | Curso Básico em Logística</span></a>
+    <span class="small">Tema escuro</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="chip">Aula 14</span>
+    <h1 class="display-6 fw-bold mt-2">Logística Reversa e Sustentabilidade</h1>
+    <p class="lead">Fluxos de retorno • PNRS • Cadeia verde • Reaproveitamento de materiais • Indicadores ambientais</p>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-amarelo btn-sm" href="index.html"><i class="bi bi-arrow-left"></i> Voltar ao índice</a>
+      <button class="btn btn-outline-light btn-sm" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container my-4">
+
+  <!-- Objetivos -->
+  <section class="tile mb-3">
+    <h3>🎯 Objetivos</h3>
+    <ul>
+      <li>Definir o que é <strong>logística reversa</strong> e identificar seus principais fluxos.</li>
+      <li>Reconhecer aspectos básicos da <strong>legislação de resíduos sólidos</strong> e responsabilidade compartilhada.</li>
+      <li>Propor <strong>práticas sustentáveis</strong> aplicadas ao armazém e transporte.</li>
+      <li>Construir <strong>indicadores ambientais</strong> simples para acompanhar melhorias.</li>
+    </ul>
+  </section>
+
+  <!-- Conceitos -->
+  <section class="tile mb-3">
+    <h3>♻️ Conceitos de Logística Reversa</h3>
+    <p><span class="code">Logística reversa = Fluxos que trazem produtos, embalagens ou resíduos de volta ao ciclo produtivo ou à destinação adequada</span></p>
+    <ul>
+      <li><strong>Pós-venda</strong>: devoluções por defeito, arrependimento, erros de pedido, garantias.</li>
+      <li><strong>Pós-consumo</strong>: embalagens, eletrônicos, pneus, baterias, medicamentos, entre outros.</li>
+      <li><strong>Reaproveitamento interno</strong>: pallets, caixas plásticas, embalagens retornáveis.</li>
+    </ul>
+  </section>
+
+  <!-- Fluxos de retorno -->
+  <section class="tile mb-3">
+    <h3>🔄 Fluxos de Retorno na Cadeia</h3>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <h6>Exemplos de fluxos</h6>
+        <ul>
+          <li>Cliente → Centro de distribuição: devolução de mercadoria.</li>
+          <li>Ponto de coleta → Reciclador: embalagens e resíduos segregados.</li>
+          <li>Lojas → Fornecedor: produtos vencidos ou fora de linha.</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <div class="callout">
+          <strong>Desafios:</strong> consolidação de volumes, roteirização eficiente, qualidade do material retornado e rastreabilidade de documentos.<br>
+          <em>Oportunidades:</em> redução de custos de matéria-prima, imagem de marca, cumprimento legal e geração de novos negócios.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legislação básica (PNRS) -->
+  <section class="tile mb-3">
+    <h3>⚖️ Legislação Básica de Resíduos</h3>
+    <p class="small">No Brasil, a Política Nacional de Resíduos Sólidos (PNRS) define princípios como responsabilidade compartilhada pelo ciclo de vida dos produtos e instrumentos de logística reversa obrigatória para determinados setores.[web:9]</p>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Tema</th>
+            <th>Resumo prático</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Responsabilidade compartilhada</td>
+            <td>Fabricantes, importadores, distribuidores, comerciantes, consumidores e poder público dividem responsabilidades na gestão de resíduos.[web:9]</td>
+          </tr>
+          <tr>
+            <td>Logística reversa obrigatória</td>
+            <td>Algumas cadeias (por exemplo, eletroeletrônicos, pneus, embalagens de agrotóxicos) possuem sistemas estruturados de retorno.[web:9]</td>
+          </tr>
+          <tr>
+            <td>Destinação adequada</td>
+            <td>Resíduos devem ser encaminhados para reaproveitamento, reciclagem, coprocessamento ou disposição final ambientalmente correta.[web:9]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Práticas sustentáveis e KPI -->
+  <section class="tile mb-3">
+    <h3>🌱 Práticas Sustentáveis e Indicadores</h3>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <ul>
+          <li>Separar resíduos por tipo (papel, plástico, metal, orgânico, rejeito) em pontos de coleta internos.</li>
+          <li>Substituir embalagens descartáveis por <strong>retornáveis</strong> quando viável.</li>
+          <li>Usar <strong>roteirização otimizada</strong> para reduzir quilômetros rodados e emissões.</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <p><span class="code">Taxa de reciclagem (%) = Peso reciclado ÷ Peso total de resíduos × 100</span></p>
+        <div class="row g-2">
+          <div class="col-4">
+            <label class="form-label small">Resíduos totais (kg)</label>
+            <input id="resTot14" class="form-control form-control-sm" type="text" inputmode="decimal" value="1200">
+          </div>
+          <div class="col-4">
+            <label class="form-label small">Enviados à reciclagem (kg)</label>
+            <input id="resRec14" class="form-control form-control-sm" type="text" inputmode="decimal" value="780">
+          </div>
+          <div class="col-4 d-grid">
+            <button class="btn btn-amarelo btn-sm mt-4" onclick="rec14()">Calcular taxa</button>
+          </div>
+        </div>
+        <div class="small mt-2" id="outRec14">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Storytelling -->
+  <section class="tile">
+    <h3>📈 Storytelling — Armazém Verde</h3>
+    <div class="callout">
+      <strong>Caso:</strong> operador de e-commerce implanta estações de triagem de resíduos, logística reversa de embalagens e roteirização colaborativa com fornecedores.<br>
+      <em>Impactos típicos:</em> redução de volume enviado a aterro, geração de receita com recicláveis e melhoria de imagem junto a clientes e comunidade.
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer py-4 mt-auto">
+  <div class="container d-flex justify-content-between align-items-center">
+    <small>© <span id="year"></span> Senac — Curso Básico em Logística</small>
+    <small class="text-light">Docente: <strong>Leandro Pereira</strong></small>
+  </div>
+</footer>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  function getNum(id, fb=0){ const el=document.getElementById(id); if(!el) return fb; let v=String(el.value||'').trim(); if(v==='')return fb; if(v.includes(',')) v=v.replace(/\./g,'').replace(',','.'); const n=Number(v); return Number.isFinite(n)?n:fb; }
+  function fmt(n,frac=1){ try{return n.toLocaleString('pt-BR',{minimumFractionDigits:frac,maximumFractionDigits:frac})}catch{return String(n)} }
+
+  function rec14(){
+    const tot=getNum('resTot14',0);
+    const rec=getNum('resRec14',0);
+    if(tot<=0){
+      outRec14.innerHTML='<span class="text-warning">Resíduos totais deve ser > 0.</span>';
+      return;
+    }
+    const taxa = (rec/tot)*100;
+    outRec14.innerHTML = `Taxa de reciclagem ≈ <strong>${fmt(taxa,1)}%</strong>`;
+  }
+</script>
+</body>
+</html>

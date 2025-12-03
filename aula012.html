@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Aula 12 — Equipamentos, EPIs, EPCs e NRs</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap & Ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --azul-escuro:#0a2a4a; --azul:#15457a; --azul-medio:#0e3b75; --azul-profundo:#082a4e;
+      --amarelo:#ffc400; --amarelo-2:#ffd84d; --texto:#eaf1fb; --borda:rgba(255,255,255,.18); --tile:rgba(255,255,255,.06);
+    }
+    html,body{height:100%}
+    body{
+      background:linear-gradient(135deg,var(--azul) 0%, var(--azul-medio) 40%, var(--azul-profundo) 100%);
+      color:var(--texto); font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,"Noto Sans",Arial;
+    }
+    .navbar{ background:var(--azul-escuro) }
+    .badge-chip{ background:rgba(255,255,255,.1); border:1px solid var(--borda); padding:.35rem .6rem; border-radius:.65rem }
+    .hero{
+      position:relative; overflow:hidden; color:#fff; padding:3rem 0;
+      background: radial-gradient(1200px 400px at 80% 10%, rgba(255,255,255,.06), rgba(255,255,255,0)),
+                  linear-gradient(180deg, rgba(10,42,74,.0) 0%, rgba(10,42,74,.2) 100%);
+    }
+    .hero:before{
+      content:""; position:absolute; left:-120px; top:-40px; width:340px; height:200%;
+      background:linear-gradient(180deg,var(--amarelo) 0%,var(--amarelo-2) 70%, #ffe98a 100%);
+      clip-path:polygon(0 0, 60% 10%, 60% 25%, 100% 38%, 60% 50%, 60% 65%, 100% 78%, 60% 90%, 60% 100%, 0 100%);
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.35)); opacity:.9
+    }
+    .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.35rem .6rem;border-radius:.75rem}
+    .tile{ background:var(--tile); border:1px solid var(--borda); border-radius:1rem; padding:1rem; }
+    .btn-amarelo{
+      --bs-btn-color:#192d45; --bs-btn-bg:var(--amarelo); --bs-btn-border-color:var(--amarelo);
+      --bs-btn-hover-bg:var(--amarelo-2); --bs-btn-hover-border-color:var(--amarelo-2);
+      --bs-btn-active-bg:#ffcf33; font-weight:700;
+    }
+    .code{ font-family: ui-monospace, Menlo, Consolas, monospace; background:rgba(0,0,0,.25); padding:.15rem .45rem; border-radius:.35rem }
+    .callout{ border-left:4px solid var(--amarelo); padding:.8rem 1rem; background:rgba(255,255,255,.05); border-radius:.5rem }
+    .table{ color:var(--texto) } thead th{ background:rgba(255,255,255,.08) }
+    .footer{ background:var(--azul-escuro); color:#bcd3f7 }
+    details[open] summary i{ transform: rotate(90deg); } summary i{ transition: transform .2s; }
+    hr.sep{ border:0; height:1px; background:rgba(255,255,255,.2); margin:1rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html"><span class="badge-chip">📦 Senac | Curso Básico em Logística</span></a>
+    <span class="small">Tema escuro</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="chip">Aula 12</span>
+    <h1 class="display-6 fw-bold mt-2">Equipamentos, EPIs, EPCs e NRs</h1>
+    <p class="lead">Paleteiras • Transportadores • Guindastes • EPIs e EPCs • NRs aplicadas à logística • Cultura de segurança</p>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-amarelo btn-sm" href="index.html"><i class="bi bi-arrow-left"></i> Voltar ao índice</a>
+      <button class="btn btn-outline-light btn-sm" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container my-4">
+
+  <!-- Objetivos -->
+  <section class="tile mb-3">
+    <h3>🎯 Objetivos</h3>
+    <ul>
+      <li>Reconhecer os principais <strong>equipamentos de movimentação de materiais</strong> na operação logística.</li>
+      <li>Aplicar corretamente <strong>EPIs</strong> e <strong>EPCs</strong> alinhados aos riscos de cada atividade.</li>
+      <li>Identificar as <strong>NRs mais relevantes</strong> para armazéns, docas e áreas de movimentação.</li>
+      <li>Estimular a <strong>cultura de segurança</strong> com check-lists, treinamentos e procedimentos padronizados.</li>
+    </ul>
+  </section>
+
+  <!-- Tipos de equipamentos -->
+  <section class="tile mb-3">
+    <h3>🏭 Equipamentos de Movimentação</h3>
+    <div class="row g-3">
+      <div class="col-lg-6">
+        <ul>
+          <li><strong>Manuais</strong>: paleteira hidráulica, carrinho plataforma, carrinho de mão.</li>
+          <li><strong>Motorizados</strong>: empilhadeiras, transpaleteiras elétricas, rebocadores, mini-load.</li>
+          <li><strong>De elevação</strong>: pontes rolantes, talhas, guindastes de coluna, pórticos.</li>
+          <li><strong>Transportadores contínuos</strong>: esteiras roletes livres ou motorizados, correias, roletes gravitacionais.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="callout">
+          <strong>Escolha do equipamento:</strong> considerar peso e dimensões da carga, distância, frequência, layout, segurança e investimento disponível.<br>
+          <em>Dica:</em> para curtas distâncias e baixo peso, priorizar meios simples (paleteira); para fluxos repetitivos, considerar automação ou esteiras.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EPIs e EPCs -->
+  <section class="tile mb-3">
+    <h3>🦺 EPIs e EPCs essenciais</h3>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <h6>EPIs comuns em logística</h6>
+        <ul>
+          <li>Capacete de segurança, luvas adequadas ao tipo de carga, calçado de segurança.</li>
+          <li>Coletes refletivos em áreas de circulação de veículos.</li>
+          <li>Protetor auricular em áreas com ruído elevado.</li>
+          <li>Cinto de segurança e travas em plataformas elevatórias.</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h6>EPCs em armazéns</h6>
+        <ul>
+          <li>Guarda-corpos, corrimãos, redes e travessões de proteção em estruturas porta-pallet.</li>
+          <li>Sinalização de piso, espelhos convexos, balizadores e barreiras físicas.</li>
+          <li>Alarmes sonoros e luminosos, sistemas de exaustão e ventilação.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NRs relevantes (simplificado) -->
+  <section class="tile mb-3">
+    <h3>📜 NRs mais Aplicadas à Logística</h3>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>NR</th>
+            <th>Tema central</th>
+            <th>Aplicação no armazém</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NR 01</td>
+            <td>Disposições gerais</td>
+            <td>Diretrizes gerais de prevenção, documentação e responsabilidades.</td>
+          </tr>
+          <tr>
+            <td>NR 06</td>
+            <td>EPI</td>
+            <td>Seleção, fornecimento, uso e registro de EPIs para trabalhadores.</td>
+          </tr>
+          <tr>
+            <td>NR 11</td>
+            <td>Transporte, movimentação, armazenagem</td>
+            <td>Regras básicas para empilhadeiras, paleteiras, içamento e armazenamento seguro.</td>
+          </tr>
+          <tr>
+            <td>NR 12</td>
+            <td>Máquinas e equipamentos</td>
+            <td>Proteções, dispositivos de segurança e procedimentos para máquinas.</td>
+          </tr>
+          <tr>
+            <td>NR 17</td>
+            <td>Ergonomia</td>
+            <td>Limites para esforço físico, posturas e organização do trabalho.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Check-list segurança -->
+  <section class="tile">
+    <h3>✅ Check-list Diário de Segurança</h3>
+    <p><span class="code">Segurança = Condição segura do equipamento + Comportamento seguro do operador</span></p>
+    <details>
+      <summary class="muted"><i class="bi bi-caret-right-fill me-1"></i><strong>Exemplo de check-list rápido</strong></summary>
+      <ul class="small mt-2">
+        <li>Verificar pneus, garfos, correntes, buzina, luzes e freios de empilhadeiras antes do turno.</li>
+        <li>Checar se todos utilizam EPI adequado à atividade e se os EPCs estão instalados e íntegros.</li>
+        <li>Conferir sinalização de rotas de pedestres e veículos, espelhos e barreiras de proteção.</li>
+        <li>Registrar não conformidades e comunicar o líder para tratativa imediata.</li>
+      </ul>
+    </details>
+  </section>
+
+</main>
+
+<footer class="footer py-4 mt-auto">
+  <div class="container d-flex justify-content-between align-items-center">
+    <small>© <span id="year"></span> Senac — Curso Básico em Logística</small>
+    <small class="text-light">Docente: <strong>Leandro Pereira</strong></small>
+  </div>
+</footer>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
